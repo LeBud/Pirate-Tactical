@@ -13,14 +13,9 @@ public class OverlayTile : MonoBehaviour
     public OverlayTile previous;
 
     public Vector3Int gridLocation;
+    public Vector2Int grid2DPos { get { return new Vector2Int(gridLocation.x, gridLocation.y); } }
 
-    void Update()
-    {
-        if (Input.GetMouseButtonDown(0))
-        {
-            HideTile();
-        }
-    }
+    public List<Sprite> direction;
 
     public void ShowTile()
     {
@@ -29,6 +24,6 @@ public class OverlayTile : MonoBehaviour
 
     public void HideTile()
     {
-        gameObject.GetComponent<SpriteRenderer>().color = new Color(0, 0, 0, 0);
+        gameObject.GetComponent<SpriteRenderer>().color = new Color(1, 1, 1, 0);
     }
 }

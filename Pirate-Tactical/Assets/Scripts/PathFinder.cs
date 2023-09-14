@@ -6,7 +6,7 @@ using UnityEngine;
 public class PathFinder
 {
 
-    public List<OverlayTile> FindPath(OverlayTile start, OverlayTile end)
+    public List<OverlayTile> FindPath(OverlayTile start, OverlayTile end, List<OverlayTile> searchableTiles)
     {
         List<OverlayTile> openList = new List<OverlayTile>();
         List<OverlayTile> closeList = new List<OverlayTile>();
@@ -25,12 +25,11 @@ public class PathFinder
                 return GetFinishedList(start, end);
             }
 
-            List<OverlayTile> neighborTiles = GetNeighborTiles(currentTile);
+            List<OverlayTile> neighborTiles = MapManager.Instance.GetNeighborTiles(currentTile, searchableTiles);
 
             foreach(var t in neighborTiles)
             {
-                //Last condition is to know if the player can jump the block (differents heights)
-                if(t.isBLocked ||closeList.Contains(t) || Mathf.Abs(currentTile.gridLocation.z - t.gridLocation.z) > 1)
+                if(t.isBLocked || closeList.Contains(t))
                 {
                     continue;
                 }
@@ -71,40 +70,41 @@ public class PathFinder
         return finishedList;
     }
 
-    List<OverlayTile> GetNeighborTiles(OverlayTile currentTile)
+
+}
+
+public class RangeFinder
+{
+
+    public List<OverlayTile> GetTilesInRange(OverlayTile startTile, int range)
     {
-        var map = MapManager.Instance.map;
+        var inRangeTile = new List<OverlayTile>();
+        int stepCount = 0;
 
-        List<OverlayTile> neighbors = new List<OverlayTile>();
+        inRangeTile.Add(startTile);
 
-        Vector2Int locationToCheck = new Vector2Int(currentTile.gridLocation.x, currentTile.gridLocation.y + 1);
+        var tileForPreviousStep = new List<OverlayTile>();
+        tileForPreviousStep.Add(startTile);
 
-        for(int i = 0; i < 4; i++)
+        while(stepCount < range)
         {
-            switch (i)
+            var surroundingTiles = new List<OverlayTile>();
+
+            foreach(var tile in tileForPreviousStep)
             {
-                case 0:
-                    locationToCheck = new Vector2Int(currentTile.gridLocation.x, currentTile.gridLocation.y + 1);
-                    break;
-                case 1:
-                    locationToCheck = new Vector2Int(currentTile.gridLocation.x, currentTile.gridLocation.y - 1);
-                    break;
-                case 2:
-                    locationToCheck = new Vector2Int(currentTile.gridLocation.x + 1, currentTile.gridLocation.y);
-                    break;
-                case 3:
-                    locationToCheck = new Vector2Int(currentTile.gridLocation.x - 1, currentTile.gridLocation.y);
-                    break;
+                surroundingTiles.AddRange(MapManager.Instance.GetNeighborTiles(tile, new List<OverlayTile>()));
             }
 
-            if (map.ContainsKey(locationToCheck))
-            {
-                neighbors.Add(map[locationToCheck]);
-            }
+            inRangeTile.AddRange(surroundingTiles);
+            tileForPreviousStep = surroundingTiles.Distinct().ToList();
+            stepCount++;
         }
 
-        return neighbors;
-        
+        return inRangeTile.Distinct().ToList();
     }
+}
+
+public class DirectionTranslator
+{
 
 }

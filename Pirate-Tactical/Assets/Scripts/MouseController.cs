@@ -12,11 +12,14 @@ public class MouseController : MonoBehaviour
     PirateShip ship;
 
     PathFinder pathFinder;
+    RangeFinder rangeFinder;
     List<OverlayTile> path = new List<OverlayTile>();
+    List<OverlayTile> inRangeTiles = new List<OverlayTile>();
 
     private void Start()
     {
         pathFinder = new PathFinder();
+        rangeFinder = new RangeFinder();
     }
 
     private void LateUpdate()
@@ -31,17 +34,18 @@ public class MouseController : MonoBehaviour
 
             if (Input.GetMouseButtonDown(0))
             {
-                OverlayTile oTile = overlayTile.GetComponent<OverlayTile>();
-                oTile.ShowTile();
+                OverlayTile selectedTile = overlayTile.GetComponent<OverlayTile>();
+                selectedTile.ShowTile();
 
                 if(ship == null)
                 {
                     ship = Instantiate(shipPrefab).GetComponent<PirateShip>();
                     PositionShipOnMap(overlayTile.GetComponent<OverlayTile>());
+                    GetInRangeTiles();
                     return;
                 }
 
-                path = pathFinder.FindPath(ship.activeTile, oTile);
+                path = pathFinder.FindPath(ship.currentTile, selectedTile, inRangeTiles);
             }
         }
 
@@ -66,6 +70,33 @@ public class MouseController : MonoBehaviour
             PositionShipOnMap(path[0]);
             path.RemoveAt(0);
         }
+
+        //Update Range Display -- Change this if u don't want it to be display once the ship has traveled
+        if(path.Count <= 0)
+        {
+            GetInRangeTiles();
+        }
+    }
+    void PositionShipOnMap(OverlayTile tile)
+    {
+        ship.transform.position = new Vector3(tile.transform.position.x, tile.transform.position.y + .0001f, tile.transform.position.z - 1);
+        ship.GetComponent<SpriteRenderer>().sortingOrder = tile.GetComponent<SpriteRenderer>().sortingOrder;
+        ship.currentTile = tile;
+    }
+
+    void GetInRangeTiles()
+    {
+        foreach(var tile in inRangeTiles)
+        {
+            tile.HideTile();
+        }
+
+        inRangeTiles = rangeFinder.GetTilesInRange(ship.currentTile, ship.travelRange);
+
+        foreach (var tile in inRangeTiles)
+        {
+            tile.ShowTile();
+        }
     }
 
     public RaycastHit2D? GetFocusedOnTile()
@@ -78,10 +109,4 @@ public class MouseController : MonoBehaviour
         return null;
     }
 
-    void PositionShipOnMap(OverlayTile tile)
-    {
-        ship.transform.position = new Vector3(tile.transform.position.x, tile.transform.position.y + .0001f, tile.transform.position.z - 1);
-        ship.GetComponent<SpriteRenderer>().sortingOrder = tile.GetComponent<SpriteRenderer>().sortingOrder;
-        ship.activeTile = tile;
-    }
 }

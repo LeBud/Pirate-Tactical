@@ -55,4 +55,55 @@ public class MapManager : MonoBehaviour
         }
     }
 
+
+    public List<OverlayTile> GetNeighborTiles(OverlayTile currentTile, List<OverlayTile> searchableTiles)
+    {
+        Dictionary<Vector2Int, OverlayTile> tilesToSearch = new Dictionary<Vector2Int, OverlayTile>();
+
+        if(searchableTiles.Count > 0)
+        {
+            foreach(var tile in searchableTiles)
+            {
+                tilesToSearch.Add(tile.grid2DPos, tile);
+            }
+        }
+        else
+        {
+            tilesToSearch = map;
+        }
+
+        List<OverlayTile> neighbors = new List<OverlayTile>();
+
+        Vector2Int locationToCheck = new Vector2Int(currentTile.gridLocation.x, currentTile.gridLocation.y + 1);
+
+        for (int i = 0; i < 4; i++)
+        {
+            switch (i)
+            {
+                case 0:
+                    locationToCheck = new Vector2Int(currentTile.gridLocation.x, currentTile.gridLocation.y + 1);
+                    break;
+                case 1:
+                    locationToCheck = new Vector2Int(currentTile.gridLocation.x, currentTile.gridLocation.y - 1);
+                    break;
+                case 2:
+                    locationToCheck = new Vector2Int(currentTile.gridLocation.x + 1, currentTile.gridLocation.y);
+                    break;
+                case 3:
+                    locationToCheck = new Vector2Int(currentTile.gridLocation.x - 1, currentTile.gridLocation.y);
+                    break;
+            }
+
+            if (tilesToSearch.ContainsKey(locationToCheck))
+            {
+                //Not necessary if no differents heights in the game -- If it broke something remove it
+                if (Mathf.Abs(currentTile.gridLocation.z - tilesToSearch[locationToCheck].gridLocation.z) <= 1)
+                    neighbors.Add(tilesToSearch[locationToCheck]);
+            }
+        }
+
+        return neighbors;
+
+    }
+
 }
