@@ -153,6 +153,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cc16adccd2257d94d824cd6adea57031, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  speed: 4
+  shipPrefab: {fileID: 68499737284521179, guid: b9b99969e84fc9f44a9641edb0b93735, type: 3}
 --- !u!212 &143204106
 SpriteRenderer:
   m_ObjectHideFlags: 0
