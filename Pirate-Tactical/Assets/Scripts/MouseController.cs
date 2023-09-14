@@ -18,6 +18,7 @@ public class MouseController : MonoBehaviour
     List<OverlayTile> inRangeTiles = new List<OverlayTile>();
 
     bool shipMoving = false;
+    bool shipSelected;
 
     private void Start()
     {
@@ -37,7 +38,8 @@ public class MouseController : MonoBehaviour
             GetComponent<SpriteRenderer>().sortingOrder = overlayTile.GetComponent<SpriteRenderer>().sortingOrder;
             OverlayTile selectedTile = overlayTile.GetComponent<OverlayTile>();
 
-            if (inRangeTiles.Contains(selectedTile) && !shipMoving)
+
+            if (inRangeTiles.Contains(selectedTile) && !shipMoving && shipSelected)
             {
                 path = pathFinder.FindPath(ship.currentTile, selectedTile, inRangeTiles);
 
@@ -58,18 +60,40 @@ public class MouseController : MonoBehaviour
 
             if (Input.GetMouseButtonDown(0))
             {
-                
+
                 selectedTile.ShowTile();
+
 
                 if(ship == null)
                 {
                     ship = Instantiate(shipPrefab).GetComponent<PirateShip>();
                     PositionShipOnMap(overlayTile.GetComponent<OverlayTile>());
+                    shipSelected = true;
                     GetInRangeTiles();
                     return;
                 }
 
-                shipMoving = true;
+                if (!shipSelected && Input.GetMouseButtonDown(0))
+                {
+                    if (ship.currentTile == selectedTile)
+                    {
+                        shipSelected = true;
+                        GetInRangeTiles();
+                        return;
+                    }
+                }
+
+                if (!inRangeTiles.Contains(selectedTile))
+                {
+                    foreach (var tile in inRangeTiles)
+                        tile.HideTile();
+
+                    shipSelected = false;
+                    return;
+                }
+
+                if(shipSelected)
+                    shipMoving = true;
             }
         }
 
