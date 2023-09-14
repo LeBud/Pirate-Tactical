@@ -41,7 +41,7 @@ public class MouseController : MonoBehaviour
             GetComponent<SpriteRenderer>().sortingOrder = overlayTile.GetComponent<SpriteRenderer>().sortingOrder;
             OverlayTile selectedTile = overlayTile.GetComponent<OverlayTile>();
 
-
+            //Maybe put this part under the GetButton to correct an issue
             if (inRangeTiles.Contains(selectedTile) && !shipMoving && shipSelected && ship[shipIndex] != null)
             {
                 path = pathFinder.FindPath(ship[shipIndex].currentTile, selectedTile, inRangeTiles);
