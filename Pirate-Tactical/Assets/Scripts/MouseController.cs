@@ -76,8 +76,8 @@ public class MouseController : MonoBehaviour
         if(path.Count > 0 && shipMoving)
         {
             MoveAlongPath();
-            shipMoving = false;
         }
+
     }
 
     void MoveAlongPath()
@@ -100,6 +100,7 @@ public class MouseController : MonoBehaviour
         if(path.Count <= 0)
         {
             GetInRangeTiles();
+            shipMoving = false;
         }
     }
     void PositionShipOnMap(OverlayTile tile)

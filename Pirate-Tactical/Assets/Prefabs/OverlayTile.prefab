@@ -110,7 +110,10 @@ MonoBehaviour:
   - {fileID: 21300000, guid: 66d81fbd5a389da4bbc593ebd1f2d45c, type: 3}
   - {fileID: 21300000, guid: bfda0877816b60849a442c58883d1a25, type: 3}
   - {fileID: 21300000, guid: bfda0877816b60849a442c58883d1a25, type: 3}
-  - {fileID: 21300000, guid: 81b2baee890237f49aae81f8dc76e406, type: 3}
+  - {fileID: 21300000, guid: 546fe8812b002bb4ba2d5986e67ebb12, type: 3}
+  - {fileID: 21300000, guid: 83ff447dd3642e844b1f6576c805099c, type: 3}
+  - {fileID: 21300000, guid: bd14015b3a7968b44a5e72b1e571fba5, type: 3}
+  - {fileID: 21300000, guid: ca543ec0bd3725144a1e9328f4640565, type: 3}
   - {fileID: 21300000, guid: bf70fd676fd1952478179a3a42b74936, type: 3}
 --- !u!60 &4205171695064600233
 PolygonCollider2D:

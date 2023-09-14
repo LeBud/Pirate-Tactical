@@ -113,8 +113,11 @@ public class DirectionTranslator
         Down = 2,
         Right = 3,
         Left = 4,
-        Corner = 5,
-        Finished = 6,
+        TopRight = 5,
+        BottomRight = 6,
+        TopLeft = 7,
+        BottomLeft = 8,
+        Finished = 9
     }
 
     public Directions TranslateDirection(OverlayTile previousTile, OverlayTile currentTile, OverlayTile futureTile)
@@ -133,9 +136,35 @@ public class DirectionTranslator
             return Directions.Right;
         if (dir == new Vector2Int(-1, 0) && !isFinal)
             return Directions.Left;
-        if (dir == new Vector2Int(1, 1) || dir == new Vector2Int(-1, 1) || dir == new Vector2Int(-1, -1) || dir == new Vector2Int(1, -1) && !isFinal)
-            return Directions.Corner;
-        if(dir != Vector2.zero && isFinal)
+        if (dir == new Vector2Int(1, 1) && !isFinal)
+        {
+            if(pastDir.y < futurDir.y)
+                return Directions.BottomLeft;
+            else
+                return Directions.TopRight;
+        }
+        if (dir == new Vector2Int(-1, 1) && !isFinal)
+        {
+            if (pastDir.y < futurDir.y)
+                return Directions.BottomRight;
+            else
+                return Directions.TopLeft;
+        }
+        if (dir == new Vector2Int(1, -1) && !isFinal)
+        {
+            if (pastDir.y > futurDir.y)
+                return Directions.TopLeft;
+            else
+                return Directions.BottomRight;
+        }
+        if (dir == new Vector2Int(-1, -1) && !isFinal)
+        {
+            if (pastDir.y > futurDir.y)
+                return Directions.TopRight;
+            else
+                return Directions.BottomLeft;
+        }
+        if (dir != Vector2.zero && isFinal)
             return Directions.Finished;
 
         return Directions.None;
