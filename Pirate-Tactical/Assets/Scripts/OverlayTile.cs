@@ -1,6 +1,8 @@
 using System.Collections;
 using System.Collections.Generic;
+using UnityEditor.Experimental.GraphView;
 using UnityEngine;
+using static DirectionTranslator;
 
 public class OverlayTile : MonoBehaviour
 {
@@ -15,7 +17,7 @@ public class OverlayTile : MonoBehaviour
     public Vector3Int gridLocation;
     public Vector2Int grid2DPos { get { return new Vector2Int(gridLocation.x, gridLocation.y); } }
 
-    public List<Sprite> direction;
+    public List<Sprite> dirSprites;
 
     public void ShowTile()
     {
@@ -25,5 +27,19 @@ public class OverlayTile : MonoBehaviour
     public void HideTile()
     {
         gameObject.GetComponent<SpriteRenderer>().color = new Color(1, 1, 1, 0);
+        SetDirSprite(Directions.None);
+    }
+
+    public void SetDirSprite(Directions d)
+    {
+        var sprite = GetComponentsInChildren<SpriteRenderer>()[1];
+        if (d == Directions.None)
+            sprite.color = new Color(1, 1, 1, 0);
+        else
+        {
+            sprite.color = new Color(1, 1, 1, 1);
+            sprite.sprite = dirSprites[(int)d];
+            sprite.sortingOrder = GetComponent<SpriteRenderer>().sortingOrder;
+        }
     }
 }

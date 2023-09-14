@@ -104,6 +104,14 @@ MonoBehaviour:
   isBLocked: 0
   previous: {fileID: 0}
   gridLocation: {x: 0, y: 0, z: 0}
+  dirSprites:
+  - {fileID: 0}
+  - {fileID: 21300000, guid: 66d81fbd5a389da4bbc593ebd1f2d45c, type: 3}
+  - {fileID: 21300000, guid: 66d81fbd5a389da4bbc593ebd1f2d45c, type: 3}
+  - {fileID: 21300000, guid: bfda0877816b60849a442c58883d1a25, type: 3}
+  - {fileID: 21300000, guid: bfda0877816b60849a442c58883d1a25, type: 3}
+  - {fileID: 21300000, guid: 81b2baee890237f49aae81f8dc76e406, type: 3}
+  - {fileID: 21300000, guid: bf70fd676fd1952478179a3a42b74936, type: 3}
 --- !u!60 &4205171695064600233
 PolygonCollider2D:
   m_ObjectHideFlags: 0
@@ -179,7 +187,7 @@ Transform:
   m_GameObject: {fileID: 8127232841197923393}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: -1}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -227,7 +235,7 @@ SpriteRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_Sprite: {fileID: 21300000, guid: bfda0877816b60849a442c58883d1a25, type: 3}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_Color: {r: 1, g: 1, b: 1, a: 0}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0

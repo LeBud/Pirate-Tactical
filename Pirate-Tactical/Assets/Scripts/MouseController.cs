@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
-using UnityEngine.Tilemaps;
+using static DirectionTranslator;
 
 public class MouseController : MonoBehaviour
 {
@@ -13,13 +13,17 @@ public class MouseController : MonoBehaviour
 
     PathFinder pathFinder;
     RangeFinder rangeFinder;
+    DirectionTranslator directionTranslator;
     List<OverlayTile> path = new List<OverlayTile>();
     List<OverlayTile> inRangeTiles = new List<OverlayTile>();
+
+    bool shipMoving = false;
 
     private void Start()
     {
         pathFinder = new PathFinder();
         rangeFinder = new RangeFinder();
+        directionTranslator = new DirectionTranslator();
     }
 
     private void LateUpdate()
@@ -31,10 +35,30 @@ public class MouseController : MonoBehaviour
             Collider2D overlayTile = focusedTile.Value.collider;
             transform.position = overlayTile.transform.position;
             GetComponent<SpriteRenderer>().sortingOrder = overlayTile.GetComponent<SpriteRenderer>().sortingOrder;
+            OverlayTile selectedTile = overlayTile.GetComponent<OverlayTile>();
+
+            if (inRangeTiles.Contains(selectedTile) && !shipMoving)
+            {
+                path = pathFinder.FindPath(ship.currentTile, selectedTile, inRangeTiles);
+
+                foreach (var tile in inRangeTiles) 
+                {
+                    tile.SetDirSprite(Directions.None);
+                }
+
+                for(int i = 0; i < path.Count; i++)
+                {
+                    var previousTile = i > 0 ? path[i - 1] : ship.currentTile;
+                    var futureTile = i < path.Count - 1 ? path[i + 1] : null;
+
+                    var dir = directionTranslator.TranslateDirection(previousTile, path[i], futureTile);
+                    path[i].SetDirSprite(dir);
+                }
+            }
 
             if (Input.GetMouseButtonDown(0))
             {
-                OverlayTile selectedTile = overlayTile.GetComponent<OverlayTile>();
+                
                 selectedTile.ShowTile();
 
                 if(ship == null)
@@ -45,13 +69,14 @@ public class MouseController : MonoBehaviour
                     return;
                 }
 
-                path = pathFinder.FindPath(ship.currentTile, selectedTile, inRangeTiles);
+                shipMoving = true;
             }
         }
 
-        if(path.Count > 0)
+        if(path.Count > 0 && shipMoving)
         {
             MoveAlongPath();
+            shipMoving = false;
         }
     }
 

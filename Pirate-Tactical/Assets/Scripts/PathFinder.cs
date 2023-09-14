@@ -106,5 +106,39 @@ public class RangeFinder
 
 public class DirectionTranslator
 {
+    public enum Directions
+    {
+        None = 0,
+        Up = 1,
+        Down = 2,
+        Right = 3,
+        Left = 4,
+        Corner = 5,
+        Finished = 6,
+    }
 
+    public Directions TranslateDirection(OverlayTile previousTile, OverlayTile currentTile, OverlayTile futureTile)
+    {
+        bool isFinal = futureTile == null;
+
+        Vector2Int pastDir = previousTile != null ? currentTile.grid2DPos - previousTile.grid2DPos : new Vector2Int(0, 0);
+        Vector2Int futurDir = futureTile != null ? futureTile.grid2DPos - currentTile.grid2DPos : new Vector2Int(0, 0);
+        Vector2Int dir = pastDir != futurDir ? pastDir + futurDir : futurDir;
+
+        if(dir == new Vector2Int(0, 1) && !isFinal)
+            return Directions.Up;
+        if (dir == new Vector2Int(0, -1) && !isFinal)
+            return Directions.Down;
+        if(dir == new Vector2Int(1, 0) && !isFinal)
+            return Directions.Right;
+        if (dir == new Vector2Int(-1, 0) && !isFinal)
+            return Directions.Left;
+        if (dir == new Vector2Int(1, 1) || dir == new Vector2Int(-1, 1) || dir == new Vector2Int(-1, -1) || dir == new Vector2Int(1, -1) && !isFinal)
+            return Directions.Corner;
+        if(dir != Vector2.zero && isFinal)
+            return Directions.Finished;
+
+        return Directions.None;
+        
+    }
 }
