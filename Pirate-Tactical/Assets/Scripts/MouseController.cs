@@ -9,17 +9,20 @@ public class MouseController : MonoBehaviour
     [SerializeField] float speed;
 
     [SerializeField] GameObject shipPrefab;
-    PirateShip ship;
+    PirateShip[] ship = new PirateShip[3];
 
     PathFinder pathFinder;
     RangeFinder rangeFinder;
     DirectionTranslator directionTranslator;
+
     List<OverlayTile> path = new List<OverlayTile>();
     List<OverlayTile> inRangeTiles = new List<OverlayTile>();
 
     bool shipMoving = false;
     bool shipSelected;
 
+    int shipIndex = 0;
+    int spawnedShips = 0;
     private void Start()
     {
         pathFinder = new PathFinder();
@@ -39,18 +42,15 @@ public class MouseController : MonoBehaviour
             OverlayTile selectedTile = overlayTile.GetComponent<OverlayTile>();
 
 
-            if (inRangeTiles.Contains(selectedTile) && !shipMoving && shipSelected)
+            if (inRangeTiles.Contains(selectedTile) && !shipMoving && shipSelected && ship[shipIndex] != null)
             {
-                path = pathFinder.FindPath(ship.currentTile, selectedTile, inRangeTiles);
+                path = pathFinder.FindPath(ship[shipIndex].currentTile, selectedTile, inRangeTiles);
 
-                foreach (var tile in inRangeTiles) 
-                {
-                    tile.SetDirSprite(Directions.None);
-                }
+                ClearTile();
 
                 for(int i = 0; i < path.Count; i++)
                 {
-                    var previousTile = i > 0 ? path[i - 1] : ship.currentTile;
+                    var previousTile = i > 0 ? path[i - 1] : ship[shipIndex].currentTile;
                     var futureTile = i < path.Count - 1 ? path[i + 1] : null;
 
                     var dir = directionTranslator.TranslateDirection(previousTile, path[i], futureTile);
@@ -64,23 +64,37 @@ public class MouseController : MonoBehaviour
                 selectedTile.ShowTile();
 
 
-                if(ship == null)
+                if(spawnedShips < ship.Length)
                 {
-                    ship = Instantiate(shipPrefab).GetComponent<PirateShip>();
+                    ClearTile();
+
+                    ship[shipIndex] = Instantiate(shipPrefab).GetComponent<PirateShip>();
                     PositionShipOnMap(overlayTile.GetComponent<OverlayTile>());
-                    shipSelected = true;
                     GetInRangeTiles();
+
+                    shipSelected = true;
+                    ship[shipIndex].index = shipIndex;
+                    if(shipIndex < ship.Length-1)
+                        shipIndex++;
+
+                    spawnedShips++;
+                    
                     return;
                 }
 
                 if (!shipSelected && Input.GetMouseButtonDown(0))
                 {
-                    if (ship.currentTile == selectedTile)
+                    for(int i = 0; i < ship.Length; i++)
                     {
-                        shipSelected = true;
-                        GetInRangeTiles();
-                        return;
+                        if (ship[i].currentTile == selectedTile)
+                        {
+                            shipIndex = i;
+                            shipSelected = true;
+                            GetInRangeTiles();
+                            return;
+                        }
                     }
+                    
                 }
 
                 if (!inRangeTiles.Contains(selectedTile))
@@ -109,12 +123,12 @@ public class MouseController : MonoBehaviour
         var step = speed * Time.deltaTime;
 
         var zIndex = path[0].transform.position.z;
-        ship.transform.position = Vector2.MoveTowards(ship.transform.position, path[0].transform.position, step);
-        Vector3 pos = ship.transform.position;
+        ship[shipIndex].transform.position = Vector2.MoveTowards(ship[shipIndex].transform.position, path[0].transform.position, step);
+        Vector3 pos = ship[shipIndex].transform.position;
 
-        ship.transform.position = new Vector3(pos.x, pos.y, zIndex);
+        ship[shipIndex].transform.position = new Vector3(pos.x, pos.y, zIndex);
 
-        if(Vector2.Distance(ship.transform.position, path[0].transform.position) < .0001f)
+        if(Vector2.Distance(ship[shipIndex].transform.position, path[0].transform.position) < .0001f)
         {
             PositionShipOnMap(path[0]);
             path.RemoveAt(0);
@@ -129,9 +143,17 @@ public class MouseController : MonoBehaviour
     }
     void PositionShipOnMap(OverlayTile tile)
     {
-        ship.transform.position = new Vector3(tile.transform.position.x, tile.transform.position.y + .0001f, tile.transform.position.z - 1);
-        ship.GetComponent<SpriteRenderer>().sortingOrder = tile.GetComponent<SpriteRenderer>().sortingOrder;
-        ship.currentTile = tile;
+        ship[shipIndex].transform.position = new Vector3(tile.transform.position.x, tile.transform.position.y + .0001f, tile.transform.position.z - 1);
+        ship[shipIndex].GetComponent<SpriteRenderer>().sortingOrder = tile.GetComponent<SpriteRenderer>().sortingOrder;
+        ship[shipIndex].currentTile = tile;
+    }
+
+    void ClearTile()
+    {
+        foreach (var tile in inRangeTiles)
+        {
+            tile.HideTile();
+        }
     }
 
     void GetInRangeTiles()
@@ -141,7 +163,7 @@ public class MouseController : MonoBehaviour
             tile.HideTile();
         }
 
-        inRangeTiles = rangeFinder.GetTilesInRange(ship.currentTile, ship.travelRange);
+        inRangeTiles = rangeFinder.GetTilesInRange(ship[shipIndex].currentTile, ship[shipIndex].travelRange);
 
         foreach (var tile in inRangeTiles)
         {
