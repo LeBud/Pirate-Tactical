@@ -24,6 +24,8 @@ public class MouseController : MonoBehaviour
 
     int shipIndex = 0;
     int spawnedShips = 0;
+
+    OverlayTile currenntMouseTile;
     private void Start()
     {
         pathFinder = new PathFinder();
@@ -33,6 +35,7 @@ public class MouseController : MonoBehaviour
 
     private void LateUpdate()
     {
+
         RaycastHit2D? focusedTile = GetFocusedOnTile();
 
         if (focusedTile.HasValue)
@@ -40,32 +43,29 @@ public class MouseController : MonoBehaviour
             Collider2D overlayTile = focusedTile.Value.collider;
             transform.position = overlayTile.transform.position;
             GetComponent<SpriteRenderer>().sortingOrder = overlayTile.GetComponent<SpriteRenderer>().sortingOrder;
-            OverlayTile selectedTile = overlayTile.GetComponent<OverlayTile>();
+            currenntMouseTile = overlayTile.GetComponent<OverlayTile>();
 
-            //Maybe put this part under the GetButton to correct an issue
-            if (inRangeTiles.Contains(selectedTile) && !shipMoving && shipSelected && allshipSpawned)
-            {
-                path = pathFinder.FindPath(ship[shipIndex].currentTile, selectedTile, inRangeTiles);
-
-                ClearTile();
-
-                for(int i = 0; i < path.Count; i++)
-                {
-                    var previousTile = i > 0 ? path[i - 1] : ship[shipIndex].currentTile;
-                    var futureTile = i < path.Count - 1 ? path[i + 1] : null;
-
-                    var dir = directionTranslator.TranslateDirection(previousTile, path[i], futureTile);
-                    path[i].SetDirSprite(dir);
-                }
-            }
+            //Make PathFinding
+            PathThind(currenntMouseTile);
 
             if (Input.GetMouseButtonDown(0))
             {
-                ClearTile();
-                selectedTile.ShowTile();
+                currenntMouseTile.ShowTile();
+
+                if (ship[0] == null)
+                {
+                    shipIndex = 0;
+                    ship[shipIndex] = Instantiate(shipPrefab).GetComponent<PirateShip>();
+                    PositionShipOnMap(currenntMouseTile);
+                    GetInRangeTiles();
+
+                    ship[shipIndex].index = shipIndex;
+
+                    return;
+                }
 
                 //SpawnShip
-                if(spawnedShips < ship.Length)
+                /*if(spawnedShips < ship.Length)
                     SpawnShpis(selectedTile);
                 
                 //Select ship
@@ -74,19 +74,35 @@ public class MouseController : MonoBehaviour
                 
                 //Deselect ship
                 if (!inRangeTiles.Contains(selectedTile))
-                    DeselectShip();
+                    DeselectShip();*/
 
                 //MoveShip
-                if(shipSelected)
-                    shipMoving = true;
+                shipMoving = true;
             }
         }
 
         if(path.Count > 0 && shipMoving)
-        {
             MoveAlongPath();
-        }
+        
+    }
 
+    void PathThind(OverlayTile tile)
+    {
+        if (inRangeTiles.Contains(tile) && !shipMoving)
+        {
+            path = pathFinder.FindPath(ship[shipIndex].currentTile, tile, inRangeTiles);
+
+            GetInRangeTiles();
+
+            for (int i = 0; i < path.Count; i++)
+            {
+                var previousTile = i > 0 ? path[i - 1] : ship[shipIndex].currentTile;
+                var futureTile = i < path.Count - 1 ? path[i + 1] : null;
+
+                var dir = directionTranslator.TranslateDirection(previousTile, path[i], futureTile);
+                path[i].SetDirSprite(dir);
+            }
+        }
     }
 
     void SelectShip(OverlayTile tile)
