@@ -93,7 +93,8 @@ public class MouseController : NetworkBehaviour
 
             if (!sm.allShipsSpawned)
             {
-                SpawnShpis();
+                if(currentMouseTile != null)
+                    SpawnShips();
                 return;
             }
 
@@ -142,20 +143,49 @@ public class MouseController : NetworkBehaviour
         shipMoving = false;
     }
 
-    void SpawnShpis()
+    void SpawnShips()
+    {
+        
+        if (NetworkManager.Singleton.IsServer)
+        {
+            int index = sm.shipIndex;
+            currentShip = Instantiate(sm.ships[index]);
+            currentShip.GetComponent<NetworkObject>().Spawn();
+            sm.ships[index] = currentShip;
+            PositionShipOnMap(currentMouseTile);
+
+            sm.ships[index].index = index;
+
+            sm.shipIndex++;
+            sm.remainShipToSpawn--;
+
+            sm.CheckIfAllSpawn();
+
+        }
+        else
+        {
+            SpawnOnServerRpc(NetworkManager.Singleton.LocalClientId);
+        }
+
+
+    }
+
+    [ServerRpc]
+    void SpawnOnServerRpc(ulong clientID, ServerRpcParams rpcParams = default)
     {
         int index = sm.shipIndex;
+
         currentShip = Instantiate(sm.ships[index]);
-        currentShip.GetComponent<NetworkObject>().Spawn(); 
+        currentShip.GetComponent<NetworkObject>().SpawnWithOwnership(clientID);
+
         sm.ships[index] = currentShip;
-        PositionShipOnMap(currentMouseTile);
-        //GetInRangeTiles();
 
         sm.ships[index].index = index;
 
         sm.shipIndex++;
         sm.remainShipToSpawn--;
 
+        PositionShipOnMap(currentMouseTile);
         sm.CheckIfAllSpawn();
     }
 
