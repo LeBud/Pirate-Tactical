@@ -97,4 +97,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5bb80bd664613bf4bbe3e7ba09b5b7c8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  activeTile: {fileID: 0}
+  shipInfo: {fileID: 11400000, guid: cd00744a0849cdb46ab5b1171ec6343d, type: 2}
+  currentTile: {fileID: 0}
+  index: 0

@@ -8,7 +8,10 @@ public class MapManager : MonoBehaviour
     public static MapManager _instance;
     public static MapManager Instance { get { return _instance; } }
 
+    [Header("TileMap Component")]
+    public Tilemap tileMap;
 
+    [Header("Tile Settings")]
     public OverlayTile overlayTilePref;
     public GameObject overlayContainer;
 
@@ -26,8 +29,6 @@ public class MapManager : MonoBehaviour
     private void Start()
     {
         map = new Dictionary<Vector2Int, OverlayTile>();
-
-        Tilemap tileMap = gameObject.GetComponentInChildren<Tilemap>();
 
         BoundsInt bounds = tileMap.cellBounds;
 

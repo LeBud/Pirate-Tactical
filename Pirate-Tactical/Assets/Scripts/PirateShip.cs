@@ -4,8 +4,9 @@ using UnityEngine;
 
 public class PirateShip : MonoBehaviour
 {
+    public PirateShipsObject shipInfo;
+
     public OverlayTile currentTile;
-    public int travelRange = 4;
 
     public int index;
 
