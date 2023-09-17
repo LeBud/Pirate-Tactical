@@ -2,16 +2,12 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
-using UnityEngine.Tilemaps;
-using static DirectionTranslator;
+using Unity.Netcode;
 using static GameManager;
 
-public class MouseController : MonoBehaviour
+public class MouseController : NetworkBehaviour
 {
     [SerializeField] float speed;
-
-    //[SerializeField] GameObject shipPrefab;
-    //PirateShip[] ship = new PirateShip[3];
 
     PathFinder pathFinder;
     RangeFinder rangeFinder;
@@ -62,6 +58,10 @@ public class MouseController : MonoBehaviour
 
     private void LateUpdate()
     {
+        if (!IsOwner)
+        {
+            return;
+        }
 
         RaycastHit2D? focusedTile = GetFocusedOnTile();
 
