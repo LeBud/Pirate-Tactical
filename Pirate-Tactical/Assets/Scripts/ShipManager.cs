@@ -1,8 +1,9 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.Netcode;
 using UnityEngine;
 
-public class ShipManager : MonoBehaviour
+public class ShipManager : NetworkBehaviour
 {
 
     [Header("Ships")]
@@ -21,6 +22,9 @@ public class ShipManager : MonoBehaviour
 
     public void CheckIfAllSpawn()
     {
+        if (!IsOwner)
+            return;
+
         if (remainShipToSpawn <= 0)
         {
             allShipsSpawned = true;

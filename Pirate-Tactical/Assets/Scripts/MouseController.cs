@@ -146,6 +146,7 @@ public class MouseController : NetworkBehaviour
     {
         int index = sm.shipIndex;
         currentShip = Instantiate(sm.ships[index]);
+        currentShip.GetComponent<NetworkObject>().SpawnWithOwnership(NetworkManager.Singleton.LocalClientId);
         sm.ships[index] = currentShip;
         PositionShipOnMap(currentMouseTile);
         //GetInRangeTiles();
