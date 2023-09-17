@@ -4,6 +4,7 @@ using System.Linq;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 using static DirectionTranslator;
+using static GameManager;
 
 public class MouseController : MonoBehaviour
 {
@@ -26,12 +27,37 @@ public class MouseController : MonoBehaviour
     bool shipMoving = false;
 
     OverlayTile currentMouseTile;
+
+    List<OverlayTile> tilesMap = new List<OverlayTile>();
+
+    public PlayerTurn player;
+
     private void Start()
     {
         pathFinder = new PathFinder();
         rangeFinder = new RangeFinder();
         directionTranslator = new DirectionTranslator();
         sm = GetComponent<ShipManager>();
+
+        BoundsInt bounds = MapManager.Instance.tileMap.cellBounds;
+
+        for (int z = bounds.max.z; z >= bounds.min.z; z--)
+        {
+            for (int y = bounds.min.y; y < bounds.max.y; y++)
+            {
+                for (int x = bounds.min.x; x < bounds.max.x; x++)
+                {
+                    Vector3Int tileLocation = new Vector3Int(x, y, z);
+                    Vector2Int tileKey = new Vector2Int(x, y);
+
+                    if (MapManager.Instance.tileMap.HasTile(tileLocation))
+                    {
+                        var overlayTiles = MapManager.Instance.map[tileKey];
+                        tilesMap.Add(overlayTiles);
+                    }
+                }
+            }
+        }
     }
 
     private void LateUpdate()
@@ -50,34 +76,7 @@ public class MouseController : MonoBehaviour
             if(sm.allShipsSpawned && sm.shipCurrentlySelected)
                 PathThind(currentMouseTile);
 
-            if (Input.GetMouseButtonDown(0))
-            {
-                ClearTile();
-                currentMouseTile.ShowTile();
-
-                if (!sm.allShipsSpawned)
-                {
-                    SpawnShpis(currentMouseTile);
-                    return;
-                }
-
-                if (!sm.shipCurrentlySelected)
-                {
-                    SelectShip();
-                    return;
-                }
-
-                if(sm.shipCurrentlySelected && !inRangeTiles.Contains(currentMouseTile))
-                {
-                    DeselectShip();
-                    return;
-                }
-
-                //MoveShip
-                if (inRangeTiles.Contains(currentMouseTile))
-                    shipMoving = true;
-                
-            }
+            PlayerActions();
         }
 
         if(path.Count > 0 && shipMoving)
@@ -85,25 +84,38 @@ public class MouseController : MonoBehaviour
         
     }
 
-    void PathThind(OverlayTile tile)
+    void PlayerActions()
     {
-        if (inRangeTiles.Contains(tile) && !shipMoving)
+        if (Input.GetMouseButtonDown(0))
         {
-            path = pathFinder.FindPath(currentShip.currentTile, tile, inRangeTiles);
+            RefreshBlockedTile();
+            currentMouseTile.ShowTile();
 
-            GetInRangeTiles();
-
-            for (int i = 0; i < path.Count; i++)
+            if (!sm.allShipsSpawned)
             {
-                var previousTile = i > 0 ? path[i - 1] : currentShip.currentTile;
-                var futureTile = i < path.Count - 1 ? path[i + 1] : null;
-
-                var dir = directionTranslator.TranslateDirection(previousTile, path[i], futureTile);
-                path[i].SetDirSprite(dir);
+                SpawnShpis(currentMouseTile);
+                return;
             }
+
+            if (!sm.shipCurrentlySelected)
+            {
+                SelectShip();
+                return;
+            }
+
+            if (sm.shipCurrentlySelected && !inRangeTiles.Contains(currentMouseTile))
+            {
+                DeselectShip();
+                return;
+            }
+
+            //MoveShip
+            if (inRangeTiles.Contains(currentMouseTile))
+                shipMoving = true;
         }
     }
 
+    #region ShipsActions
     void SelectShip()
     {
         for (int i = 0; i < sm.ships.Length; i++)
@@ -124,7 +136,7 @@ public class MouseController : MonoBehaviour
     {
         sm.shipCurrentlySelected = false;
         currentShip = null;
-        ClearTile();
+        RefreshBlockedTile();
         currentMouseTile.ShowTile();
         path.Clear();
         shipMoving = false;
@@ -146,6 +158,28 @@ public class MouseController : MonoBehaviour
         sm.CheckIfAllSpawn();
     }
 
+    #endregion
+
+    void PathThind(OverlayTile tile)
+    {
+        if (inRangeTiles.Contains(tile) && !shipMoving)
+        {
+            path = pathFinder.FindPath(currentShip.currentTile, tile, inRangeTiles);
+
+            GetInRangeTiles();
+
+            for (int i = 0; i < path.Count; i++)
+            {
+                var previousTile = i > 0 ? path[i - 1] : currentShip.currentTile;
+                var futureTile = i < path.Count - 1 ? path[i + 1] : null;
+
+                var dir = directionTranslator.TranslateDirection(previousTile, path[i], futureTile);
+                path[i].SetDirSprite(dir);
+            }
+        }
+    }
+
+
     void MoveAlongPath()
     {
         var step = speed * Time.deltaTime;
@@ -165,25 +199,17 @@ public class MouseController : MonoBehaviour
         //Update Range Display -- Change this if u don't want it to be display once the ship has traveled
         if(path.Count <= 0)
         {
-            ResetBlockedTile();
+            RefreshBlockedTile();
             GetInRangeTiles();
             shipMoving = false;
         }
     }
+
     void PositionShipOnMap(OverlayTile tile)
     {
         currentShip.transform.position = new Vector3(tile.transform.position.x, tile.transform.position.y + .0001f, tile.transform.position.z - 1);
         currentShip.GetComponent<SpriteRenderer>().sortingOrder = tile.GetComponent<SpriteRenderer>().sortingOrder;
         currentShip.currentTile = tile;
-        tile.isBLocked = true;
-    }
-
-    void ClearTile()
-    {
-        foreach (var tile in inRangeTiles)
-        {
-            tile.HideTile();
-        }
     }
 
     void GetInRangeTiles()
@@ -212,30 +238,18 @@ public class MouseController : MonoBehaviour
     }
 
 
-    void ResetBlockedTile()
+    void RefreshBlockedTile()
     {
-        BoundsInt bounds = MapManager.Instance.tileMap.cellBounds;
-
-        for (int z = bounds.max.z; z >= bounds.min.z; z--)
+        foreach(var tile in tilesMap)
         {
-            for (int y = bounds.min.y; y < bounds.max.y; y++)
-            {
-                for (int x = bounds.min.x; x < bounds.max.x; x++)
-                {
-                    Vector3Int tileLocation = new Vector3Int(x, y, z);
-                    Vector2Int tileKey = new Vector2Int(x, y);
-
-                    if (MapManager.Instance.tileMap.HasTile(tileLocation))
-                    {
-                        var overlayTile = MapManager.Instance.map[tileKey];
-
-                        MapManager.Instance.map[tileKey].isBLocked = false;
-                    }
-                }
-            }
+            tile.HideTile();
+            tile.isBLocked = false;
         }
 
-        for (int i = 0; i < sm.ships.Length; i++)
-            sm.ships[i].currentTile.isBLocked = true; ;
+        if (sm.allShipsSpawned)
+        {
+            for (int i = 0; i < sm.ships.Length; i++)
+                sm.ships[i].currentTile.isBLocked = true;
+        }
     }
 }
