@@ -93,7 +93,7 @@ public class MouseController : NetworkBehaviour
 
             if (!sm.allShipsSpawned)
             {
-                SpawnShpis(currentMouseTile);
+                SpawnShpis();
                 return;
             }
 
@@ -142,11 +142,11 @@ public class MouseController : NetworkBehaviour
         shipMoving = false;
     }
 
-    void SpawnShpis(OverlayTile tile)
+    void SpawnShpis()
     {
         int index = sm.shipIndex;
         currentShip = Instantiate(sm.ships[index]);
-        currentShip.GetComponent<NetworkObject>().SpawnWithOwnership(NetworkManager.Singleton.LocalClientId);
+        currentShip.GetComponent<NetworkObject>().Spawn(); 
         sm.ships[index] = currentShip;
         PositionShipOnMap(currentMouseTile);
         //GetInRangeTiles();
