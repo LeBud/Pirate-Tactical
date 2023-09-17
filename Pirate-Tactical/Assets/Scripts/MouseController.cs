@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using UnityEngine.Tilemaps;
 using static DirectionTranslator;
 
 public class MouseController : MonoBehaviour
@@ -51,6 +52,7 @@ public class MouseController : MonoBehaviour
 
             if (Input.GetMouseButtonDown(0))
             {
+                ClearTile();
                 currentMouseTile.ShowTile();
 
                 if (!sm.allShipsSpawned)
@@ -68,13 +70,13 @@ public class MouseController : MonoBehaviour
                 if(sm.shipCurrentlySelected && !inRangeTiles.Contains(currentMouseTile))
                 {
                     DeselectShip();
-
                     return;
                 }
 
                 //MoveShip
-                if(inRangeTiles.Contains(currentMouseTile))
+                if (inRangeTiles.Contains(currentMouseTile))
                     shipMoving = true;
+                
             }
         }
 
@@ -121,8 +123,11 @@ public class MouseController : MonoBehaviour
     void DeselectShip()
     {
         sm.shipCurrentlySelected = false;
+        currentShip = null;
         ClearTile();
         currentMouseTile.ShowTile();
+        path.Clear();
+        shipMoving = false;
     }
 
     void SpawnShpis(OverlayTile tile)
@@ -131,7 +136,7 @@ public class MouseController : MonoBehaviour
         currentShip = Instantiate(sm.ships[index]);
         sm.ships[index] = currentShip;
         PositionShipOnMap(currentMouseTile);
-        GetInRangeTiles();
+        //GetInRangeTiles();
 
         sm.ships[index].index = index;
 
@@ -160,6 +165,7 @@ public class MouseController : MonoBehaviour
         //Update Range Display -- Change this if u don't want it to be display once the ship has traveled
         if(path.Count <= 0)
         {
+            ResetBlockedTile();
             GetInRangeTiles();
             shipMoving = false;
         }
@@ -169,6 +175,7 @@ public class MouseController : MonoBehaviour
         currentShip.transform.position = new Vector3(tile.transform.position.x, tile.transform.position.y + .0001f, tile.transform.position.z - 1);
         currentShip.GetComponent<SpriteRenderer>().sortingOrder = tile.GetComponent<SpriteRenderer>().sortingOrder;
         currentShip.currentTile = tile;
+        tile.isBLocked = true;
     }
 
     void ClearTile()
@@ -204,4 +211,31 @@ public class MouseController : MonoBehaviour
         return null;
     }
 
+
+    void ResetBlockedTile()
+    {
+        BoundsInt bounds = MapManager.Instance.tileMap.cellBounds;
+
+        for (int z = bounds.max.z; z >= bounds.min.z; z--)
+        {
+            for (int y = bounds.min.y; y < bounds.max.y; y++)
+            {
+                for (int x = bounds.min.x; x < bounds.max.x; x++)
+                {
+                    Vector3Int tileLocation = new Vector3Int(x, y, z);
+                    Vector2Int tileKey = new Vector2Int(x, y);
+
+                    if (MapManager.Instance.tileMap.HasTile(tileLocation))
+                    {
+                        var overlayTile = MapManager.Instance.map[tileKey];
+
+                        MapManager.Instance.map[tileKey].isBLocked = false;
+                    }
+                }
+            }
+        }
+
+        for (int i = 0; i < sm.ships.Length; i++)
+            sm.ships[i].currentTile.isBLocked = true; ;
+    }
 }
