@@ -4,10 +4,10 @@ using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 
-public class MapManager : NetworkBehaviour
+public class MapManager : MonoBehaviour
 {
-    public static MapManager _instance;
-    public static MapManager Instance { get { return _instance; } }
+    //public static MapManager _instance;
+    public static MapManager Instance { get; private set; }
 
     [Header("TileMap Component")]
     public Tilemap tileMap;
@@ -18,20 +18,20 @@ public class MapManager : NetworkBehaviour
 
     public Dictionary<Vector2Int, OverlayTile> map;
 
+    public List<PirateShip> tempSpawnShip = new List<PirateShip>();
+    public List<OverlayTile> overlayTilesMap = new List<OverlayTile>();
     private void Awake()
     {
-        if (_instance != null && _instance != this)
+        /*if (_instance != null && _instance != this)
             Destroy(this.gameObject);
         else
-            _instance = this;
+            _instance = this;*/
+        Instance = this;
     }
 
 
     private void Start()
     {
-        if (!IsServer)
-            return;
-
         map = new Dictionary<Vector2Int, OverlayTile>();
 
         BoundsInt bounds = tileMap.cellBounds;
@@ -55,6 +55,7 @@ public class MapManager : NetworkBehaviour
                         overlayTile.GetComponent<SpriteRenderer>().sortingOrder = tileMap.GetComponent<TilemapRenderer>().sortingOrder;
                         overlayTile.gridLocation = tileLocation;
                         map.Add(tileKey, overlayTile);
+                        overlayTilesMap.Add(overlayTile);
                     }
                 }
             }

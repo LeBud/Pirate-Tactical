@@ -28,6 +28,8 @@ public class MouseController : NetworkBehaviour
 
     public PlayerTurn player;
 
+    OverlayTile tempTile;
+
     private void Start()
     {
         pathFinder = new PathFinder();
@@ -35,25 +37,8 @@ public class MouseController : NetworkBehaviour
         directionTranslator = new DirectionTranslator();
         sm = GetComponent<ShipManager>();
 
-        BoundsInt bounds = MapManager.Instance.tileMap.cellBounds;
+        tilesMap = MapManager.Instance.overlayTilesMap;
 
-        for (int z = bounds.max.z; z >= bounds.min.z; z--)
-        {
-            for (int y = bounds.min.y; y < bounds.max.y; y++)
-            {
-                for (int x = bounds.min.x; x < bounds.max.x; x++)
-                {
-                    Vector3Int tileLocation = new Vector3Int(x, y, z);
-                    Vector2Int tileKey = new Vector2Int(x, y);
-
-                    if (MapManager.Instance.tileMap.HasTile(tileLocation))
-                    {
-                        var overlayTiles = MapManager.Instance.map[tileKey];
-                        tilesMap.Add(overlayTiles);
-                    }
-                }
-            }
-        }
     }
 
     private void LateUpdate()
@@ -88,6 +73,7 @@ public class MouseController : NetworkBehaviour
     {
         if (Input.GetMouseButtonDown(0))
         {
+            Debug.Log(currentMouseTile.name);
             RefreshBlockedTile();
             currentMouseTile.ShowTile();
 
@@ -146,13 +132,13 @@ public class MouseController : NetworkBehaviour
     void SpawnShips()
     {
         
-        if (NetworkManager.Singleton.IsServer)
+        if (IsServer)
         {
             int index = sm.shipIndex;
             currentShip = Instantiate(sm.ships[index]);
             currentShip.GetComponent<NetworkObject>().Spawn();
             sm.ships[index] = currentShip;
-            PositionShipOnMap(currentMouseTile);
+            PositionShipOnMap(tempTile);
 
             sm.ships[index].index = index;
 
@@ -162,32 +148,31 @@ public class MouseController : NetworkBehaviour
             sm.CheckIfAllSpawn();
 
         }
-        else
+        else if (!IsServer)
         {
-            SpawnOnServerRpc(NetworkManager.Singleton.LocalClientId);
+            SpawnOnServerRpc(NetworkManager.Singleton.LocalClientId, sm.shipIndex);
         }
-
-
     }
 
-    [ServerRpc]
-    void SpawnOnServerRpc(ulong clientID, ServerRpcParams rpcParams = default)
+    [ServerRpc(RequireOwnership = false)]
+    void SpawnOnServerRpc(ulong clientID, int index)
     {
-        int index = sm.shipIndex;
+        PirateShip ship = Instantiate(sm.ships[index]);
+        MapManager.Instance.tempSpawnShip.Add(ship);
+        ship.GetComponent<NetworkObject>().SpawnWithOwnership(clientID);
 
-        currentShip = Instantiate(sm.ships[index]);
-        currentShip.GetComponent<NetworkObject>().SpawnWithOwnership(clientID);
-
-        sm.ships[index] = currentShip;
-
+        sm.ships[index] = ship;
         sm.ships[index].index = index;
+
+        currentShip = sm.ships[index];
 
         sm.shipIndex++;
         sm.remainShipToSpawn--;
 
-        PositionShipOnMap(currentMouseTile);
+        PositionShipOnMap(tempTile);
         sm.CheckIfAllSpawn();
     }
+
 
     #endregion
 
@@ -238,9 +223,23 @@ public class MouseController : NetworkBehaviour
 
     void PositionShipOnMap(OverlayTile tile)
     {
+        if (IsClient)
+        {
+            tempTile = tile;
+            PositionShipClientRpc();
+            return;
+        }
         currentShip.transform.position = new Vector3(tile.transform.position.x, tile.transform.position.y + .0001f, tile.transform.position.z - 1);
         currentShip.GetComponent<SpriteRenderer>().sortingOrder = tile.GetComponent<SpriteRenderer>().sortingOrder;
-        currentShip.currentTile = tile;
+        currentShip.currentTile = tile.GetComponent<OverlayTile>();
+    }
+
+    [ClientRpc]
+    void PositionShipClientRpc()
+    {
+        currentShip.transform.position = new Vector3(tempTile.transform.position.x, tempTile.transform.position.y + .0001f, tempTile.transform.position.z - 1);
+        currentShip.GetComponent<SpriteRenderer>().sortingOrder = tempTile.transform.GetComponent<SpriteRenderer>().sortingOrder;
+        currentShip.currentTile = tempTile.transform.GetComponent<OverlayTile>();
     }
 
     void GetInRangeTiles()
