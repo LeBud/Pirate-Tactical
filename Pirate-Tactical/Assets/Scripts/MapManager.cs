@@ -4,7 +4,7 @@ using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 
-public class MapManager : MonoBehaviour
+public class MapManager : NetworkBehaviour
 {
     public static MapManager _instance;
     public static MapManager Instance { get { return _instance; } }
@@ -29,6 +29,9 @@ public class MapManager : MonoBehaviour
 
     private void Start()
     {
+        if (!IsServer)
+            return;
+
         map = new Dictionary<Vector2Int, OverlayTile>();
 
         BoundsInt bounds = tileMap.cellBounds;
@@ -45,6 +48,7 @@ public class MapManager : MonoBehaviour
                     if (tileMap.HasTile(tileLocation) && !map.ContainsKey(tileKey))
                     {
                         var overlayTile = Instantiate(overlayTilePref, overlayContainer.transform);
+                        overlayTile.name = "Tile : " + x + "," + y;
                         var cellWorldPos = tileMap.GetCellCenterWorld(tileLocation);
 
                         overlayTile.transform.position = new Vector3(cellWorldPos.x, cellWorldPos.y, cellWorldPos.z - 1);
