@@ -4,6 +4,8 @@ using System.Linq;
 using UnityEngine;
 using Unity.Netcode;
 using static GameManager;
+using Unity.VisualScripting;
+using Unity.Multiplayer.Samples.Utilities.ClientAuthority;
 
 public class MouseController : NetworkBehaviour
 {
@@ -27,8 +29,6 @@ public class MouseController : NetworkBehaviour
     List<OverlayTile> tilesMap = new List<OverlayTile>();
 
     public PlayerTurn player;
-
-    OverlayTile tempTile;
 
     private void Start()
     {
@@ -131,46 +131,24 @@ public class MouseController : NetworkBehaviour
 
     void SpawnShips()
     {
-        
-        if (IsServer)
-        {
-            int index = sm.shipIndex;
-            currentShip = Instantiate(sm.ships[index]);
-            currentShip.GetComponent<NetworkObject>().Spawn();
-            sm.ships[index] = currentShip;
-            PositionShipOnMap(tempTile);
+        if (!IsOwner) return;
 
-            sm.ships[index].index = index;
-
-            sm.shipIndex++;
-            sm.remainShipToSpawn--;
-
-            sm.CheckIfAllSpawn();
-
-        }
-        else if (!IsServer)
-        {
-            SpawnOnServerRpc(NetworkManager.Singleton.LocalClientId, sm.shipIndex);
-        }
-    }
-
-    [ServerRpc(RequireOwnership = false)]
-    void SpawnOnServerRpc(ulong clientID, int index)
-    {
-        PirateShip ship = Instantiate(sm.ships[index]);
-        MapManager.Instance.tempSpawnShip.Add(ship);
-        ship.GetComponent<NetworkObject>().SpawnWithOwnership(clientID);
-
-        sm.ships[index] = ship;
-        sm.ships[index].index = index;
+        int index = sm.shipIndex;
 
         currentShip = sm.ships[index];
+        currentShip.transform.parent = null;
+
+        currentShip.gameObject.SetActive(true);
+        sm.ships[index].index = index;
+
+
 
         sm.shipIndex++;
         sm.remainShipToSpawn--;
 
-        PositionShipOnMap(tempTile);
+        PositionShipOnMap(currentMouseTile);
         sm.CheckIfAllSpawn();
+
     }
 
 
@@ -223,25 +201,10 @@ public class MouseController : NetworkBehaviour
 
     void PositionShipOnMap(OverlayTile tile)
     {
-        if (IsClient)
-        {
-            tempTile = tile;
-            PositionShipClientRpc();
-            return;
-        }
         currentShip.transform.position = new Vector3(tile.transform.position.x, tile.transform.position.y + .0001f, tile.transform.position.z - 1);
         currentShip.GetComponent<SpriteRenderer>().sortingOrder = tile.GetComponent<SpriteRenderer>().sortingOrder;
         currentShip.currentTile = tile.GetComponent<OverlayTile>();
     }
-
-    [ClientRpc]
-    void PositionShipClientRpc()
-    {
-        currentShip.transform.position = new Vector3(tempTile.transform.position.x, tempTile.transform.position.y + .0001f, tempTile.transform.position.z - 1);
-        currentShip.GetComponent<SpriteRenderer>().sortingOrder = tempTile.transform.GetComponent<SpriteRenderer>().sortingOrder;
-        currentShip.currentTile = tempTile.transform.GetComponent<OverlayTile>();
-    }
-
     void GetInRangeTiles()
     {
         foreach(var tile in inRangeTiles)
