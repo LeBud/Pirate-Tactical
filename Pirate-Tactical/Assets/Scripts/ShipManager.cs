@@ -79,15 +79,15 @@ public class ShipManager : MonoBehaviour
     void SpawnShips(OverlayTile tile)
     {
         int index = shipIndex;
-        ships[index].index = index;
-        ships[index] = Instantiate(ships[index]);
-        mc.currentShip = ships[index];
 
         shipIndex++;
         remainShipToSpawn--;
-
-        mc.PositionShipOnMap(tile);
         CheckIfAllSpawn();
+
+        ships[index].index = index;
+        ships[index] = Instantiate(ships[index]);
+        mc.currentShip = ships[index];
+        mc.PositionShipOnMap(tile);
     }
 
     public void CheckIfAllSpawn()
