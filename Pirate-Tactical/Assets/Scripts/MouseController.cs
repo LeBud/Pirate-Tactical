@@ -90,6 +90,8 @@ public class MouseController : NetworkBehaviour
 
     void MoveAlongPath()
     {
+        if(!IsOwner) return;
+
         var step = speed * Time.deltaTime;
 
         var zIndex = path[0].transform.position.z;
@@ -98,21 +100,20 @@ public class MouseController : NetworkBehaviour
 
         currentShip.transform.position = new Vector3(pos.x, pos.y, zIndex);
 
-        if(Vector2.Distance(currentShip.transform.position, path[0].transform.position) < .0001f)
+        if (Vector2.Distance(currentShip.transform.position, path[0].transform.position) < .0001f)
         {
             PositionShipOnMap(path[0]);
             path.RemoveAt(0);
         }
 
         //Update Range Display -- Change this if u don't want it to be display once the ship has traveled
-        if(path.Count <= 0)
+        if (path.Count <= 0)
         {
             RefreshBlockedTile();
             GetInRangeTiles();
             shipMoving = false;
         }
     }
-
     public void PositionShipOnMap(OverlayTile tile)
     {
         currentShip.transform.position = new Vector3(tile.transform.position.x, tile.transform.position.y + .0001f, tile.transform.position.z - 1);

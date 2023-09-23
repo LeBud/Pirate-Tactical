@@ -1,8 +1,10 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.Netcode;
 using UnityEngine;
 
-public class ShipManager : MonoBehaviour
+public class ShipManager : NetworkBehaviour
 {
 
     [Header("Ships")]
@@ -85,9 +87,19 @@ public class ShipManager : MonoBehaviour
         CheckIfAllSpawn();
 
         ships[index].index = index;
-        ships[index] = Instantiate(ships[index]);
+
+        SpawnOnServerRpc(index);
+        ships[index].PositionShipOnMap(tile);
+
         mc.currentShip = ships[index];
-        mc.PositionShipOnMap(tile);
+    }
+
+    [ServerRpc]
+    void SpawnOnServerRpc(int index)
+    {
+        PirateShip s = Instantiate(ships[index]);
+        s.GetComponent<NetworkObject>().SpawnWithOwnership(OwnerClientId);
+        ships[index] = s;
     }
 
     public void CheckIfAllSpawn()
