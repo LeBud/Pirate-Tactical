@@ -87,10 +87,10 @@ public class ShipManager : NetworkBehaviour
         CheckIfAllSpawn();
 
         ships[index].index = index;
+        ships[index].currentTile = tile;
 
         SpawnOnServerRpc(index);
         ships[index].PositionShipOnMap(tile);
-
         mc.currentShip = ships[index];
     }
 

@@ -33,7 +33,7 @@ public class MouseController : NetworkBehaviour
         tilesMap = MapManager.Instance.overlayTilesMap;
     }
 
-    private void LateUpdate()
+    private void Update()
     {
         if (!IsOwner)
             return;
@@ -52,8 +52,11 @@ public class MouseController : NetworkBehaviour
 
             PlayerActions();
         }
+    }
 
-        if(path.Count > 0 && shipMoving)
+    private void FixedUpdate()
+    {
+        if (path.Count > 0 && shipMoving)
             MoveAlongPath();
     }
 
@@ -61,7 +64,6 @@ public class MouseController : NetworkBehaviour
     {
         if (Input.GetMouseButtonDown(0))
         {
-            Debug.Log(currentMouseTile.name);
             RefreshBlockedTile();
             currentMouseTile.ShowTile();
 
@@ -90,19 +92,21 @@ public class MouseController : NetworkBehaviour
 
     void MoveAlongPath()
     {
-        if(!IsOwner) return;
+        if (!IsOwner) return;
 
-        var step = speed * Time.deltaTime;
+        var step = speed * Time.fixedDeltaTime;
 
         var zIndex = path[0].transform.position.z;
-        currentShip.transform.position = Vector2.MoveTowards(currentShip.transform.position, path[0].transform.position, step);
-        Vector3 pos = currentShip.transform.position;
+        Vector2 shipPos = currentShip.transform.position;
+        shipPos = Vector2.MoveTowards(shipPos, path[0].transform.position, step);
+        Vector3 pos = shipPos;
 
-        currentShip.transform.position = new Vector3(pos.x, pos.y, zIndex);
+        //currentShip.transform.position = new Vector3(pos.x, pos.y, zIndex);
+        UpdateShipsClientRpc(pos.x, pos.y, zIndex);
 
-        if (Vector2.Distance(currentShip.transform.position, path[0].transform.position) < .0001f)
+        if (Vector2.Distance(shipPos, path[0].transform.position) < .0001f)
         {
-            PositionShipOnMap(path[0]);
+            currentShip.PositionShipOnMap(path[0]);
             path.RemoveAt(0);
         }
 
@@ -114,6 +118,13 @@ public class MouseController : NetworkBehaviour
             shipMoving = false;
         }
     }
+
+    [ClientRpc]
+    void UpdateShipsClientRpc(float x, float y, float zIndex)
+    {
+        currentShip.transform.position = new Vector3(x, y, zIndex);
+    }
+
     public void PositionShipOnMap(OverlayTile tile)
     {
         currentShip.transform.position = new Vector3(tile.transform.position.x, tile.transform.position.y + .0001f, tile.transform.position.z - 1);
@@ -165,7 +176,7 @@ public class MouseController : NetworkBehaviour
 
     bool AllShipsSpawned()
     {
-        return sm.allShipsSpawned && sm.shipCurrentlySelected;
+        return sm.allShipsSpawned && sm.shipCurrentlySelected && !shipMoving;
     }
 
     #endregion

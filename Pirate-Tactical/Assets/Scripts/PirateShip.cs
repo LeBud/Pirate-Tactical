@@ -11,27 +11,32 @@ public class PirateShip : NetworkBehaviour
 
     public int index;
 
-    private void Start()
+
+    private void Update()
     {
-        Debug.Log("PirateShip Spawned !");
+        if (!IsOwner) return;
+
+        if (Input.GetKeyDown(KeyCode.A))
+        {
+            PositionShipOnMap(currentTile);
+        }
     }
 
     public void PositionShipOnMap(OverlayTile tile)
     {
-        currentTile = tile.GetComponent<OverlayTile>();
-        GetComponent<SpriteRenderer>().sortingOrder = tile.GetComponent<SpriteRenderer>().sortingOrder;
-        Vector3 pos = new Vector3(tile.transform.position.x, tile.transform.position.y, tile.transform.position.z);
-        if(IsOwner)
-            ChangePositionServerRpc(pos.x, pos.y + .0001f, pos.z - 1);
-        
-        //transform.position = new Vector3(tile.transform.position.x, tile.transform.position.y + .0001f, tile.transform.position.z - 1);
+        if (!IsOwner) return;
+        if(currentTile == null) return;
+        currentTile = tile;
+        GetComponent<SpriteRenderer>().sortingOrder = currentTile.GetComponent<SpriteRenderer>().sortingOrder;
+        Vector3 pos = currentTile.transform.position;
+        ChangePositionServerRpc(pos.x, pos.y + .0001f, pos.z - 1);
     }
+
 
     [ServerRpc]
     void ChangePositionServerRpc(float x, float y, float z)
     {
         transform.position = new Vector3(x, y, z);
-
     }
 
 }
