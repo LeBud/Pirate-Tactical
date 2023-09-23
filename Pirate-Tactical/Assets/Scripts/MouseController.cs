@@ -3,9 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using Unity.Netcode;
-using static GameManager;
-using Unity.VisualScripting;
-using Unity.Multiplayer.Samples.Utilities.ClientAuthority;
 
 public class MouseController : NetworkBehaviour
 {
@@ -15,20 +12,16 @@ public class MouseController : NetworkBehaviour
     RangeFinder rangeFinder;
     DirectionTranslator directionTranslator;
 
-    List<OverlayTile> path = new List<OverlayTile>();
-    List<OverlayTile> inRangeTiles = new List<OverlayTile>();
-
-    ShipManager sm;
-
-    PirateShip currentShip;
-
-    bool shipMoving = false;
+    public List<OverlayTile> path = new List<OverlayTile>();
+    public List<OverlayTile> inRangeTiles = new List<OverlayTile>();
 
     OverlayTile currentMouseTile;
-
     List<OverlayTile> tilesMap = new List<OverlayTile>();
 
-    public PlayerTurn player;
+    ShipManager sm;
+    public PirateShip currentShip;
+
+    public bool shipMoving = false;
 
     private void Start()
     {
@@ -38,15 +31,12 @@ public class MouseController : NetworkBehaviour
         sm = GetComponent<ShipManager>();
 
         tilesMap = MapManager.Instance.overlayTilesMap;
-
     }
 
     private void LateUpdate()
     {
         if (!IsOwner)
-        {
             return;
-        }
 
         RaycastHit2D? focusedTile = GetFocusedOnTile();
 
@@ -57,8 +47,7 @@ public class MouseController : NetworkBehaviour
             GetComponent<SpriteRenderer>().sortingOrder = overlayTile.GetComponent<SpriteRenderer>().sortingOrder;
             currentMouseTile = overlayTile.GetComponent<OverlayTile>();
 
-            //Make PathFinding
-            if(sm.allShipsSpawned && sm.shipCurrentlySelected)
+            if(AllShipsSpawned())
                 PathThind(currentMouseTile);
 
             PlayerActions();
@@ -66,7 +55,6 @@ public class MouseController : NetworkBehaviour
 
         if(path.Count > 0 && shipMoving)
             MoveAlongPath();
-        
     }
 
     void PlayerActions()
@@ -77,84 +65,11 @@ public class MouseController : NetworkBehaviour
             RefreshBlockedTile();
             currentMouseTile.ShowTile();
 
-            if (!sm.allShipsSpawned)
-            {
-                if(currentMouseTile != null)
-                    SpawnShips();
-                return;
-            }
-
-            if (!sm.shipCurrentlySelected)
-            {
-                SelectShip();
-                return;
-            }
-
-            if (sm.shipCurrentlySelected && !inRangeTiles.Contains(currentMouseTile))
-            {
-                DeselectShip();
-                return;
-            }
-
-            //MoveShip
-            if (inRangeTiles.Contains(currentMouseTile))
-                shipMoving = true;
+            sm.ExecuteAction(currentMouseTile);
         }
     }
 
-    #region ShipsActions
-    void SelectShip()
-    {
-        for (int i = 0; i < sm.ships.Length; i++)
-        {
-            if (sm.ships[i].currentTile == currentMouseTile)
-            {
-                sm.shipIndex = sm.ships[i].index;
-                currentShip = sm.ships[i];
-                sm.shipCurrentlySelected = true;
-                GetInRangeTiles();
-
-                break;
-            }
-        }
-    }
-
-    void DeselectShip()
-    {
-        sm.shipCurrentlySelected = false;
-        currentShip = null;
-        RefreshBlockedTile();
-        currentMouseTile.ShowTile();
-        path.Clear();
-        shipMoving = false;
-    }
-
-    void SpawnShips()
-    {
-        if (!IsOwner) return;
-
-        int index = sm.shipIndex;
-
-        currentShip = sm.ships[index];
-        currentShip.transform.parent = null;
-
-        currentShip.gameObject.SetActive(true);
-        sm.ships[index].index = index;
-
-
-
-        sm.shipIndex++;
-        sm.remainShipToSpawn--;
-
-        PositionShipOnMap(currentMouseTile);
-        sm.CheckIfAllSpawn();
-
-    }
-
-
-    #endregion
-
-    void PathThind(OverlayTile tile)
+    public void PathThind(OverlayTile tile)
     {
         if (inRangeTiles.Contains(tile) && !shipMoving)
         {
@@ -172,7 +87,6 @@ public class MouseController : NetworkBehaviour
             }
         }
     }
-
 
     void MoveAlongPath()
     {
@@ -199,13 +113,14 @@ public class MouseController : NetworkBehaviour
         }
     }
 
-    void PositionShipOnMap(OverlayTile tile)
+    public void PositionShipOnMap(OverlayTile tile)
     {
         currentShip.transform.position = new Vector3(tile.transform.position.x, tile.transform.position.y + .0001f, tile.transform.position.z - 1);
         currentShip.GetComponent<SpriteRenderer>().sortingOrder = tile.GetComponent<SpriteRenderer>().sortingOrder;
         currentShip.currentTile = tile.GetComponent<OverlayTile>();
     }
-    void GetInRangeTiles()
+
+    public void GetInRangeTiles()
     {
         foreach(var tile in inRangeTiles)
         {
@@ -220,20 +135,9 @@ public class MouseController : NetworkBehaviour
         }
     }
 
-    public RaycastHit2D? GetFocusedOnTile()
+    public void RefreshBlockedTile()
     {
-        Vector3 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-        Vector2 pos = new Vector2(mousePos.x, mousePos.y);
-
-        RaycastHit2D[] hits = Physics2D.RaycastAll(pos, Vector2.zero);
-        if (hits.Length > 0) return hits.OrderByDescending(i => i.collider.transform.position.z).First();
-        return null;
-    }
-
-
-    void RefreshBlockedTile()
-    {
-        foreach(var tile in tilesMap)
+        foreach (var tile in tilesMap)
         {
             tile.HideTile();
             tile.isBLocked = false;
@@ -245,4 +149,23 @@ public class MouseController : NetworkBehaviour
                 sm.ships[i].currentTile.isBLocked = true;
         }
     }
+
+    public RaycastHit2D? GetFocusedOnTile()
+    {
+        Vector3 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+        Vector2 pos = new Vector2(mousePos.x, mousePos.y);
+
+        RaycastHit2D[] hits = Physics2D.RaycastAll(pos, Vector2.zero);
+        if (hits.Length > 0) return hits.OrderByDescending(i => i.collider.transform.position.z).First();
+        return null;
+    }
+
+    #region Boolean
+
+    bool AllShipsSpawned()
+    {
+        return sm.allShipsSpawned && sm.shipCurrentlySelected;
+    }
+
+    #endregion
 }
