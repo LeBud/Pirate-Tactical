@@ -101,11 +101,12 @@ public class MouseController : NetworkBehaviour
         shipPos = Vector2.MoveTowards(shipPos, path[0].transform.position, step);
         Vector3 pos = shipPos;
 
-        //currentShip.transform.position = new Vector3(pos.x, pos.y, zIndex);
-        UpdateShipsClientRpc(pos.x, pos.y, zIndex);
+        currentShip.transform.position = new Vector3(pos.x, pos.y, zIndex);
 
         if (Vector2.Distance(shipPos, path[0].transform.position) < .0001f)
         {
+            Vector3 pathPos = path[0].transform.position;
+            UpdateShipsServerRpc(pathPos.x, pathPos.y, pathPos.z);
             currentShip.PositionShipOnMap(path[0]);
             path.RemoveAt(0);
         }
@@ -119,10 +120,11 @@ public class MouseController : NetworkBehaviour
         }
     }
 
-    [ClientRpc]
-    void UpdateShipsClientRpc(float x, float y, float zIndex)
+    [ServerRpc]
+    void UpdateShipsServerRpc(float x, float y, float z)
     {
-        currentShip.transform.position = new Vector3(x, y, zIndex);
+        if(!IsOwner) return;
+        currentShip.transform.position = new Vector3(x,y,z);
     }
 
     public void PositionShipOnMap(OverlayTile tile)

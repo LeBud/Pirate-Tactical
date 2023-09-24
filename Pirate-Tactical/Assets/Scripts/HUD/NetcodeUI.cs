@@ -17,6 +17,7 @@ public class NetcodeUI : MonoBehaviour
             Debug.Log("Hosting");
             NetworkManager.Singleton.StartHost();
             HideNetCodeUI();
+            MapManager.Instance.InitialiseServerRpc();
         });
 
         startClientBtt.onClick.AddListener(() =>
@@ -24,6 +25,7 @@ public class NetcodeUI : MonoBehaviour
             Debug.Log("Hosting");
             NetworkManager.Singleton.StartClient();
             HideNetCodeUI();
+            MapManager.Instance.SetClientInstance();
         });
     }
 

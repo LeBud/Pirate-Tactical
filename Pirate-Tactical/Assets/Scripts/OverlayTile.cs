@@ -1,9 +1,10 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.Netcode;
 using UnityEngine;
 using static DirectionTranslator;
 
-public class OverlayTile : MonoBehaviour
+public class OverlayTile : NetworkBehaviour
 {
     public int g;
     public int h;
@@ -16,7 +17,18 @@ public class OverlayTile : MonoBehaviour
     public Vector3Int gridLocation;
     public Vector2Int grid2DPos { get { return new Vector2Int(gridLocation.x, gridLocation.y); } }
 
+    public NetworkVariable<int> posX = new NetworkVariable<int>(0);
+    public NetworkVariable<int> posY = new NetworkVariable<int>(0);
+
     public List<Sprite> dirSprites;
+
+    private void Start()
+    {
+        if (!IsOwner) return;
+
+        posX.Value = gridLocation.x;
+        posY.Value = gridLocation.y;
+    }
 
     public void ShowTile()
     {

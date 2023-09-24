@@ -134,6 +134,7 @@ GameObject:
   - component: {fileID: 182476332}
   - component: {fileID: 182476333}
   - component: {fileID: 182476334}
+  - component: {fileID: 182476335}
   m_Layer: 0
   m_Name: GameManager
   m_TagString: Untagged
@@ -170,7 +171,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   tileMap: {fileID: 1513794697}
   overlayTilePref: {fileID: 1366712894248705390, guid: 4a6c9cc4b85d6a0449a1984330821f16, type: 3}
-  overlayContainer: {fileID: 1480000685}
+  overlayContainer: {fileID: 1480000686}
   tempSpawnShip: []
   overlayTilesMap: []
 --- !u!114 &182476334
@@ -186,6 +187,26 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   playerTurn: 0
+--- !u!114 &182476335
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 182476331}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  GlobalObjectIdHash: 2285720597
+  AlwaysReplicateAsRoot: 0
+  SynchronizeTransform: 1
+  ActiveSceneSynchronization: 0
+  SceneMigrationSynchronization: 1
+  SpawnWithObservers: 1
+  DontDestroyWithOwner: 0
+  AutoObjectParentSync: 1
 --- !u!1 &268174231
 GameObject:
   m_ObjectHideFlags: 0
@@ -1319,6 +1340,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1480000686}
+  - component: {fileID: 1480000687}
   m_Layer: 0
   m_Name: OverlayContainer
   m_TagString: Untagged
@@ -1341,6 +1363,26 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1480000687
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1480000685}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  GlobalObjectIdHash: 2804163752
+  AlwaysReplicateAsRoot: 0
+  SynchronizeTransform: 1
+  ActiveSceneSynchronization: 0
+  SceneMigrationSynchronization: 1
+  SpawnWithObservers: 1
+  DontDestroyWithOwner: 0
+  AutoObjectParentSync: 1
 --- !u!1 &1513794694
 GameObject:
   m_ObjectHideFlags: 0

@@ -4,7 +4,7 @@ using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 
-public class MapManager : MonoBehaviour
+public class MapManager : NetworkBehaviour
 {
     //public static MapManager _instance;
     public static MapManager Instance { get; private set; }
@@ -14,7 +14,7 @@ public class MapManager : MonoBehaviour
 
     [Header("Tile Settings")]
     public OverlayTile overlayTilePref;
-    public GameObject overlayContainer;
+    public Transform overlayContainer;
 
     public Dictionary<Vector2Int, OverlayTile> map;
 
@@ -22,16 +22,24 @@ public class MapManager : MonoBehaviour
     public List<OverlayTile> overlayTilesMap = new List<OverlayTile>();
     private void Awake()
     {
-        /*if (_instance != null && _instance != this)
-            Destroy(this.gameObject);
+        if(Instance != null && Instance != this)
+            Destroy(Instance);
         else
-            _instance = this;*/
         Instance = this;
     }
 
+    public void SetClientInstance()
+    {
+        if (Instance != null && Instance != this)
+            Destroy(Instance);
+        else
+            Instance = this;
+    }
 
     private void Start()
     {
+        if (!IsHost) return;
+
         map = new Dictionary<Vector2Int, OverlayTile>();
 
         BoundsInt bounds = tileMap.cellBounds;
@@ -47,7 +55,7 @@ public class MapManager : MonoBehaviour
 
                     if (tileMap.HasTile(tileLocation) && !map.ContainsKey(tileKey))
                     {
-                        var overlayTile = Instantiate(overlayTilePref, overlayContainer.transform);
+                        var overlayTile = Instantiate(overlayTilePref, overlayContainer);
                         overlayTile.name = "Tile : " + x + "," + y;
                         var cellWorldPos = tileMap.GetCellCenterWorld(tileLocation);
 
@@ -62,6 +70,42 @@ public class MapManager : MonoBehaviour
         }
     }
 
+    [ServerRpc]
+    public void InitialiseServerRpc()
+    {
+        map = new Dictionary<Vector2Int, OverlayTile>();
+
+        BoundsInt bounds = tileMap.cellBounds;
+
+        for (int z = bounds.max.z; z >= bounds.min.z; z--)
+        {
+            for (int y = bounds.min.y; y < bounds.max.y; y++)
+            {
+                for (int x = bounds.min.x; x < bounds.max.x; x++)
+                {
+                    Vector3Int tileLocation = new Vector3Int(x, y, z);
+                    Vector2Int tileKey = new Vector2Int(x, y);
+
+                    if (tileMap.HasTile(tileLocation) && !map.ContainsKey(tileKey))
+                    {
+                        var overlayTile = Instantiate(overlayTilePref);
+                        NetworkObject tile = overlayTile.GetComponent<NetworkObject>();
+                        tile.Spawn();
+                        tile.TrySetParent(overlayContainer, true);
+                        tile.name = "Tile : " + x + "," + y;
+                        var cellWorldPos = tileMap.GetCellCenterWorld(tileLocation);
+
+                        overlayTile.transform.position = new Vector3(cellWorldPos.x, cellWorldPos.y, cellWorldPos.z - 1);
+                        overlayTile.GetComponent<SpriteRenderer>().sortingOrder = tileMap.GetComponent<TilemapRenderer>().sortingOrder;
+                        overlayTile.gridLocation = tileLocation;
+                        map.Add(tileKey, overlayTile);
+                        overlayTilesMap.Add(overlayTile);
+                    }
+                }
+            }
+        }
+
+    }
 
     public List<OverlayTile> GetNeighborTiles(OverlayTile currentTile, List<OverlayTile> searchableTiles)
     {
@@ -81,23 +125,23 @@ public class MapManager : MonoBehaviour
 
         List<OverlayTile> neighbors = new List<OverlayTile>();
 
-        Vector2Int locationToCheck = new Vector2Int(currentTile.gridLocation.x, currentTile.gridLocation.y + 1);
+        Vector2Int locationToCheck = new Vector2Int(currentTile.posX.Value, currentTile.posY.Value + 1);
 
         for (int i = 0; i < 4; i++)
         {
             switch (i)
             {
                 case 0:
-                    locationToCheck = new Vector2Int(currentTile.gridLocation.x, currentTile.gridLocation.y + 1);
+                    locationToCheck = new Vector2Int(currentTile.posX.Value, currentTile.posY.Value + 1);
                     break;
                 case 1:
-                    locationToCheck = new Vector2Int(currentTile.gridLocation.x, currentTile.gridLocation.y - 1);
+                    locationToCheck = new Vector2Int(currentTile.posX.Value, currentTile.posY.Value - 1);
                     break;
                 case 2:
-                    locationToCheck = new Vector2Int(currentTile.gridLocation.x + 1, currentTile.gridLocation.y);
+                    locationToCheck = new Vector2Int(currentTile.posX.Value + 1, currentTile.posY.Value);
                     break;
                 case 3:
-                    locationToCheck = new Vector2Int(currentTile.gridLocation.x - 1, currentTile.gridLocation.y);
+                    locationToCheck = new Vector2Int(currentTile.posX.Value - 1, currentTile.posY.Value);
                     break;
             }
 
