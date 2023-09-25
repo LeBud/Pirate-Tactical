@@ -20,6 +20,7 @@ public class MapManager : NetworkBehaviour
 
     public List<PirateShip> tempSpawnShip = new List<PirateShip>();
     public List<OverlayTile> overlayTilesMap = new List<OverlayTile>();
+
     private void Awake()
     {
         if(Instance != null && Instance != this)
@@ -156,5 +157,4 @@ public class MapManager : NetworkBehaviour
         return neighbors;
 
     }
-
 }

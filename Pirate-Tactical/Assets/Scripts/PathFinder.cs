@@ -24,10 +24,10 @@ public class PathFinder
             {
                 return GetFinishedList(start, end);
             }
-
+            
             List<OverlayTile> neighborTiles = MapManager.Instance.GetNeighborTiles(currentTile, searchableTiles);
 
-            foreach(var t in neighborTiles)
+            foreach (var t in neighborTiles)
             {
                 if(t.isBLocked || closeList.Contains(t))
                 {
