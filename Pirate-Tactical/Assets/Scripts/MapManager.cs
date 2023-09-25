@@ -126,7 +126,7 @@ public class MapManager : NetworkBehaviour
 
         List<OverlayTile> neighbors = new List<OverlayTile>();
 
-        Vector2Int locationToCheck = new Vector2Int(currentTile.posX.Value, currentTile.posY.Value + 1);
+        Vector2Int locationToCheck = new Vector2Int(currentTile.posX.Value, currentTile.posY.Value);
 
         for (int i = 0; i < 4; i++)
         {

@@ -26,8 +26,8 @@ public class OverlayTile : NetworkBehaviour
     {
         if (!IsOwner) return;
 
-        posX.Value = gridLocation.x;
-        posY.Value = gridLocation.y;
+        posX.Value = grid2DPos.x;
+        posY.Value = grid2DPos.y;
     }
 
     public void ShowTile()
