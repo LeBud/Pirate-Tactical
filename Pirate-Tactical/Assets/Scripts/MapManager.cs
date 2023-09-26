@@ -99,6 +99,9 @@ public class MapManager : NetworkBehaviour
                         overlayTile.transform.position = new Vector3(cellWorldPos.x, cellWorldPos.y, cellWorldPos.z - 1);
                         overlayTile.GetComponent<SpriteRenderer>().sortingOrder = tileMap.GetComponent<TilemapRenderer>().sortingOrder;
                         overlayTile.gridLocation = tileLocation;
+                        overlayTile.posX.Value = x;
+                        overlayTile.posY.Value = y;
+
                         map.Add(tileKey, overlayTile);
                         overlayTilesMap.Add(overlayTile);
                     }
@@ -116,7 +119,7 @@ public class MapManager : NetworkBehaviour
         {
             foreach(var tile in searchableTiles)
             {
-                tilesToSearch.Add(tile.grid2DPos, tile);
+                tilesToSearch.Add(new Vector2Int(tile.posX.Value, tile.posY.Value), tile);
             }
         }
         else
@@ -145,6 +148,8 @@ public class MapManager : NetworkBehaviour
                     locationToCheck = new Vector2Int(currentTile.posX.Value - 1, currentTile.posY.Value);
                     break;
             }
+
+            Debug.Log(tilesToSearch.ContainsKey(locationToCheck) + " : exist in tile map");
 
             if (tilesToSearch.ContainsKey(locationToCheck))
             {
