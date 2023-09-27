@@ -17,7 +17,7 @@ public class MapManager : NetworkBehaviour
     public OverlayTile overlayTilePref;
     public Transform overlayContainer;
 
-    public Dictionary<Vector2Int, OverlayTile> map;
+    public Dictionary<Vector2Int, OverlayTile> map = new Dictionary<Vector2Int, OverlayTile>();
 
     public List<PirateShip> tempSpawnShip = new List<PirateShip>();
     public List<OverlayTile> overlayTilesMap = new List<OverlayTile>();
