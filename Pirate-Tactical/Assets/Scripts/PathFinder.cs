@@ -25,7 +25,7 @@ public class PathFinder
                 return GetFinishedList(start, end);
             }
             
-            List<OverlayTile> neighborTiles = MapManager.Instance.GetNeighborTiles(currentTile, searchableTiles);
+            List<OverlayTile> neighborTiles = MapManager.Instance.getNeighborTiles.GetNeighborsTiles(currentTile, searchableTiles);
 
             foreach (var t in neighborTiles)
             {
@@ -92,7 +92,7 @@ public class RangeFinder
 
             foreach(var tile in tileForPreviousStep)
             {
-                surroundingTiles.AddRange(MapManager.Instance.GetNeighborTiles(tile, new List<OverlayTile>()));
+                surroundingTiles.AddRange(MapManager.Instance.getNeighborTiles.GetNeighborsTiles(tile, new List<OverlayTile>()));
             }
 
             inRangeTile.AddRange(surroundingTiles);

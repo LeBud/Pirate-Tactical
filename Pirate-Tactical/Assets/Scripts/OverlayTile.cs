@@ -19,13 +19,10 @@ public class OverlayTile : NetworkBehaviour
 
     public NetworkVariable<int> posX = new NetworkVariable<int>(0);
     public NetworkVariable<int> posY = new NetworkVariable<int>(0);
+    public NetworkVariable<int> posZ = new NetworkVariable<int>(0);
 
     public List<Sprite> dirSprites;
 
-    private void Start()
-    {
-
-    }
 
     public void ShowTile()
     {
