@@ -1,6 +1,7 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
+using Unity.Collections;
 using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.Tilemaps;
@@ -18,27 +19,55 @@ public class MapManager : NetworkBehaviour
     public Transform overlayContainer;
 
     public Dictionary<Vector2Int, OverlayTile> map = new Dictionary<Vector2Int, OverlayTile>();
-
-    public List<PirateShip> tempSpawnShip = new List<PirateShip>();
-    public List<OverlayTile> overlayTilesMap = new List<OverlayTile>();
     public GetNeighborTiles getNeighborTiles = new GetNeighborTiles();
+    public List<OverlayTile> overlayTilesMap = new List<OverlayTile>();
+
+    public NetworkList<tileMapDictionnary> dictionnary;
+
+    public struct tileMapDictionnary : INetworkSerializable, IEquatable<tileMapDictionnary>
+    {
+        public Vector2Int keyPos;
+        public int indexPos;
+
+        public tileMapDictionnary(Vector2Int _keyPos, int _indexPos)
+        {
+            keyPos = _keyPos; indexPos = _indexPos;
+        }
+
+        public void NetworkSerialize<T>(BufferSerializer<T> serializer) where T : IReaderWriter
+        {
+            serializer.SerializeValue(ref keyPos);
+            serializer.SerializeValue(ref indexPos);
+        }
+
+        public bool Equals(tileMapDictionnary other)
+        {
+            return keyPos == other.keyPos && indexPos == other.indexPos;
+        }
+    }
+
     private void Awake()
     {
         if(Instance != null && Instance != this)
             Destroy(Instance);
         else
             Instance = this;
+
+        dictionnary = new NetworkList<tileMapDictionnary>();
     }
 
-    public IEnumerator SetClientInstance()
+    private void OnDisable()
     {
-        yield return new WaitForSeconds(1);
+        dictionnary.Dispose();
+    }
 
+    [ServerRpc]
+    public void SetClientInstanceServerRpc()
+    {
         if (Instance != null && Instance != this)
             Destroy(Instance);
         else
             Instance = this;
-
     }
 
     [ServerRpc]
@@ -85,9 +114,18 @@ public class MapManager : NetworkBehaviour
             }
         }
 
+        for (int i = 0; i < overlayContainer.childCount; i++)
+        {
+            OverlayTile t = overlayContainer.GetChild(i).GetComponent<OverlayTile>();
+            Vector2Int tPos = new Vector2Int(t.posX.Value, t.posY.Value);
+            dictionnary.Add(new tileMapDictionnary {keyPos = tPos, indexPos = i });
+        }
+
+        Debug.Log(dictionnary.Count.ToString() + " item in dictionnary");
     }
 
 }
+
 
 public class GetNeighborTiles
 {
@@ -106,7 +144,8 @@ public class GetNeighborTiles
         }
         else
         {
-            tilesToSearch = MapManager.Instance.map;
+            foreach (var tile in MapManager.Instance.dictionnary)
+                tilesToSearch.Add(tile.keyPos, MapManager.Instance.overlayContainer.GetChild(tile.indexPos).GetComponent<OverlayTile>());
         }
 
         //tileToSearch est == null -> probleme, trouver un moyen de le rendre non null -- C'est pas une variable serveur -- trouver un moyen détourner d'obtenir le dictionnary
@@ -143,7 +182,7 @@ public class GetNeighborTiles
                     neighbors.Add(tilesToSearch[locationToCheck]);
             }
         }
-
+        tilesToSearch.Clear();
         return neighbors;
 
     }

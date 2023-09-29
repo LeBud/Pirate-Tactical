@@ -24,7 +24,7 @@ public class NetcodeUI : MonoBehaviour
         {
             Debug.Log("Hosting");
             NetworkManager.Singleton.StartClient();
-            StartCoroutine(MapManager.Instance.SetClientInstance());
+            MapManager.Instance.SetClientInstanceServerRpc();
             HideNetCodeUI();
         });
     }
