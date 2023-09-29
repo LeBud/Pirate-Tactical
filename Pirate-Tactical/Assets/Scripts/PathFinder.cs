@@ -75,7 +75,6 @@ public class PathFinder
 
 public class RangeFinder
 {
-
     public List<OverlayTile> GetTilesInRange(OverlayTile startTile, int range)
     {
         var inRangeTile = new List<OverlayTile>();

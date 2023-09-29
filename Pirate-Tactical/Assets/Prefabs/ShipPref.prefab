@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 918456018849074266}
   - component: {fileID: 213310019283143073}
   - component: {fileID: 3385964469878706665}
-  - component: {fileID: -8723522330471233484}
+  - component: {fileID: -6955599517136232997}
   m_Layer: 0
   m_Name: ShipPref
   m_TagString: Untagged
@@ -29,7 +29,7 @@ Transform:
   m_GameObject: {fileID: 68499737284521179}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -0.60999966, y: -1.0899, z: -2}
+  m_LocalPosition: {x: 0.39000034, y: -0.09000003, z: -1}
   m_LocalScale: {x: 2, y: 2, z: 2}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -122,7 +122,7 @@ MonoBehaviour:
   SpawnWithObservers: 1
   DontDestroyWithOwner: 0
   AutoObjectParentSync: 1
---- !u!114 &-8723522330471233484
+--- !u!114 &-6955599517136232997
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -131,7 +131,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 68499737284521179}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e96cb6065543e43c4a752faaa1468eb1, type: 3}
+  m_Script: {fileID: 11500000, guid: 145e06c0cb9145a48a1d4cc72231a463, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   SyncPositionX: 1

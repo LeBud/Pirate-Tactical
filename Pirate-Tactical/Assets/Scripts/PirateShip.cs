@@ -11,6 +11,7 @@ public class PirateShip : NetworkBehaviour
 
     public int index;
 
+    public NetworkVariable<Vector3> position = new NetworkVariable<Vector3>(Vector3.zero, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);
 
     private void Update()
     {
@@ -20,7 +21,9 @@ public class PirateShip : NetworkBehaviour
         {
             PositionShipOnMap(currentTile);
         }
+
     }
+
 
     public void PositionShipOnMap(OverlayTile tile)
     {
@@ -28,15 +31,6 @@ public class PirateShip : NetworkBehaviour
         if(currentTile == null) return;
         currentTile = tile;
         GetComponent<SpriteRenderer>().sortingOrder = currentTile.GetComponent<SpriteRenderer>().sortingOrder;
-        Vector3 pos = currentTile.transform.position;
-        ChangePositionServerRpc(pos.x, pos.y + .0001f, pos.z - 1);
+        transform.position = currentTile.transform.position;
     }
-
-
-    [ServerRpc]
-    void ChangePositionServerRpc(float x, float y, float z)
-    {
-        transform.position = new Vector3(x, y, z);
-    }
-
 }

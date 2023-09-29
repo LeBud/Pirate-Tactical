@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using Unity.Netcode;
+using Unity.VisualScripting;
 
 public class MouseController : NetworkBehaviour
 {
@@ -16,7 +17,7 @@ public class MouseController : NetworkBehaviour
     public List<OverlayTile> inRangeTiles = new List<OverlayTile>();
 
     OverlayTile currentMouseTile;
-    List<OverlayTile> tilesMap = new List<OverlayTile>();
+    public List<OverlayTile> tilesMap = new List<OverlayTile>();
 
     ShipManager sm;
     public PirateShip currentShip;
@@ -25,12 +26,16 @@ public class MouseController : NetworkBehaviour
 
     private void Start()
     {
+        if (!IsOwner) return;
+
         pathFinder = new PathFinder();
         rangeFinder = new RangeFinder();
         directionTranslator = new DirectionTranslator();
         sm = GetComponent<ShipManager>();
 
-        tilesMap = MapManager.Instance.overlayTilesMap;
+        foreach (var tile in MapManager.Instance.dictionnary)
+            tilesMap.Add(MapManager.Instance.overlayContainer.GetChild(tile.indexPos).GetComponent<OverlayTile>());
+
     }
 
     private void Update()
@@ -129,10 +134,13 @@ public class MouseController : NetworkBehaviour
 
     public void PositionShipOnMap(OverlayTile tile)
     {
+        if (!IsOwner) return;
+        if (tile == null) return;
         currentShip.transform.position = new Vector3(tile.transform.position.x, tile.transform.position.y + .0001f, tile.transform.position.z - 1);
         currentShip.GetComponent<SpriteRenderer>().sortingOrder = tile.GetComponent<SpriteRenderer>().sortingOrder;
         currentShip.currentTile = tile.GetComponent<OverlayTile>();
     }
+
 
     public void GetInRangeTiles()
     {

@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 8466887344958670043}
   - component: {fileID: 4107874556352093842}
   - component: {fileID: 226931680964913169}
-  - component: {fileID: 8869344430143312651}
+  - component: {fileID: -3000393466940155828}
   m_Layer: 0
   m_Name: ShipPref2
   m_TagString: Untagged
@@ -29,7 +29,7 @@ Transform:
   m_GameObject: {fileID: 9139363385716235281}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: -0.60999966, y: -0.09000003, z: -1}
   m_LocalScale: {x: 2, y: 2, z: 2}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -102,6 +102,8 @@ MonoBehaviour:
   shipInfo: {fileID: 11400000, guid: e57861a43db33954a9577e2a6abcff7a, type: 2}
   currentTile: {fileID: 0}
   index: 1
+  position:
+    m_InternalValue: {x: -0.5317755, y: -0.07323771, z: -1}
 --- !u!114 &226931680964913169
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -122,7 +124,7 @@ MonoBehaviour:
   SpawnWithObservers: 1
   DontDestroyWithOwner: 0
   AutoObjectParentSync: 1
---- !u!114 &8869344430143312651
+--- !u!114 &-3000393466940155828
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -131,7 +133,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 9139363385716235281}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e96cb6065543e43c4a752faaa1468eb1, type: 3}
+  m_Script: {fileID: 11500000, guid: 145e06c0cb9145a48a1d4cc72231a463, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   SyncPositionX: 1

@@ -20,7 +20,6 @@ public class MapManager : NetworkBehaviour
 
     public Dictionary<Vector2Int, OverlayTile> map = new Dictionary<Vector2Int, OverlayTile>();
     public GetNeighborTiles getNeighborTiles = new GetNeighborTiles();
-    public List<OverlayTile> overlayTilesMap = new List<OverlayTile>();
 
     public NetworkList<tileMapDictionnary> dictionnary;
 
@@ -58,17 +57,20 @@ public class MapManager : NetworkBehaviour
 
     private void OnDisable()
     {
+        if (!IsServer) return;
         dictionnary.Dispose();
     }
 
-    [ServerRpc]
-    public void SetClientInstanceServerRpc()
+    [ClientRpc]
+    public void SetClientInstanceClientRpc()
     {
         if (Instance != null && Instance != this)
             Destroy(Instance);
         else
             Instance = this;
     }
+
+
 
     [ServerRpc]
     public void InitialiseServerRpc()
@@ -108,7 +110,6 @@ public class MapManager : NetworkBehaviour
                         overlayTile.posZ.Value = z;
 
                         map.Add(tileKey, overlayTile);
-                        overlayTilesMap.Add(overlayTile);
                     }
                 }
             }
@@ -133,8 +134,6 @@ public class GetNeighborTiles
     {
         Dictionary<Vector2Int, OverlayTile> tilesToSearch = new Dictionary<Vector2Int, OverlayTile>();
 
-        Debug.Log(MapManager.Instance.map.Count + " : key in map");
-
         if (searchableTiles.Count > 0)
         {
             foreach (var tile in searchableTiles)
@@ -147,9 +146,6 @@ public class GetNeighborTiles
             foreach (var tile in MapManager.Instance.dictionnary)
                 tilesToSearch.Add(tile.keyPos, MapManager.Instance.overlayContainer.GetChild(tile.indexPos).GetComponent<OverlayTile>());
         }
-
-        //tileToSearch est == null -> probleme, trouver un moyen de le rendre non null -- C'est pas une variable serveur -- trouver un moyen détourner d'obtenir le dictionnary
-        Debug.Log(tilesToSearch.Count + " : tile To search");
 
         List<OverlayTile> neighbors = new List<OverlayTile>();
 
@@ -173,8 +169,6 @@ public class GetNeighborTiles
                     break;
             }
 
-            Debug.Log(tilesToSearch.ContainsKey(locationToCheck) + " : exist in tile map");
-
             if (tilesToSearch.ContainsKey(locationToCheck))
             {
                 //Not necessary if no differents heights in the game -- If it broke something remove it
@@ -182,8 +176,7 @@ public class GetNeighborTiles
                     neighbors.Add(tilesToSearch[locationToCheck]);
             }
         }
-        tilesToSearch.Clear();
-        return neighbors;
 
+        return neighbors;
     }
 }
