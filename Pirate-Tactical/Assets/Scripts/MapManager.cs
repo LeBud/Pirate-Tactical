@@ -5,6 +5,7 @@ using Unity.Collections;
 using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.Tilemaps;
+using static UnityEditor.PlayerSettings;
 
 public class MapManager : NetworkBehaviour
 {
@@ -110,19 +111,11 @@ public class MapManager : NetworkBehaviour
                         overlayTile.posZ.Value = z;
 
                         map.Add(tileKey, overlayTile);
+                        dictionnary.Add(new tileMapDictionnary { keyPos = tileKey, indexPos = overlayContainer.childCount });
                     }
                 }
             }
         }
-
-        for (int i = 0; i < overlayContainer.childCount; i++)
-        {
-            OverlayTile t = overlayContainer.GetChild(i).GetComponent<OverlayTile>();
-            Vector2Int tPos = new Vector2Int(t.posX.Value, t.posY.Value);
-            dictionnary.Add(new tileMapDictionnary {keyPos = tPos, indexPos = i });
-        }
-
-        Debug.Log(dictionnary.Count.ToString() + " item in dictionnary");
     }
 
 }

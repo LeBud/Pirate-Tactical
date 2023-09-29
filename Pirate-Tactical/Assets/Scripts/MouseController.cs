@@ -107,6 +107,7 @@ public class MouseController : NetworkBehaviour
         Vector3 pos = shipPos;
 
         currentShip.transform.position = new Vector3(pos.x, pos.y, zIndex);
+        UpdateShipsServerRpc(pos.x, pos.y, zIndex);
 
         if (Vector2.Distance(shipPos, path[0].transform.position) < .0001f)
         {
