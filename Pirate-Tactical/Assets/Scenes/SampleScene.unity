@@ -172,8 +172,6 @@ MonoBehaviour:
   tileMap: {fileID: 1513794697}
   overlayTilePref: {fileID: 1366712894248705390, guid: 4a6c9cc4b85d6a0449a1984330821f16, type: 3}
   overlayContainer: {fileID: 1480000686}
-  tempSpawnShip: []
-  overlayTilesMap: []
 --- !u!114 &182476334
 MonoBehaviour:
   m_ObjectHideFlags: 0
