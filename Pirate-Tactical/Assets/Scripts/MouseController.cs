@@ -33,9 +33,14 @@ public class MouseController : NetworkBehaviour
         directionTranslator = new DirectionTranslator();
         sm = GetComponent<ShipManager>();
 
+        StartCoroutine(AddTileMap());
+    }
+
+    IEnumerator AddTileMap()
+    {
+        yield return new WaitForSeconds(1);
         foreach (var tile in MapManager.Instance.dictionnary)
             tilesMap.Add(MapManager.Instance.overlayContainer.GetChild(tile.indexPos).GetComponent<OverlayTile>());
-
     }
 
     private void Update()
