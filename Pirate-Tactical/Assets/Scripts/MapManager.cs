@@ -110,7 +110,7 @@ public class MapManager : NetworkBehaviour
                         overlayTile.posZ.Value = z;
 
                         map.Add(tileKey, overlayTile);
-                        dictionnary.Add(new tileMapDictionnary { keyPos = tileKey, indexPos = overlayContainer.childCount });
+                        dictionnary.Add(new tileMapDictionnary { keyPos = tileKey, indexPos = overlayContainer.childCount - 1 });
                     }
                 }
             }
