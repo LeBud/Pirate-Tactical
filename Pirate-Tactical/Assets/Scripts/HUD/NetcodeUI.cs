@@ -14,17 +14,19 @@ public class NetcodeUI : MonoBehaviour
     {
         startHostBtt.onClick.AddListener(() =>
         {
-            Debug.Log("Hosting");
+            Debug.Log("Hosting...");
             NetworkManager.Singleton.StartHost();
+            //MapManager.Instance.InitialiseServerRpc();
+            GridManager.Instance.GenerateGridServerRpc();
             HideNetCodeUI();
-            MapManager.Instance.InitialiseServerRpc();
         });
 
         startClientBtt.onClick.AddListener(() =>
         {
-            Debug.Log("Hosting");
+            Debug.Log("Connecting...");
             NetworkManager.Singleton.StartClient();
-            MapManager.Instance.SetClientInstanceClientRpc();
+            //MapManager.Instance.SetClientInstanceClientRpc();
+            GridManager.Instance.JoinServerServerRpc();
             HideNetCodeUI();
         });
     }
