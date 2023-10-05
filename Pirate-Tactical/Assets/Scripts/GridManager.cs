@@ -27,7 +27,6 @@ public class GridManager : NetworkBehaviour
     {
         if(!IsServer) return;
 
-        //_tiles = new Dictionary<Vector2, TileScript>();
         for (int x = 0; x < _width; x++)
         {
             for (int y = 0; y < _height; y++)
@@ -41,7 +40,6 @@ public class GridManager : NetworkBehaviour
                 dictionnary.Add(new Vector2(x, y));
 
                 spawnedTile.GetComponent<NetworkObject>().Spawn();
-                spawnedTile._highlight.transform.parent = spawnedTile.transform;
                 spawnedTile.transform.parent = transform;
             }
         }

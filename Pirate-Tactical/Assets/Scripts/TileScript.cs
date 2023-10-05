@@ -25,20 +25,18 @@ public class TileScript : NetworkBehaviour
         _highlight.SetActive(false);
     }
 
+    private void OnMouseDown()
+    {
+        
+    }
+
+    #region HighlightTiles
 
     [ClientRpc]
     void HighlightClientRpc()
     {
         _highlight.SetActive(true);
     }
-
-    [ServerRpc(RequireOwnership = false)]
-    void HighlightServerRpc()
-    {
-        _highlight.SetActive(true);
-    }
-
-
 
     [ClientRpc]
     void DeHighlightClientRpc()
@@ -47,10 +45,16 @@ public class TileScript : NetworkBehaviour
     }
 
     [ServerRpc(RequireOwnership = false)]
+    void HighlightServerRpc()
+    {
+        _highlight.SetActive(true);
+    }
+
+    [ServerRpc(RequireOwnership = false)]
     void DeHighlightServerRpc()
     {
         _highlight.SetActive(false);
     }
 
-
+    #endregion
 }
