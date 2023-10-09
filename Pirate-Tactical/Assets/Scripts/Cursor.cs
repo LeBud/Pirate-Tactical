@@ -20,11 +20,12 @@ public class Cursor : NetworkBehaviour
         RaycastHit2D? tile = GetCurrentTile(pos);
 
         if (!tile.HasValue) return;
+        TileScript t = tile.Value.transform.GetComponent<TileScript>();
 
         if (Input.GetMouseButtonDown(0) && !shipSpawn)
-            SpawnShip(pos);
+            SpawnShip(t.pos.Value);
         else if (Input.GetMouseButtonDown(0) && shipSpawn)
-            ValueServerRpc(pos);
+            ValueServerRpc(t.pos.Value);
     }
 
     [ServerRpc(RequireOwnership = false)]

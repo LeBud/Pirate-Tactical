@@ -36,11 +36,12 @@ public class GridManager : NetworkBehaviour
                 var spawnedTile = Instantiate(isOffset ? _tilePrefab1 : _tilePrefab2, new Vector3(x, y), Quaternion.identity);
                 spawnedTile.name = $"Tile {x} {y}";
 
+                spawnedTile.GetComponent<NetworkObject>().Spawn();
+                spawnedTile.transform.parent = transform;
+
                 spawnedTile.pos.Value = new Vector2(x, y);
                 dictionnary.Add(new Vector2(x, y));
 
-                spawnedTile.GetComponent<NetworkObject>().Spawn();
-                spawnedTile.transform.parent = transform;
             }
         }
 

@@ -99,6 +99,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8235f83a23874fe4b9725a2425d45df8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  shipSpeed: 0.0015
   unitPos:
     m_InternalValue: {x: 8.172023, y: 5.4177694}
 --- !u!114 &810226246150426423
