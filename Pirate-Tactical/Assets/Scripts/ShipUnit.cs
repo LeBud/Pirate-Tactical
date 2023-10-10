@@ -16,11 +16,6 @@ public class ShipUnit : NetworkBehaviour
 
     IEnumerator MoveShip()
     {
-        /*while(Mathf.Abs(Vector2.Distance(unitPos.Value, transform.position)) > .1f)
-        {
-            transform.position = Vector3.MoveTowards(transform.position, new Vector3(unitPos.Value.x, unitPos.Value.y, -1), shipSpeed * Time.deltaTime);
-            yield return null;
-        }*/
         transform.position = new Vector3(unitPos.Value.x, unitPos.Value.y, -1);
         yield return null;
     }
