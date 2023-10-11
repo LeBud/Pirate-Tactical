@@ -208,6 +208,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _renderer: {fileID: 7510680066457283783}
   _highlight: {fileID: 2573194627471863620}
+  pathColor: {r: 1, g: 0.2971698, b: 0.2971698, a: 1}
+  openColor: {r: 0.5789483, g: 1, b: 0.3443396, a: 1}
+  closeColor: {r: 1, g: 0.6777429, b: 0, a: 1}
+  normalColor: {r: 0, g: 0, b: 0, a: 0}
   pos:
     m_InternalValue: {x: 0, y: 0}
 --- !u!61 &-2935063926136949155

@@ -11,6 +11,8 @@ public class GridManager : NetworkBehaviour
     [SerializeField] TileScript _tilePrefab1, _tilePrefab2;
     [SerializeField] Transform _cam;
 
+    public TileScript goalTile, playerTile;
+
     //Dictionary<Vector2, TileScript> _tiles;
     public NetworkList<Vector2> dictionnary;
 
@@ -42,10 +44,20 @@ public class GridManager : NetworkBehaviour
                 spawnedTile.pos.Value = new Vector2(x, y);
                 dictionnary.Add(new Vector2(x, y));
 
+                spawnedTile.Coords = new SquareCoord { Pos = new Vector2(x, y) };
             }
         }
 
         _cam.transform.position = new Vector3((float)_width / 2 - 0.5f, (float)_height / 2 - 0.5f, -10);
+
+        TileScript.OnHoverTile += OnTileHover;
+    }
+
+    void OnTileHover(TileScript tile)
+    {
+        goalTile = tile;
+
+        var path = PathFindTesting.PathTest(playerTile, goalTile);
     }
 
     [ServerRpc]

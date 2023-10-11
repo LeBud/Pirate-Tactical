@@ -9,6 +9,8 @@ public class Cursor : NetworkBehaviour
     [SerializeField] ShipUnit shipUnit;
     [SerializeField] bool shipSpawn = false;
 
+    TileScript currentTile;
+
     void Update()
     {
         if(!IsOwner) return;
@@ -23,7 +25,7 @@ public class Cursor : NetworkBehaviour
         TileScript t = tile.Value.transform.GetComponent<TileScript>();
 
         if (Input.GetMouseButtonDown(0) && !shipSpawn)
-            SpawnShip(t.pos.Value);
+            SpawnShip(t.pos.Value, t);
         else if (Input.GetMouseButtonDown(0) && shipSpawn)
             ValueServerRpc(t.pos.Value);
     }
@@ -34,11 +36,15 @@ public class Cursor : NetworkBehaviour
         shipUnit.unitPos.Value = pos;
     }
 
-    void SpawnShip(Vector2 pos)
+    void SpawnShip(Vector2 pos, TileScript t)
     {
         if (!IsOwner) return;
         shipSpawn = true;
         SpawnShipServerRpc(pos);
+
+        //Test pathFind
+        currentTile = t;
+        GridManager.Instance.playerTile = t;
     }
 
     [ServerRpc]
