@@ -2,20 +2,20 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public static class PathFindTesting
 {
-
-    public static List<TileScript> PathTest(TileScript startTile, TileScript targetTile)
+    public static List<TileScript> PathTest(TileScript startNode, TileScript targetNode)
     {
-        var toSearch = new List<TileScript>() { startTile} ;
+        var toSearch = new List<TileScript>() { startNode };
         var processed = new List<TileScript>();
 
         while (toSearch.Any())
         {
             var current = toSearch[0];
-            foreach(var t in toSearch)
+            foreach (var t in toSearch)
                 if (t.F < current.F || t.F == current.F && t.H < current.H) current = t;
 
             processed.Add(current);
@@ -23,50 +23,46 @@ public static class PathFindTesting
 
             current.SetColor(2);
 
-            if(current == targetTile)
+            if (current == targetNode)
             {
-                var currentPathTile = targetTile;
+                var currentPathTile = targetNode;
                 var path = new List<TileScript>();
                 var count = 100;
-
-                while(currentPathTile != startTile)
+                while (currentPathTile != startNode)
                 {
                     path.Add(currentPathTile);
-                    currentPathTile = null;
+                    currentPathTile = currentPathTile.Connection;
                     count--;
-                    if (count < 0) return null;
+                    if (count < 0) throw new Exception();
+                    Debug.Log("sdfsdf");
                 }
 
-                foreach(var t in path)
-                {
-                    t.SetColor(0);
-                }
-                startTile.SetColor(0);
-                Debug.Log("Path Find : There is " + path.Count + " tiles in the path");
+                foreach (var tile in path) tile.SetColor(0);
+                startNode.SetColor(0);
+                Debug.Log(path.Count);
                 return path;
             }
 
-            foreach(var neighbor in current.Neighbors.Where(t => t.Walkable && !processed.Contains(t)))
+            foreach (var neighbor in current.Neighbors.Where(t => t.Walkable && !processed.Contains(t)))
             {
                 var inSearch = toSearch.Contains(neighbor);
 
                 var costToNeighbor = current.G + current.GetDistance(neighbor);
 
-                if(!inSearch ||costToNeighbor < neighbor.G)
+                if (!inSearch || costToNeighbor < neighbor.G)
                 {
                     neighbor.SetG(costToNeighbor);
                     neighbor.SetConnection(current);
 
                     if (!inSearch)
                     {
-                        neighbor.SetH(neighbor.GetDistance(targetTile));
+                        neighbor.SetH(neighbor.GetDistance(targetNode));
                         toSearch.Add(neighbor);
                         neighbor.SetColor(1);
                     }
                 }
             }
         }
-
         return null;
     }
 

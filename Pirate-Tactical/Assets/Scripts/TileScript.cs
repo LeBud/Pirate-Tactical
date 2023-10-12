@@ -8,6 +8,7 @@ public class TileScript : NetworkBehaviour
 {
     [SerializeField] SpriteRenderer _renderer;
     public GameObject _highlight;
+
     bool selected;
 
     public Color pathColor;
@@ -34,25 +35,17 @@ public class TileScript : NetworkBehaviour
     public float H { get; private set; }
     public float F => G + H;
 
-    public void SetG(float g)
-    {
-        G = g;
-    }
+    public void SetG(float g) => G = g;
 
-    public void SetH(float h)
-    {
-        H = h;
-    }
+    public void SetH(float h) => H = h;
 
-    public void SetConnection(TileScript tileBase)
-    {
-        Connection = tileBase;
-    }
+    public void SetConnection(TileScript tileBase) => Connection = tileBase;
 
     #endregion
 
     private void Start()
     {
+        #region SetNeighbors
         TileScript[] neighbors = FindObjectsOfType<TileScript>();
 
         Vector2 neighborPos = new Vector2(pos.Value.x + 1, pos.Value.y);
@@ -87,6 +80,7 @@ public class TileScript : NetworkBehaviour
                 if (n.pos.Value == neighborPos) Neighbors.Add(n);
             }
         }
+        #endregion
 
         OnHoverTile += OnOnHoverTile;
     }
