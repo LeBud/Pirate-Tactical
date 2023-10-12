@@ -8,6 +8,7 @@ public class TileScript : NetworkBehaviour
 {
     [SerializeField] SpriteRenderer _renderer;
     public GameObject _highlight;
+    public GameObject _highlightRange;
 
 
     [Header("Normals Colors")]
@@ -112,6 +113,11 @@ public class TileScript : NetworkBehaviour
     {
         if(!Walkable) return;
         OnHoverTile?.Invoke(this);
+    }
+
+    public void HighLightRange(bool active)
+    {
+        _highlightRange.SetActive(active);
     }
 
     public void SetColor(int colorI)

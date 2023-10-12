@@ -8,11 +8,13 @@ public class Cursor : NetworkBehaviour
 {
     [SerializeField] ShipUnit shipUnit;
     [SerializeField] bool shipSpawn = false;
+    [SerializeField] int unitRange = 4;
 
     TileScript playerTile, goalTile;
 
     List<TileScript> path = new List<TileScript>();
     List<TileScript> allTiles = new List<TileScript>();
+    public List<TileScript> inRangeTiles = new List<TileScript>();
 
     bool unitMoving = false;
 
@@ -53,6 +55,15 @@ public class Cursor : NetworkBehaviour
             StartCoroutine(UpdateShipPlacementOnGrid());
     }
 
+    void GetInRangeTiles()
+    {
+        foreach (var t in inRangeTiles) t.HighLightRange(false);
+
+        inRangeTiles = PathFindTesting.GetInRangeTiles(playerTile, unitRange);
+
+        foreach (var t in inRangeTiles) t.HighLightRange(true);
+    }
+
     void OnTileHover(TileScript tile)
     {
         if (playerTile == null || unitMoving) return;
@@ -73,7 +84,7 @@ public class Cursor : NetworkBehaviour
             path.RemoveAt(value);
             value--;
 
-            yield return new WaitForSeconds(.5f);
+            yield return new WaitForSeconds(.25f);
 
             if(path.Count == 0)
             {
@@ -81,6 +92,8 @@ public class Cursor : NetworkBehaviour
                     item.SetColor(3);
             }
         }
+
+        GetInRangeTiles();
         unitMoving = false;
     }
 
@@ -90,6 +103,8 @@ public class Cursor : NetworkBehaviour
         shipSpawn = true;
         SpawnUnitServerRpc(pos);
         playerTile = t;
+
+        GetInRangeTiles();
     }
 
     #region ServerRpcMethods
