@@ -184,7 +184,7 @@ SpriteRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_Sprite: {fileID: 7482667652216324306, guid: 311925a002f4447b3a28927169b83ea6, type: 3}
-  m_Color: {r: 0.32395872, g: 0.39805445, b: 0.754717, a: 1}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
@@ -208,12 +208,17 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _renderer: {fileID: 7510680066457283783}
   _highlight: {fileID: 2573194627471863620}
+  normalColor: {r: 0.3254902, g: 0.40000004, b: 0.75294125, a: 1}
+  offsetNormalColor: {r: 0.21698111, g: 0.21698111, b: 0.21698111, a: 1}
   pathColor: {r: 1, g: 0.2971698, b: 0.2971698, a: 1}
   openColor: {r: 0.5789483, g: 1, b: 0.3443396, a: 1}
   closeColor: {r: 1, g: 0.6777429, b: 0, a: 1}
-  normalColor: {r: 0, g: 0, b: 0, a: 0}
   pos:
     m_InternalValue: {x: 0, y: 0}
+  Walkable: 1
+  offsetTile:
+    m_InternalValue: 0
+  Neighbors: []
 --- !u!61 &-2935063926136949155
 BoxCollider2D:
   m_ObjectHideFlags: 0

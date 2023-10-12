@@ -9,16 +9,20 @@ public class TileScript : NetworkBehaviour
     [SerializeField] SpriteRenderer _renderer;
     public GameObject _highlight;
 
-    bool selected;
 
+    [Header("Normals Colors")]
+    public Color normalColor;
+    public Color offsetNormalColor;
+
+    [Header("Pathfind Colors")]
     public Color pathColor;
     public Color openColor;
     public Color closeColor;
-    public Color normalColor;
 
     public NetworkVariable<Vector2> pos = new NetworkVariable<Vector2>(Vector2.zero, NetworkVariableReadPermission.Everyone);
 
     public bool Walkable = true;
+    public NetworkVariable<bool> offsetTile = new NetworkVariable<bool>(false, NetworkVariableReadPermission.Everyone);
 
     #region PathFinding
 
@@ -27,14 +31,12 @@ public class TileScript : NetworkBehaviour
     void OnDisable() => OnHoverTile -= OnOnHoverTile;
     void OnOnHoverTile(TileScript _selected) => selected = _selected == this;
 
-
-    public ICoords Coords;
-    public float GetDistance(TileScript other) => Coords.GetDistance(other.Coords);
     public List<TileScript> Neighbors;
     public TileScript Connection { get; private set; }
     public float G { get; private set; }
     public float H { get; private set; }
     public float F => G + H;
+    bool selected;
 
     public void SetG(float g) => G = g;
 
@@ -86,6 +88,12 @@ public class TileScript : NetworkBehaviour
         OnHoverTile += OnOnHoverTile;
     }
 
+    [ClientRpc]
+    public void InitTilesClientRpc()
+    {
+        SetColor(3);
+    }
+
     void OnMouseEnter()
     {
         HighlightClientRpc();
@@ -120,7 +128,7 @@ public class TileScript : NetworkBehaviour
                 _renderer.color = closeColor;
                 break; 
             case 3:
-                _renderer.color = normalColor;
+                _renderer.color = offsetTile.Value ? normalColor : offsetNormalColor;
                 break;
                     
         }
@@ -165,27 +173,4 @@ public class TileScript : NetworkBehaviour
 
         return lowest * 14 + horizontalMovesRequired * 10;
     }
-}
-
-public struct SquareCoord : ICoords
-{
-    public float GetDistance(ICoords other)
-    {
-        var dist = new Vector2Int(Mathf.Abs((int)Pos.x - (int)other.Pos.x), Mathf.Abs((int)Pos.y - (int)other.Pos.y));
-
-        var lowest = Mathf.Min(dist.x, dist.y);
-        var highest = Mathf.Max(dist.x, dist.y);
-
-        var horizontalMovesRequired = highest - lowest;
-
-        return lowest * 14 + horizontalMovesRequired * 10;
-    }
-    public Vector2 Pos { get; set; }
-
-}
-
-public interface ICoords
-{
-    public float GetDistance(ICoords other);
-    public Vector2 Pos { get; set; }
 }

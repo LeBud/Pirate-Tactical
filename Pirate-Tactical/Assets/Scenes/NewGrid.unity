@@ -1162,8 +1162,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _width: 19
   _height: 9
-  _tilePrefab1: {fileID: 9178135446572580332, guid: 0bec297b910024c4da26c598d9b4902d, type: 3}
-  _tilePrefab2: {fileID: 9178135446572580332, guid: b60f02620c2361440a886c6cdfcb44a8, type: 3}
+  _tilePrefab: {fileID: 9178135446572580332, guid: 0bec297b910024c4da26c598d9b4902d, type: 3}
   _cam: {fileID: 1390690773}
 --- !u!114 &1518340151
 MonoBehaviour:
