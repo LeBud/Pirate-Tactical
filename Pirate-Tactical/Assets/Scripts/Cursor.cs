@@ -12,12 +12,21 @@ public class Cursor : NetworkBehaviour
     TileScript playerTile, goalTile;
 
     List<TileScript> path = new List<TileScript>();
+    List<TileScript> allTiles = new List<TileScript>();
 
     bool unitMoving = false;
 
     private void Start()
     {
         TileScript.OnHoverTile += OnTileHover;
+        GridManager.Instance.JoinServerServerRpc();
+
+        TileScript[] tiles = FindObjectsOfType<TileScript>();
+        foreach (var t in tiles)
+        {
+            allTiles.Add(t);
+            t.SetColor(3);
+        }
     }
 
     void Update()
@@ -60,12 +69,17 @@ public class Cursor : NetworkBehaviour
         {
             UnitNewPosServerRpc(path[value].pos.Value);
             
-            if(path.Count == 0) playerTile = path[0];
-            
+            if(path.Count == 1) playerTile = path[0];
             path.RemoveAt(value);
             value--;
 
             yield return new WaitForSeconds(.5f);
+
+            if(path.Count == 0)
+            {
+                foreach (var item in allTiles)
+                    item.SetColor(3);
+            }
         }
         unitMoving = false;
     }

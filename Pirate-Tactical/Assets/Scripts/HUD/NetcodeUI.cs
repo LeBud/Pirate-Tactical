@@ -16,7 +16,6 @@ public class NetcodeUI : MonoBehaviour
         {
             Debug.Log("Hosting...");
             NetworkManager.Singleton.StartHost();
-            //MapManager.Instance.InitialiseServerRpc();
             GridManager.Instance.GenerateGridServerRpc();
             HideNetCodeUI();
         });
@@ -25,8 +24,6 @@ public class NetcodeUI : MonoBehaviour
         {
             Debug.Log("Connecting...");
             NetworkManager.Singleton.StartClient();
-            //MapManager.Instance.SetClientInstanceClientRpc();
-            GridManager.Instance.JoinServerServerRpc();
             HideNetCodeUI();
         });
     }

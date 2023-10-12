@@ -40,7 +40,7 @@ public class GridManager : NetworkBehaviour
 
                 spawnedTile.pos.Value = new Vector2(x, y);
                 spawnedTile.offsetTile.Value = (x + y) % 2 == 1;
-                spawnedTile.InitTilesClientRpc();
+                //spawnedTile.InitTilesClientRpc();
 
                 dictionnary.Add(new Vector2(x, y));
             }
@@ -50,16 +50,16 @@ public class GridManager : NetworkBehaviour
     }
 
     
-    [ServerRpc]
+    [ServerRpc(RequireOwnership = false)]
     public void JoinServerServerRpc()
     {
         if(!IsOwner) return;
         Camera.main.transform.position = new Vector3((float)_width / 2 - 0.5f, (float)_height / 2 - 0.5f, -10);
-        TileScript[] tiles = FindObjectsOfType<TileScript>();
+        /*TileScript[] tiles = FindObjectsOfType<TileScript>();
         foreach(var t in tiles)
         {
             t.InitTilesClientRpc();
-        }
+        }*/
     }
 
     public TileScript GetTileAtPosition(Vector2 pos)
