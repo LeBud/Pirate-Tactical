@@ -2,7 +2,6 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using Unity.VisualScripting;
 using UnityEngine;
 
 public static class PathFindTesting
@@ -34,7 +33,7 @@ public static class PathFindTesting
                     currentPathTile = currentPathTile.Connection;
                     count--;
                     if (count < 0) throw new Exception();
-                    Debug.Log("sdfsdf");
+                    Debug.Log("No Path");
                 }
 
                 foreach (var tile in path) tile.SetColor(0);
@@ -47,7 +46,8 @@ public static class PathFindTesting
             {
                 var inSearch = toSearch.Contains(neighbor);
 
-                var costToNeighbor = current.G + current.GetDistance(neighbor);
+                //var costToNeighbor = current.G + current.GetDistance(neighbor);
+                var costToNeighbor = current.G + current.GetTileDistance(neighbor.pos.Value);
 
                 if (!inSearch || costToNeighbor < neighbor.G)
                 {
@@ -56,7 +56,8 @@ public static class PathFindTesting
 
                     if (!inSearch)
                     {
-                        neighbor.SetH(neighbor.GetDistance(targetNode));
+                        //neighbor.SetH(neighbor.GetDistance(targetNode));
+                        neighbor.SetH(neighbor.GetTileDistance(targetNode.pos.Value));
                         toSearch.Add(neighbor);
                         neighbor.SetColor(1);
                     }

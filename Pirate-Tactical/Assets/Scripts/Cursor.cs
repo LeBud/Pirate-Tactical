@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using Unity.Netcode;
 using UnityEngine;
 
@@ -9,7 +10,13 @@ public class Cursor : NetworkBehaviour
     [SerializeField] ShipUnit shipUnit;
     [SerializeField] bool shipSpawn = false;
 
-    TileScript currentTile;
+    TileScript currentTile, playerTile, goalTile;
+
+    List<TileScript> path = new List<TileScript>();
+    private void Start()
+    {
+        TileScript.OnHoverTile += OnTileHover;
+    }
 
     void Update()
     {
@@ -27,11 +34,20 @@ public class Cursor : NetworkBehaviour
         if (Input.GetMouseButtonDown(0) && !shipSpawn)
             SpawnShip(t.pos.Value, t);
         else if (Input.GetMouseButtonDown(0) && shipSpawn)
-            ValueServerRpc(t.pos.Value);
+            UnitNewPosServerRpc(t.pos.Value);
+        
     }
 
+    void OnTileHover(TileScript tile)
+    {
+        if (playerTile == null) return;
+        goalTile = tile;
+        path = PathFindTesting.PathTest(playerTile, goalTile);
+    }
+
+
     [ServerRpc(RequireOwnership = false)]
-    void ValueServerRpc(Vector2 pos)
+    void UnitNewPosServerRpc(Vector2 pos)
     {
         shipUnit.unitPos.Value = pos;
     }
@@ -40,15 +56,12 @@ public class Cursor : NetworkBehaviour
     {
         if (!IsOwner) return;
         shipSpawn = true;
-        SpawnShipServerRpc(pos);
-
-        //Test pathFind
-        currentTile = t;
-        GridManager.Instance.playerTile = t;
+        SpawnUnitServerRpc(pos);
+        playerTile = t;
     }
 
     [ServerRpc]
-    void SpawnShipServerRpc(Vector2 pos)
+    void SpawnUnitServerRpc(Vector2 pos)
     {
         ShipUnit ship = Instantiate(shipUnit);
         ship.transform.position = new Vector3(pos.x, pos.y, -1);

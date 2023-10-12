@@ -20,12 +20,13 @@ public class TileScript : NetworkBehaviour
 
     public bool Walkable = true;
 
+    #region PathFinding
+
     public static event Action<TileScript> OnHoverTile;
     void OnEnable() => OnHoverTile += OnOnHoverTile;
     void OnDisable() => OnHoverTile -= OnOnHoverTile;
     void OnOnHoverTile(TileScript _selected) => selected = _selected == this;
 
-    #region PathFinding
 
     public ICoords Coords;
     public float GetDistance(TileScript other) => Coords.GetDistance(other.Coords);
@@ -152,6 +153,18 @@ public class TileScript : NetworkBehaviour
     }
 
     #endregion
+
+    public float GetTileDistance(Vector2 other)
+    {
+        var dist = new Vector2Int(Mathf.Abs((int)pos.Value.x - (int)other.x), Mathf.Abs((int)pos.Value.y - (int)other.y));
+
+        var lowest = Mathf.Min(dist.x, dist.y);
+        var highest = Mathf.Max(dist.x, dist.y);
+
+        var horizontalMovesRequired = highest - lowest;
+
+        return lowest * 14 + horizontalMovesRequired * 10;
+    }
 }
 
 public struct SquareCoord : ICoords
@@ -168,6 +181,7 @@ public struct SquareCoord : ICoords
         return lowest * 14 + horizontalMovesRequired * 10;
     }
     public Vector2 Pos { get; set; }
+
 }
 
 public interface ICoords
