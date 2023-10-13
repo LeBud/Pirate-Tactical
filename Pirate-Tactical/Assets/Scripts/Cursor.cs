@@ -51,7 +51,7 @@ public class Cursor : NetworkBehaviour
 
         if (Input.GetMouseButtonDown(0) && !shipSpawn)
             SpawnShip(t.pos.Value, t);
-        else if (Input.GetMouseButtonDown(0) && CanMoveUnit())
+        else if (Input.GetMouseButtonDown(0) && CanMoveUnit(t))
             StartCoroutine(UpdateShipPlacementOnGrid());
     }
 
@@ -66,7 +66,7 @@ public class Cursor : NetworkBehaviour
 
     void OnTileHover(TileScript tile)
     {
-        if (playerTile == null || unitMoving) return;
+        if (playerTile == null || unitMoving || !inRangeTiles.Contains(tile)) return;
         goalTile = tile;
         path = PathFindTesting.PathTest(playerTile, goalTile);
     }
@@ -133,9 +133,9 @@ public class Cursor : NetworkBehaviour
         return null;
     }
 
-    bool CanMoveUnit()
+    bool CanMoveUnit(TileScript t)
     {
-        return shipSpawn && path.Count > 0 && !unitMoving;
+        return shipSpawn && path.Count > 0 && !unitMoving && inRangeTiles.Contains(t);
     }
 
 }

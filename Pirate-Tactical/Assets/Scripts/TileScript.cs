@@ -112,7 +112,7 @@ public class TileScript : NetworkBehaviour
     private void OnMouseDown()
     {
         if(!Walkable) return;
-        OnHoverTile?.Invoke(this);
+        OnHoverTile?.Invoke(this);  //OnHoverTile s'invoque ici, lorsque le joueur appuie sur la tile
     }
 
     public void HighLightRange(bool active)

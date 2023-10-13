@@ -83,12 +83,11 @@ public static class PathFindTesting
             //Ajouter toutes les tiles voisines aux tiles actuels dans la liste
             foreach (var tile in tileForPreviousStep)
             {
-                surroundingTiles.AddRange(startTile.Neighbors);
+                surroundingTiles.AddRange(tile.Neighbors);
             }
 
-            inRangeTile.AddRange(surroundingTiles); //J'ajoute toutes les tiles dans cette list qui va constituer la range
-            tileForPreviousStep = surroundingTiles.Distinct().ToList(); //Je renvoie dans cette list toutes les tiles voisines en remplacant les anciennes par les nouvelles
-            //Le problème est que cela ne se joue qu'une fois et que seul les tiles à côté du joueur s'allume ET NON toutes les tiles dans la range
+            inRangeTile.AddRange(surroundingTiles);
+            tileForPreviousStep = surroundingTiles.Distinct().ToList();
             stepCount++;
         }
 
