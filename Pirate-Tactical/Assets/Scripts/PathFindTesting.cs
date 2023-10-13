@@ -33,12 +33,10 @@ public static class PathFindTesting
                     currentPathTile = currentPathTile.Connection;
                     count--;
                     if (count < 0) throw new Exception();
-                    Debug.Log("No Path");
                 }
 
                 foreach (var tile in path) tile.SetColor(0);
                 startNode.SetColor(0);
-                Debug.Log(path.Count);
                 return path;
             }
 
@@ -46,7 +44,6 @@ public static class PathFindTesting
             {
                 var inSearch = toSearch.Contains(neighbor);
 
-                //var costToNeighbor = current.G + current.GetDistance(neighbor);
                 var costToNeighbor = current.G + current.GetTileDistance(neighbor.pos.Value);
 
                 if (!inSearch || costToNeighbor < neighbor.G)
@@ -56,7 +53,6 @@ public static class PathFindTesting
 
                     if (!inSearch)
                     {
-                        //neighbor.SetH(neighbor.GetDistance(targetNode));
                         neighbor.SetH(neighbor.GetTileDistance(targetNode.pos.Value));
                         toSearch.Add(neighbor);
                         neighbor.SetColor(1);
@@ -80,7 +76,6 @@ public static class PathFindTesting
         while (stepCount < range)
         {
             var surroundingTiles = new List<TileScript>();
-            //Ajouter toutes les tiles voisines aux tiles actuels dans la liste
             foreach (var tile in tileForPreviousStep)
             {
                 if (!tile.Walkable) continue; 

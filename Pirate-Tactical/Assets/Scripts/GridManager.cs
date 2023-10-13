@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using Unity.Netcode;
@@ -69,5 +70,24 @@ public class GridManager : NetworkBehaviour
             }
         }
         return null;
+    }
+
+    //Ca marche mais ca fait buggé de fou malade dri POW plaplaplaplaplapla PLA ca me saoule
+    [ServerRpc(RequireOwnership = false)]
+    public void DamageUnitServerRpc(int damage, Vector2 pos, ulong id)
+    {
+        ShipUnit[] ships = FindObjectsOfType<ShipUnit>();
+
+        for(int i = 0; i < ships.Length; i++)
+        {
+            if (ships[i].unitPos.Value == pos)
+            {
+                if (ships[i].GetComponent<NetworkObject>().OwnerClientId != id)
+                    ships[i].TakeDamage(damage);
+
+                break;
+            }
+        }
+
     }
 }

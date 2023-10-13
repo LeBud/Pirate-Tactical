@@ -9,6 +9,8 @@ public class Cursor : NetworkBehaviour
     [SerializeField] ShipUnit shipUnit;
     [SerializeField] bool shipSpawn = false;
     [SerializeField] int unitRange = 4;
+    [SerializeField] int damage = 4;
+    public NetworkVariable<bool> canPlay = new NetworkVariable<bool>(false);
 
     TileScript playerTile, goalTile;
 
@@ -49,16 +51,29 @@ public class Cursor : NetworkBehaviour
         if (!tile.HasValue) return;
         TileScript t = tile.Value.transform.GetComponent<TileScript>();
 
-        if (Input.GetMouseButtonDown(0) && !shipSpawn)
-            SpawnShip(t.pos.Value, t);
-        else if (Input.GetMouseButtonDown(0) && CanMoveUnit(t))
-            StartCoroutine(UpdateShipPlacementOnGrid());
+        if (Input.GetMouseButtonDown(0))
+        {
+            if (!canPlay.Value) return;
+
+            if(!shipSpawn)
+                SpawnShip(t.pos.Value, t);
+            else if (t.shipOnTile.Value)
+            {
+                GridManager.Instance.DamageUnitServerRpc(damage, t.pos.Value, NetworkManager.LocalClientId);
+                GameManager.Instance.UpdateGameStateServerRpc();
+            }
+            else if (CanMoveUnit(t))
+            {
+                StartCoroutine(UpdateShipPlacementOnGrid());
+                GameManager.Instance.UpdateGameStateServerRpc();
+            }
+        }
     }
 
     void GetInRangeTiles()
     {
         foreach (var t in inRangeTiles) t.HighLightRange(false);
-
+        inRangeTiles.Clear();
         inRangeTiles = PathFindTesting.GetInRangeTiles(playerTile, unitRange);
 
         foreach (var t in inRangeTiles) t.HighLightRange(true);
@@ -66,8 +81,10 @@ public class Cursor : NetworkBehaviour
 
     void OnTileHover(TileScript tile)
     {
-        if (playerTile == null || unitMoving || !inRangeTiles.Contains(tile)) return;
+        if (playerTile == null || unitMoving || !inRangeTiles.Contains(tile) || !canPlay.Value) return;
+
         goalTile = tile;
+        path.Clear();
         path = PathFindTesting.PathTest(playerTile, goalTile);
     }
 
