@@ -76,7 +76,9 @@ public class Cursor : NetworkBehaviour
         unitMoving = true;
         int value = path.Count - 1;
 
-        while(path.Count > 0)
+        SetShipOnTileServerRpc(playerTile.pos.Value, false);
+
+        while (path.Count > 0)
         {
             UnitNewPosServerRpc(path[value].pos.Value);
             
@@ -93,6 +95,7 @@ public class Cursor : NetworkBehaviour
             }
         }
 
+        SetShipOnTileServerRpc(playerTile.pos.Value, true);
         GetInRangeTiles();
         unitMoving = false;
     }
@@ -104,6 +107,7 @@ public class Cursor : NetworkBehaviour
         SpawnUnitServerRpc(pos);
         playerTile = t;
 
+        SetShipOnTileServerRpc(pos, true);
         GetInRangeTiles();
     }
 
@@ -122,6 +126,15 @@ public class Cursor : NetworkBehaviour
         ship.transform.position = new Vector3(pos.x, pos.y, -1);
         shipUnit = ship;
         shipUnit.GetComponent<NetworkObject>().SpawnWithOwnership(OwnerClientId);
+    }
+
+    [ServerRpc(RequireOwnership = false)]
+    void SetShipOnTileServerRpc(Vector2 tilePos, bool active)
+    {
+        if (!GridManager.Instance.dictionnary.Contains(tilePos)) return;
+
+        TileScript t = GridManager.Instance.GetTileAtPosition(tilePos);
+        t.shipOnTile.Value = active;
     }
 
     #endregion

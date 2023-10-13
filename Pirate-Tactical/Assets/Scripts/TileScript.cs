@@ -10,7 +10,6 @@ public class TileScript : NetworkBehaviour
     public GameObject _highlight;
     public GameObject _highlightRange;
 
-
     [Header("Normals Colors")]
     public Color normalColor;
     public Color offsetNormalColor;
@@ -20,9 +19,10 @@ public class TileScript : NetworkBehaviour
     public Color openColor;
     public Color closeColor;
 
-    public NetworkVariable<Vector2> pos = new NetworkVariable<Vector2>(Vector2.zero, NetworkVariableReadPermission.Everyone);
-
     public bool Walkable = true;
+
+    public NetworkVariable<Vector2> pos = new NetworkVariable<Vector2>(Vector2.zero, NetworkVariableReadPermission.Everyone);
+    public NetworkVariable<bool> shipOnTile = new NetworkVariable<bool>(false, NetworkVariableReadPermission.Everyone);
     public NetworkVariable<bool> offsetTile = new NetworkVariable<bool>(false, NetworkVariableReadPermission.Everyone);
 
     #region PathFinding
@@ -111,7 +111,7 @@ public class TileScript : NetworkBehaviour
 
     private void OnMouseDown()
     {
-        if(!Walkable) return;
+        if(!Walkable || shipOnTile.Value) return;
         OnHoverTile?.Invoke(this);  //OnHoverTile s'invoque ici, lorsque le joueur appuie sur la tile
     }
 

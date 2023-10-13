@@ -42,7 +42,7 @@ public static class PathFindTesting
                 return path;
             }
 
-            foreach (var neighbor in current.Neighbors.Where(t => t.Walkable && !processed.Contains(t)))
+            foreach (var neighbor in current.Neighbors.Where(t => t.Walkable && !processed.Contains(t) && (t != startNode && !t.shipOnTile.Value)))
             {
                 var inSearch = toSearch.Contains(neighbor);
 
@@ -83,6 +83,8 @@ public static class PathFindTesting
             //Ajouter toutes les tiles voisines aux tiles actuels dans la liste
             foreach (var tile in tileForPreviousStep)
             {
+                if (!tile.Walkable) continue; 
+                    if(tile != startTile && tile.shipOnTile.Value) continue;
                 surroundingTiles.AddRange(tile.Neighbors);
             }
 
