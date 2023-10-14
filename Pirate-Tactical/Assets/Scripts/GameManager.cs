@@ -12,7 +12,8 @@ public class GameManager : NetworkBehaviour
         GameStarting,
         player1Turn,
         player2Turn,
-        GameFinish
+        GameFinish,
+        GameTesting
     }
     public GameState state;
 
@@ -21,6 +22,7 @@ public class GameManager : NetworkBehaviour
         if (Instance == null)
             Instance = this;
 
+        if (state == GameState.GameTesting) return;
         state = GameState.GameStarting;
     }
 
@@ -37,6 +39,13 @@ public class GameManager : NetworkBehaviour
     [ServerRpc(RequireOwnership = false)]
     public void UpdateGameStateServerRpc()
     {
+        if(state == GameState.GameTesting)
+        {
+            NetworkManager.ConnectedClients[0].PlayerObject.GetComponent<Cursor>().canPlay.Value = true;
+            NetworkManager.ConnectedClients[1].PlayerObject.GetComponent<Cursor>().canPlay.Value = true;
+            return;
+        }
+
         NetworkManager.ConnectedClients[0].PlayerObject.GetComponent<Cursor>().canPlay.Value = false;
         NetworkManager.ConnectedClients[1].PlayerObject.GetComponent<Cursor>().canPlay.Value = false;
 
