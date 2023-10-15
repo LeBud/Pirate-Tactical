@@ -11,7 +11,7 @@ public class LobbyScript : MonoBehaviour
     public static LobbyScript Instance  {get; private set; }
 
     Lobby hostLobby;
-    Lobby joinedLobby;
+    public Lobby joinedLobby;
     float heartbeatTimer;
     float lobbyUpdateTimer;
     public string playerName = "Player 1";
@@ -22,7 +22,7 @@ public class LobbyScript : MonoBehaviour
             Instance = this;
     }
 
-        private async void Start()
+    private async void Start()
     {
         await UnityServices.InitializeAsync(); //Permet d'envoyer aux services unity la requête d'un serveur
 
@@ -109,7 +109,7 @@ public class LobbyScript : MonoBehaviour
     #endregion
 
     #region SearchLobby
-    private async void SearchLobbies()
+    public async void SearchLobbies()
     {
         try
         {
