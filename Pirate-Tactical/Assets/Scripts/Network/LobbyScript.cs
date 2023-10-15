@@ -8,13 +8,21 @@ using UnityEngine;
 
 public class LobbyScript : MonoBehaviour
 {
+    public static LobbyScript Instance  {get; private set; }
 
     Lobby hostLobby;
     Lobby joinedLobby;
     float heartbeatTimer;
     float lobbyUpdateTimer;
-    string playerName = "Player 1";
-    private async void Start()
+    public string playerName = "Player 1";
+
+    private void Awake()
+    {
+        if (Instance == null)
+            Instance = this;
+    }
+
+        private async void Start()
     {
         await UnityServices.InitializeAsync(); //Permet d'envoyer aux services unity la requête d'un serveur
 
@@ -65,17 +73,16 @@ public class LobbyScript : MonoBehaviour
     }
 
     #region CreateLobby
-    private async void CreateLobby()
+    public async void CreateLobby(string lobbyName, bool privateRoom)
     {
         //Actuellement toutes les valeurs du lobby (options/gamemode) sont attribuer lorsque le lobby est créer
         try
         {
-            string lobbyNamme = "MyLobby";
             int maxPlayers = 2;
             //Set parameters to the lobby like set it private
             CreateLobbyOptions createOptions = new CreateLobbyOptions
             {
-                IsPrivate = false,
+                IsPrivate = privateRoom,
                 Player = GetPlayer(),
                 Data = new Dictionary<string, DataObject>
                 {
@@ -84,7 +91,7 @@ public class LobbyScript : MonoBehaviour
                 }
             };
 
-            Lobby lobby = await LobbyService.Instance.CreateLobbyAsync(lobbyNamme, maxPlayers, createOptions);
+            Lobby lobby = await LobbyService.Instance.CreateLobbyAsync(lobbyName, maxPlayers, createOptions);
 
             hostLobby = lobby;
             joinedLobby = hostLobby;
