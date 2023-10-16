@@ -1588,17 +1588,14 @@ MonoBehaviour:
   m_GameObject: {fileID: 421887027}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 038e31d3737bcf547afa330321bc9c7d, type: 3}
+  m_Script: {fileID: 11500000, guid: 036011c3534f9324a8549c348e8becfc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   createLobbyBtt: {fileID: 116951469}
-  lobbyName: {fileID: 2049312341}
-  toggleLobby: {fileID: 1259048280}
-  refreshLobbyBtt: {fileID: 468679808}
-  lobbyPrefabsBtt: {fileID: 7456034327993909076, guid: 398fab7984f11134b9a5528c2157ecf4, type: 3}
-  joinedLobbyNameTxt: {fileID: 1692697594}
-  gameModeLobbyTxt: {fileID: 844554133}
-  playerConnectedPrefabs: {fileID: 2585757978684212856, guid: 338c997156506c44e86115ac18230a2b, type: 3}
+  lobbyNameIF: {fileID: 2049312341}
+  publicLobby: {fileID: 1259048280}
+  searchLobbiesContainer: {fileID: 0}
+  searchLobbyPrefab: {fileID: 1415392941944161550, guid: 398fab7984f11134b9a5528c2157ecf4, type: 3}
 --- !u!1 &468679806
 GameObject:
   m_ObjectHideFlags: 0
@@ -5343,7 +5340,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &1771304237
 RectTransform:
   m_ObjectHideFlags: 0

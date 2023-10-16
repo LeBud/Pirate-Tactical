@@ -135,6 +135,8 @@ public class LobbyScript : MonoBehaviour
             {
                 Debug.Log(result.Name + " " + result.MaxPlayers + " " + result.Data["GameMode"].Value);
             }
+
+            LobbyUIScript.Instance.AddSearchLobbies(query);
         }
         catch (LobbyServiceException e)
         {
@@ -146,7 +148,7 @@ public class LobbyScript : MonoBehaviour
 
     #region JoinLobby
 
-    async void JoinLobbyByCode(string lobbyCode)
+    public async void JoinLobbyByCode(string lobbyCode)
     {
         try
         {
