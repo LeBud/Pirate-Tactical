@@ -4,11 +4,12 @@ using TMPro;
 using Unity.Services.Lobbies.Models;
 using UnityEngine;
 using UnityEngine.UI;
-using static LobbyManager;
 
 public class LobbyUIScript : MonoBehaviour
 {
     public static LobbyUIScript Instance { get; private set; }
+
+    [SerializeField] TMP_InputField playerName;
 
     [Header("CreateLobby")]
     [SerializeField] Button createLobbyBtt;
@@ -17,6 +18,7 @@ public class LobbyUIScript : MonoBehaviour
 
     [Header("SearchLobby")]
     [SerializeField] Button connectBtt;
+    [SerializeField] Button refreshBtt;
     [SerializeField] Transform searchLobbiesContainer;
     [SerializeField] Button searchLobbyPrefab;
     [SerializeField] GameObject searchLobbyObject;
@@ -24,6 +26,9 @@ public class LobbyUIScript : MonoBehaviour
     [Header("JoinedLobby")]
     [SerializeField] TextMeshProUGUI joinedLobbyNameTxt;
     [SerializeField] GameObject joinedLobbyObject;
+    [SerializeField] GameObject playersInLobbyPref;
+    [SerializeField] Transform playersInLobbyContainer;
+    [SerializeField] Button leaveBtt;
 
     private void Awake()
     {
@@ -35,6 +40,14 @@ public class LobbyUIScript : MonoBehaviour
     {
         createLobbyBtt.onClick.AddListener(() => { CreateLobby(); });
         connectBtt.onClick.AddListener(() => { LobbyScript.Instance.SearchLobbies(); });
+        refreshBtt.onClick.AddListener(() => { LobbyScript.Instance.SearchLobbies(); });
+        leaveBtt.onClick.AddListener(() => { LobbyScript.Instance.LeaveLobby(); });
+        playerName.onSubmit.AddListener(delegate { LobbyScript.Instance.playerName = playerName.text; });
+    }
+
+    void Authenticate()
+    {
+        LobbyScript.Instance.UpdatePlayerName(playerName.text);
     }
 
     public void AddSearchLobbies(QueryResponse query)
@@ -47,7 +60,8 @@ public class LobbyUIScript : MonoBehaviour
         foreach(var lobby in query.Results)
         {
             Button btt = Instantiate(searchLobbyPrefab, searchLobbiesContainer);
-            btt.onClick.AddListener(() => { JoinLobby(lobby.LobbyCode); });
+            btt.GetComponentInChildren<TextMeshProUGUI>().text = lobby.Name + " | " + lobby.Players.Count + " player connected";
+            btt.onClick.AddListener(() => { JoinLobby(lobby.Id); });
         }
     }
 
@@ -59,7 +73,7 @@ public class LobbyUIScript : MonoBehaviour
 
     public void JoinLobby(string code)
     {
-        LobbyScript.Instance.JoinLobbyByCode(code);
+        LobbyScript.Instance.JoinLobbyById(code);
         searchLobbyObject.SetActive(false);
         joinedLobbyObject.SetActive(true);
     }
@@ -70,6 +84,15 @@ public class LobbyUIScript : MonoBehaviour
         //publicPrivateText.text = publicLobby ? "Private" : "Public";
         //maxPlayersText.text = maxPlayers.ToString();
         //gameModeText.text = gameMode.ToString();
+
+        foreach (Transform t in playersInLobbyContainer)
+            Destroy(t.gameObject);
+
+        foreach(var player in LobbyScript.Instance.joinedLobby.Players)
+        {
+            var p = Instantiate(playersInLobbyPref, playersInLobbyContainer);
+            p.GetComponentInChildren<TextMeshProUGUI>().text = player.Data["PlayerName"].Value.ToString();
+        }
     }
 
 }

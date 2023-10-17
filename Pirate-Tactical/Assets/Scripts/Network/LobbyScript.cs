@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using Unity.Services.Authentication;
@@ -14,7 +15,10 @@ public class LobbyScript : MonoBehaviour
     public Lobby joinedLobby;
     float heartbeatTimer;
     float lobbyUpdateTimer;
+    float lobbyPollTimer;
     public string playerName = "Player 1";
+
+    int previousAmountOfPlayer = 0;
 
     private void Awake()
     {
@@ -38,6 +42,7 @@ public class LobbyScript : MonoBehaviour
     {
         HandleLobbyHeartBeat();
         HandleLobbyCallForUpdate();
+        HandleLobbyPolling();
     }
 
     async void HandleLobbyHeartBeat()
@@ -70,6 +75,31 @@ public class LobbyScript : MonoBehaviour
             }
         }
 
+    }
+
+    private async void HandleLobbyPolling()
+    {
+        if (joinedLobby != null)
+        {
+            lobbyPollTimer -= Time.deltaTime;
+            if (lobbyPollTimer < 0f)
+            {
+                float lobbyPollTimerMax = 1.1f;
+                lobbyPollTimer = lobbyPollTimerMax;
+
+                joinedLobby = await LobbyService.Instance.GetLobbyAsync(joinedLobby.Id);
+
+                if (joinedLobby.Players.Count <= 0)
+                    DeleteLobby();
+
+                int currentPlayerNum = joinedLobby.Players.Count;
+                if(currentPlayerNum != previousAmountOfPlayer)
+                {
+                    previousAmountOfPlayer = currentPlayerNum;
+                    LobbyUIScript.Instance.UpdateTextUI();
+                }
+            }
+        }
     }
 
     #region CreateLobby
@@ -174,6 +204,29 @@ public class LobbyScript : MonoBehaviour
 
     }
 
+    public async void JoinLobbyById(string lobbyCode)
+    {
+        try
+        {
+            JoinLobbyByIdOptions joinOption = new JoinLobbyByIdOptions
+            {
+                Player = GetPlayer()
+            };
+            Lobby lobby = await Lobbies.Instance.JoinLobbyByIdAsync(lobbyCode, joinOption);
+            joinedLobby = lobby;
+
+            Debug.Log("joined lobby with code " + lobbyCode);
+
+            PrintPlayers(lobby);
+
+            LobbyUIScript.Instance.UpdateTextUI();
+        }
+        catch (LobbyServiceException e)
+        {
+            Debug.Log(e);
+        }
+    }
+
     async void QuickJoinLobby()
     {
         //Join a lobby public lobby without entering lobby code or id
@@ -191,7 +244,14 @@ public class LobbyScript : MonoBehaviour
     #endregion
 
     #region LeaveOrKickLobby
-    async void LeaveLobby()
+
+    private void OnApplicationQuit()
+    {
+        if(joinedLobby != null)
+            LeaveLobby();
+    }
+
+    public async void LeaveLobby()
     {
         try
         {
@@ -273,7 +333,7 @@ public class LobbyScript : MonoBehaviour
 
     }
 
-    async void UpdatePlayerName(string newName)
+    public async void UpdatePlayerName(string newName)
     {
         try
         {
@@ -312,9 +372,9 @@ public class LobbyScript : MonoBehaviour
         return new Player
         {
             Data = new Dictionary<string, PlayerDataObject>
-                    {
-                        { "PlayerName", new PlayerDataObject(PlayerDataObject.VisibilityOptions.Member, playerName) }
-                    }
+            {
+                { "PlayerName", new PlayerDataObject(PlayerDataObject.VisibilityOptions.Member, playerName) }
+            }
         };
     }
 
