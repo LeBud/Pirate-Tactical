@@ -180,7 +180,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Public room
+  m_text: Private Room
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -1581,7 +1581,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   createLobbyBtt: {fileID: 116951469}
   lobbyNameIF: {fileID: 2049312341}
-  publicLobby: {fileID: 1259048280}
+  privateLobby: {fileID: 1259048280}
   connectBtt: {fileID: 356249953}
   searchLobbiesContainer: {fileID: 128876449}
   searchLobbyPrefab: {fileID: 7456034327993909076, guid: 398fab7984f11134b9a5528c2157ecf4, type: 3}

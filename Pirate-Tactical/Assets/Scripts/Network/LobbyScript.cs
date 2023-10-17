@@ -82,7 +82,7 @@ public class LobbyScript : MonoBehaviour
             //Set parameters to the lobby like set it private
             CreateLobbyOptions createOptions = new CreateLobbyOptions
             {
-                IsPrivate = privateRoom,
+                IsPrivate = false,
                 Player = GetPlayer(),
                 Data = new Dictionary<string, DataObject>
                 {
@@ -99,6 +99,8 @@ public class LobbyScript : MonoBehaviour
             Debug.Log("Created lobby ! " + lobby.Name + " | Max players " + lobby.MaxPlayers + " | ID " + lobby.Id + " | Lobby code" + lobby.LobbyCode);
 
             PrintPlayers(hostLobby);
+
+            LobbyUIScript.Instance.UpdateTextUI();
         }
         catch(LobbyServiceException e)
         {
@@ -163,6 +165,7 @@ public class LobbyScript : MonoBehaviour
 
             PrintPlayers(lobby);
 
+            LobbyUIScript.Instance.UpdateTextUI();
         }
         catch (LobbyServiceException e)
         {

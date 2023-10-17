@@ -13,15 +13,17 @@ public class LobbyUIScript : MonoBehaviour
     [Header("CreateLobby")]
     [SerializeField] Button createLobbyBtt;
     [SerializeField] TMP_InputField lobbyNameIF;
-    [SerializeField] Toggle publicLobby;
+    [SerializeField] Toggle privateLobby;
 
     [Header("SearchLobby")]
     [SerializeField] Button connectBtt;
     [SerializeField] Transform searchLobbiesContainer;
     [SerializeField] Button searchLobbyPrefab;
+    [SerializeField] GameObject searchLobbyObject;
 
     [Header("JoinedLobby")]
     [SerializeField] TextMeshProUGUI joinedLobbyNameTxt;
+    [SerializeField] GameObject joinedLobbyObject;
 
     private void Awake()
     {
@@ -52,19 +54,19 @@ public class LobbyUIScript : MonoBehaviour
 
     public void CreateLobby()
     {
-        LobbyScript.Instance.CreateLobby(lobbyNameIF.text, publicLobby);
-
-        UpdateTextUI();
+        LobbyScript.Instance.CreateLobby(lobbyNameIF.text, privateLobby);
     }
 
     public void JoinLobby(string code)
     {
         LobbyScript.Instance.JoinLobbyByCode(code);
+        searchLobbyObject.SetActive(false);
+        joinedLobbyObject.SetActive(true);
     }
 
-    private void UpdateTextUI()
+    public void UpdateTextUI()
     {
-        joinedLobbyNameTxt.text = lobbyNameIF.text;
+        joinedLobbyNameTxt.text = LobbyScript.Instance.joinedLobby.Name;
         //publicPrivateText.text = publicLobby ? "Private" : "Public";
         //maxPlayersText.text = maxPlayers.ToString();
         //gameModeText.text = gameMode.ToString();
