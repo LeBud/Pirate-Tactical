@@ -4,6 +4,7 @@ using TMPro;
 using Unity.Services.Lobbies.Models;
 using UnityEngine;
 using UnityEngine.UI;
+using static LobbyManager;
 
 public class LobbyUIScript : MonoBehaviour
 {
@@ -15,6 +16,7 @@ public class LobbyUIScript : MonoBehaviour
     [SerializeField] Toggle publicLobby;
 
     [Header("SearchLobby")]
+    [SerializeField] Button connectBtt;
     [SerializeField] Transform searchLobbiesContainer;
     [SerializeField] Button searchLobbyPrefab;
 
@@ -27,6 +29,12 @@ public class LobbyUIScript : MonoBehaviour
             Instance = this;
     }
 
+    private void Start()
+    {
+        createLobbyBtt.onClick.AddListener(() => { CreateLobby(); });
+        connectBtt.onClick.AddListener(() => { LobbyScript.Instance.SearchLobbies(); });
+    }
+
     public void AddSearchLobbies(QueryResponse query)
     {
         foreach(Transform t in searchLobbiesContainer)
@@ -36,7 +44,7 @@ public class LobbyUIScript : MonoBehaviour
 
         foreach(var lobby in query.Results)
         {
-            Button btt = Instantiate(searchLobbyPrefab);
+            Button btt = Instantiate(searchLobbyPrefab, searchLobbiesContainer);
             btt.onClick.AddListener(() => { JoinLobby(lobby.LobbyCode); });
         }
     }
@@ -45,11 +53,21 @@ public class LobbyUIScript : MonoBehaviour
     public void CreateLobby()
     {
         LobbyScript.Instance.CreateLobby(lobbyNameIF.text, publicLobby);
-        joinedLobbyNameTxt.text = LobbyScript.Instance.joinedLobby.Name;
+
+        UpdateTextUI();
     }
 
     public void JoinLobby(string code)
     {
         LobbyScript.Instance.JoinLobbyByCode(code);
     }
+
+    private void UpdateTextUI()
+    {
+        joinedLobbyNameTxt.text = lobbyNameIF.text;
+        //publicPrivateText.text = publicLobby ? "Private" : "Public";
+        //maxPlayersText.text = maxPlayers.ToString();
+        //gameModeText.text = gameMode.ToString();
+    }
+
 }
