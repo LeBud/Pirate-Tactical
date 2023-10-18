@@ -43,7 +43,7 @@ public class LobbyUIScript : MonoBehaviour
         connectBtt.onClick.AddListener(() => { LobbyScript.Instance.SearchLobbies(); });
         refreshBtt.onClick.AddListener(() => { LobbyScript.Instance.SearchLobbies(); });
         leaveBtt.onClick.AddListener(() => { LobbyScript.Instance.LeaveLobby(); });
-        playerName.onSubmit.AddListener(delegate { LobbyScript.Instance.playerName = playerName.text; });
+        playerName.onValueChanged.AddListener(delegate { LobbyScript.Instance.playerName = playerName.text; });
     }
 
     void Authenticate()

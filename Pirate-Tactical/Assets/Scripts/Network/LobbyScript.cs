@@ -151,7 +151,7 @@ public class LobbyScript : MonoBehaviour
             //Set parameters to the lobby like set it private
             CreateLobbyOptions createOptions = new CreateLobbyOptions
             {
-                IsPrivate = false,
+                IsPrivate = privateRoom,
                 Player = GetPlayer(),
                 Data = new Dictionary<string, DataObject>
                 {

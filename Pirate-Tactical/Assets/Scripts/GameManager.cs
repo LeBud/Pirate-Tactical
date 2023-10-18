@@ -26,6 +26,11 @@ public class GameManager : NetworkBehaviour
         state = GameState.GameStarting;
     }
 
+    private void Start()
+    {
+        HUD.Instance.SetGameState();
+    }
+
     private void Update()
     {
         if (!IsServer) return;
@@ -57,6 +62,7 @@ public class GameManager : NetworkBehaviour
             state = GameState.player1Turn;
 
         GivePlayerAction();
+        HUD.Instance.SetGameState();
     }
 
     void GivePlayerAction()
