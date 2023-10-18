@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.Netcode;
 using Unity.Services.Authentication;
 using Unity.Services.Core;
 using Unity.Services.Lobbies;
@@ -98,7 +99,45 @@ public class LobbyScript : MonoBehaviour
                     previousAmountOfPlayer = currentPlayerNum;
                     LobbyUIScript.Instance.UpdateTextUI();
                 }
+
+                if (joinedLobby.Data["RelayKey"].Value != "0")
+                {
+                    //StartTheGame
+                    if (!IsLobbyHost())
+                        RelayScript.Instance.JoinRelay(joinedLobby.Data["RelayKey"].Value);
+
+                    LobbyUIScript.Instance.HideUI();
+                    joinedLobby = null;
+                }
             }
+        }
+    }
+
+    public async void StartGame()
+    {
+        if (IsLobbyHost())
+        {
+            try
+            {
+                Debug.Log("Start game");
+
+                string relayCode = await RelayScript.Instance.CreateRelay();
+
+                Lobby lobby = await Lobbies.Instance.UpdateLobbyAsync(joinedLobby.Id, new UpdateLobbyOptions 
+                { 
+                    Data = new Dictionary<string, DataObject> 
+                    { 
+                        {"RelayKey", new DataObject(DataObject.VisibilityOptions.Member, relayCode) }
+                    } 
+                });
+
+                joinedLobby = lobby;
+            }
+            catch (LobbyServiceException e)
+            {
+                Debug.Log(e);
+            }
+
         }
     }
 
@@ -117,7 +156,8 @@ public class LobbyScript : MonoBehaviour
                 Data = new Dictionary<string, DataObject>
                 {
                     {"GameMode", new DataObject(DataObject.VisibilityOptions.Public, "TestMode") },
-                    {"Map", new DataObject(DataObject.VisibilityOptions.Public, "testMap") }
+                    {"Map", new DataObject(DataObject.VisibilityOptions.Public, "testMap") },
+                    {"RelayKey", new DataObject(DataObject.VisibilityOptions.Member, "0") }
                 }
             };
 
@@ -378,4 +418,8 @@ public class LobbyScript : MonoBehaviour
         };
     }
 
+    public bool IsLobbyHost()
+    {
+        return joinedLobby != null && joinedLobby.HostId == AuthenticationService.Instance.PlayerId;
+    }
 }
