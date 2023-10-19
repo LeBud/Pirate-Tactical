@@ -1,9 +1,11 @@
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
+using Unity.Collections;
+using Unity.Netcode;
 using UnityEngine;
 
-public class HUD : MonoBehaviour
+public class HUD : NetworkBehaviour
 {
     public static HUD Instance { get; private set; }
     [SerializeField] TextMeshProUGUI gameStateTxt;
@@ -16,11 +18,13 @@ public class HUD : MonoBehaviour
 
     private void LateUpdate()
     {
+
     }
 
-    public void SetGameState()
+    [ClientRpc]
+    public void SetGameStateClientRpc(string gameState)
     {
-        gameStateTxt.text = GameManager.Instance.state.ToString();
+        gameStateTxt.text = gameState;
     }
 
 }

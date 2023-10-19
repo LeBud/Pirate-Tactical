@@ -69,7 +69,7 @@ public class LobbyUIScript : MonoBehaviour
 
     public void CreateLobby()
     {
-        LobbyScript.Instance.CreateLobby(lobbyNameIF.text, privateLobby);
+        LobbyScript.Instance.CreateLobby(lobbyNameIF.text, privateLobby.isOn);
     }
 
     public void JoinLobby(string code)

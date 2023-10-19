@@ -82,6 +82,7 @@ public class RelayScript : MonoBehaviour
                 joinAllocation.HostConnectionData);*/
 
             NetworkManager.Singleton.StartClient();
+
         }
         catch (RelayServiceException e)
         {

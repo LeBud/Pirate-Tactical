@@ -47,16 +47,9 @@ public class GridManager : NetworkBehaviour
             }
         }
 
-        _cam.transform.position = new Vector3((float)_width / 2 - 0.5f, (float)_height / 2 - 0.5f, -10);
+        //_cam.transform.position = new Vector3((float)_width / 2 - 0.5f, (float)_height / 2 - 0.5f, -10);
     }
 
-    //Placer la cam correctement lorsqu'un joueur rejoint
-    [ServerRpc(RequireOwnership = false)]
-    public void JoinServerServerRpc()
-    {
-        if(!IsOwner) return;
-        Camera.main.transform.position = new Vector3((float)_width / 2 - 0.5f, (float)_height / 2 - 0.5f, -10);
-    }
 
     //Permet d'obtenir une tile avec sa position
     public TileScript GetTileAtPosition(Vector2 pos)

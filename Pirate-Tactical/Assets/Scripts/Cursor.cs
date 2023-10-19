@@ -23,7 +23,7 @@ public class Cursor : NetworkBehaviour
     private void Start()
     {
         TileScript.OnHoverTile += OnTileHover;
-        GridManager.Instance.JoinServerServerRpc();
+        GameManager.Instance.JoinServerServerRpc();
 
         TileScript[] tiles = FindObjectsOfType<TileScript>();
         foreach (var t in tiles)
@@ -65,7 +65,6 @@ public class Cursor : NetworkBehaviour
             else if (CanMoveUnit(t))
             {
                 StartCoroutine(UpdateShipPlacementOnGrid());
-                GameManager.Instance.UpdateGameStateServerRpc();
             }
         }
     }
@@ -112,6 +111,7 @@ public class Cursor : NetworkBehaviour
             }
         }
 
+        GameManager.Instance.UpdateGameStateServerRpc();
         SetShipOnTileServerRpc(playerTile.pos.Value, true);
         GetInRangeTiles();
         unitMoving = false;
@@ -121,7 +121,7 @@ public class Cursor : NetworkBehaviour
     {
         if (!IsOwner) return;
         shipSpawn = true;
-        SpawnUnitServerRpc(pos);
+        SpawnUnitServerRpc(pos, NetworkManager.LocalClientId);
         playerTile = t;
 
         SetShipOnTileServerRpc(pos, true);
@@ -137,12 +137,14 @@ public class Cursor : NetworkBehaviour
     }
 
     [ServerRpc]
-    void SpawnUnitServerRpc(Vector2 pos)
+    void SpawnUnitServerRpc(Vector2 pos, ulong id)
     {
         ShipUnit ship = Instantiate(shipUnit);
-        ship.transform.position = new Vector3(pos.x, pos.y, -1);
+
         shipUnit = ship;
         shipUnit.GetComponent<NetworkObject>().SpawnWithOwnership(OwnerClientId);
+        ship.unitPos.Value = new Vector3(pos.x, pos.y, -1);
+        shipUnit.SetShipColorClientRpc(id);
     }
 
     [ServerRpc(RequireOwnership = false)]

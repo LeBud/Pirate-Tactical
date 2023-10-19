@@ -6,12 +6,14 @@ using UnityEngine;
 public class GameManager : NetworkBehaviour
 {
     public static GameManager Instance { get; private set; }
+    public int player1unitLeft = 1;
+    public int player2unitLeft = 1;
 
     public enum GameState
     {
         GameStarting,
-        player1Turn,
-        player2Turn,
+        Player1Turn,
+        Player2Turn,
         GameFinish,
         GameTesting
     }
@@ -22,13 +24,13 @@ public class GameManager : NetworkBehaviour
         if (Instance == null)
             Instance = this;
 
-        if (state == GameState.GameTesting) return;
-        state = GameState.GameStarting;
+        if (state != GameState.GameTesting)
+            state = GameState.GameStarting;
     }
 
     private void Start()
     {
-        HUD.Instance.SetGameState();
+        
     }
 
     private void Update()
@@ -39,7 +41,15 @@ public class GameManager : NetworkBehaviour
         {
             UpdateGameStateServerRpc();
         }
+
+        if (player1unitLeft == 0 || player2unitLeft == 0 && state != GameState.GameFinish)
+        {
+            state = GameState.GameFinish;
+            UpdateGameStateServerRpc();
+        }
     }
+
+    #region SetGameState
 
     [ServerRpc(RequireOwnership = false)]
     public void UpdateGameStateServerRpc()
@@ -54,23 +64,57 @@ public class GameManager : NetworkBehaviour
         NetworkManager.ConnectedClients[0].PlayerObject.GetComponent<Cursor>().canPlay.Value = false;
         NetworkManager.ConnectedClients[1].PlayerObject.GetComponent<Cursor>().canPlay.Value = false;
 
-        if (state == GameState.GameStarting)
-            state = GameState.player1Turn;
-        else if(state == GameState.player1Turn)
-            state = GameState.player2Turn;
-        else if(state == GameState.player2Turn)
-            state = GameState.player1Turn;
+        if(state == GameState.GameFinish)
+        {
+            Debug.Log("Game Finish");
+        }
+        else if (state == GameState.GameStarting)
+            state = GameState.Player1Turn;
+        else if(state == GameState.Player1Turn)
+            state = GameState.Player2Turn;
+        else if(state == GameState.Player2Turn)
+            state = GameState.Player1Turn;
 
         GivePlayerAction();
-        HUD.Instance.SetGameState();
+        HUD.Instance.SetGameStateClientRpc(SetGameStateString(state));
+    }
+
+    string SetGameStateString(GameState newState)
+    {
+        string returnState = "";
+
+        if (newState == GameState.GameTesting)
+            returnState = "Game Testing";
+        else if (newState == GameState.Player1Turn)
+            returnState = "Player 1 Turn";
+        else if (newState == GameState.Player2Turn)
+            returnState = "Player 2 Turn";
+        else if (newState == GameState.GameStarting)
+            returnState = "Game is Starting";
+        else if (newState == GameState.GameFinish)
+            returnState = "Game is Finish";
+
+        return returnState;
     }
 
     void GivePlayerAction()
     {
-        if (state == GameState.player1Turn)
+        if (state == GameState.Player1Turn)
             NetworkManager.ConnectedClients[0].PlayerObject.GetComponent<Cursor>().canPlay.Value = true;
-        else if (state == GameState.player2Turn)
+        else if (state == GameState.Player2Turn)
             NetworkManager.ConnectedClients[1].PlayerObject.GetComponent<Cursor>().canPlay.Value = true;
+    }
+
+    #endregion
+
+    //Initialise Player
+    [ServerRpc(RequireOwnership = false)]
+    public void JoinServerServerRpc()
+    {
+        if (!IsOwner) return;
+        Camera.main.transform.position = new Vector3((float)19 / 2 - 0.5f, (float)9 / 2 - 0.5f, -10);
+
+        HUD.Instance.SetGameStateClientRpc(SetGameStateString(state));
     }
 
 }
