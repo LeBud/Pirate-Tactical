@@ -99,6 +99,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8235f83a23874fe4b9725a2425d45df8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  currentTile: {fileID: 0}
   shipSpeed: 0.0015
   unitLife:
     m_InternalValue: 10
@@ -107,6 +108,12 @@ MonoBehaviour:
   player1Color: {r: 0.9622642, g: 0.55039275, b: 0.004538993, a: 1}
   player2Color: {r: 0.5994166, g: 0, b: 0.8113208, a: 1}
   unitSprite: {fileID: 4475007845721384360}
+  unitRange: 4
+  damage: 4
+  index: 0
+  clientIdOwner: 0
+  movePoint: 1
+  attackPoint: 1
 --- !u!114 &810226246150426423
 MonoBehaviour:
   m_ObjectHideFlags: 0

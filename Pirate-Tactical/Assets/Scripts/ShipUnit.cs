@@ -6,6 +6,8 @@ using UnityEngine;
 
 public class ShipUnit : NetworkBehaviour
 {
+    public TileScript currentTile;
+
     public float shipSpeed = .0015f;
 
     public NetworkVariable<int> unitLife = new NetworkVariable<int>(10);
@@ -15,6 +17,16 @@ public class ShipUnit : NetworkBehaviour
     public Color player2Color;
 
     public SpriteRenderer unitSprite;
+
+    public int unitRange = 4;
+    public int damage = 4;
+    public int index;
+
+    public ulong clientIdOwner;
+
+    //Point d'actions
+    public int movePoint;
+    public int attackPoint;
 
     private void Update()
     {

@@ -6,19 +6,20 @@ using UnityEngine;
 
 public class Cursor : NetworkBehaviour
 {
-    [SerializeField] ShipUnit shipUnit;
-    [SerializeField] bool shipSpawn = false;
-    [SerializeField] int unitRange = 4;
-    [SerializeField] int damage = 4;
+    [SerializeField] int currentShipIndex;
+    [SerializeField] bool shipSelected = false;
+
     public NetworkVariable<bool> canPlay = new NetworkVariable<bool>(false);
 
-    TileScript playerTile, goalTile;
+    TileScript goalTile;
 
     List<TileScript> path = new List<TileScript>();
     List<TileScript> allTiles = new List<TileScript>();
     public List<TileScript> inRangeTiles = new List<TileScript>();
 
     bool unitMoving = false;
+
+    [SerializeField] UnitManager unitManager;
 
     private void Start()
     {
@@ -37,7 +38,10 @@ public class Cursor : NetworkBehaviour
     {
         if(!IsOwner) return;
 
+        if (!canPlay.Value) return;
+
         MyInputs();
+
     }
 
     void MyInputs()
@@ -51,20 +55,44 @@ public class Cursor : NetworkBehaviour
         if (!tile.HasValue) return;
         TileScript t = tile.Value.transform.GetComponent<TileScript>();
 
-        if (Input.GetMouseButtonDown(0))
+        if (Input.GetMouseButtonDown(0) && shipSelected)
         {
-            if (!canPlay.Value) return;
-
-            if(!shipSpawn)
-                SpawnShip(t.pos.Value, t);
-            else if (t.shipOnTile.Value)
+            if (t.shipOnTile.Value)
             {
-                GridManager.Instance.DamageUnitServerRpc(damage, t.pos.Value, NetworkManager.LocalClientId);
+                GridManager.Instance.DamageUnitServerRpc(unitManager.ships[currentShipIndex].damage, t.pos.Value, NetworkManager.LocalClientId);
                 GameManager.Instance.UpdateGameStateServerRpc();
             }
             else if (CanMoveUnit(t))
             {
                 StartCoroutine(UpdateShipPlacementOnGrid());
+            }
+            else if (!CanMoveUnit(t) && !unitMoving)
+            {
+                shipSelected = false;
+                HideTiles();
+            }
+        }
+        else if (Input.GetMouseButtonDown(0) && !shipSelected)
+        {
+            if (!unitManager.allShipSpawned)
+            {
+                SpawnShip(t.pos.Value, t);
+
+                if (currentShipIndex >= unitManager.ships.Length) currentShipIndex = 0;
+
+            }
+            else if (t.shipOnTile.Value && unitManager.allShipSpawned)
+            {
+                foreach(var ship in unitManager.ships)
+                {
+                    if(ship.unitPos.Value == t.pos.Value && ship.clientIdOwner == NetworkManager.LocalClientId)
+                    {
+                        currentShipIndex = ship.index;
+                        shipSelected = true;
+                        GetInRangeTiles();
+                        break;
+                    }
+                }
             }
         }
     }
@@ -73,18 +101,24 @@ public class Cursor : NetworkBehaviour
     {
         foreach (var t in inRangeTiles) t.HighLightRange(false);
         inRangeTiles.Clear();
-        inRangeTiles = PathFindTesting.GetInRangeTiles(playerTile, unitRange);
+        inRangeTiles = PathFindTesting.GetInRangeTiles(unitManager.ships[currentShipIndex].currentTile, unitManager.ships[currentShipIndex].unitRange);
 
         foreach (var t in inRangeTiles) t.HighLightRange(true);
     }
 
+    void HideTiles()
+    {
+        foreach (var t in inRangeTiles) t.HighLightRange(false);
+        inRangeTiles.Clear();
+    }
+
     void OnTileHover(TileScript tile)
     {
-        if (playerTile == null || unitMoving || !inRangeTiles.Contains(tile) || !canPlay.Value) return;
+        if (unitManager.ships[currentShipIndex].currentTile == null || unitMoving || !inRangeTiles.Contains(tile) || !canPlay.Value || !shipSelected) return;
 
         goalTile = tile;
         path.Clear();
-        path = PathFindTesting.PathTest(playerTile, goalTile);
+        path = PathFindTesting.PathTest(unitManager.ships[currentShipIndex].currentTile, goalTile);
     }
 
     IEnumerator UpdateShipPlacementOnGrid()
@@ -92,13 +126,13 @@ public class Cursor : NetworkBehaviour
         unitMoving = true;
         int value = path.Count - 1;
 
-        SetShipOnTileServerRpc(playerTile.pos.Value, false);
+        SetShipOnTileServerRpc(unitManager.ships[currentShipIndex].currentTile.pos.Value, false);
 
         while (path.Count > 0)
         {
             UnitNewPosServerRpc(path[value].pos.Value);
             
-            if(path.Count == 1) playerTile = path[0];
+            if(path.Count == 1) unitManager.ships[currentShipIndex].currentTile = path[0];
             path.RemoveAt(value);
             value--;
 
@@ -112,7 +146,7 @@ public class Cursor : NetworkBehaviour
         }
 
         GameManager.Instance.UpdateGameStateServerRpc();
-        SetShipOnTileServerRpc(playerTile.pos.Value, true);
+        SetShipOnTileServerRpc(unitManager.ships[currentShipIndex].currentTile.pos.Value, true);
         GetInRangeTiles();
         unitMoving = false;
     }
@@ -120,12 +154,18 @@ public class Cursor : NetworkBehaviour
     void SpawnShip(Vector2 pos, TileScript t)
     {
         if (!IsOwner) return;
-        shipSpawn = true;
-        SpawnUnitServerRpc(pos, NetworkManager.LocalClientId);
-        playerTile = t;
+
+
+        SpawnUnitServerRpc(pos, NetworkManager.LocalClientId, currentShipIndex);
+
+        unitManager.ships[currentShipIndex].currentTile = t;
+        unitManager.ships[currentShipIndex].index = currentShipIndex;
+        unitManager.ships[currentShipIndex].clientIdOwner = NetworkManager.LocalClientId;
+        unitManager.numShipSpawned++;
+        currentShipIndex++;
 
         SetShipOnTileServerRpc(pos, true);
-        GetInRangeTiles();
+        //GetInRangeTiles();
     }
 
     #region ServerRpcMethods
@@ -133,18 +173,33 @@ public class Cursor : NetworkBehaviour
     [ServerRpc(RequireOwnership = false)]
     void UnitNewPosServerRpc(Vector2 pos)
     {
-        shipUnit.unitPos.Value = pos;
+        unitManager.ships[currentShipIndex].unitPos.Value = pos;
     }
 
     [ServerRpc]
-    void SpawnUnitServerRpc(Vector2 pos, ulong id)
+    void SpawnUnitServerRpc(Vector2 pos, ulong id, int index)
     {
-        ShipUnit ship = Instantiate(shipUnit);
+        ShipUnit ship = Instantiate(NetworkManager.ConnectedClients[id].PlayerObject.GetComponent<Cursor>().unitManager.ships[index]);
+        ship.GetComponent<NetworkObject>().SpawnWithOwnership(id);
 
-        shipUnit = ship;
-        shipUnit.GetComponent<NetworkObject>().SpawnWithOwnership(OwnerClientId);
-        ship.unitPos.Value = new Vector3(pos.x, pos.y, -1);
-        shipUnit.SetShipColorClientRpc(id);
+        LinkUnitToClientRpc(ship.GetComponent<NetworkObject>().NetworkObjectId, index);
+
+        //unitManager.ships[index] = ship;
+        unitManager.ships[index].unitPos.Value = new Vector3(pos.x, pos.y, -1);
+        unitManager.ships[index].SetShipColorClientRpc(id);
+    }
+
+    [ClientRpc]
+    void LinkUnitToClientRpc(ulong unitID, int index)
+    {
+        foreach(NetworkObject obj in FindObjectsOfType<NetworkObject>())
+        {
+            if (obj.NetworkObjectId == unitID)
+            {
+                unitManager.ships[index] = obj.GetComponent<ShipUnit>();
+                break;
+            }
+        }
     }
 
     [ServerRpc(RequireOwnership = false)]
@@ -167,7 +222,7 @@ public class Cursor : NetworkBehaviour
 
     bool CanMoveUnit(TileScript t)
     {
-        return shipSpawn && path.Count > 0 && !unitMoving && inRangeTiles.Contains(t);
+        return unitManager.allShipSpawned && shipSelected && path.Count > 0 && !unitMoving && inRangeTiles.Contains(t);
     }
 
 }

@@ -47,6 +47,11 @@ public class GameManager : NetworkBehaviour
             state = GameState.GameFinish;
             UpdateGameStateServerRpc();
         }
+
+        if(state == GameState.GameTesting && NetworkManager.ConnectedClients.Count >= 1)
+        {
+            UpdateGameStateServerRpc();
+        }
     }
 
     #region SetGameState
@@ -56,8 +61,10 @@ public class GameManager : NetworkBehaviour
     {
         if(state == GameState.GameTesting)
         {
-            NetworkManager.ConnectedClients[0].PlayerObject.GetComponent<Cursor>().canPlay.Value = true;
-            NetworkManager.ConnectedClients[1].PlayerObject.GetComponent<Cursor>().canPlay.Value = true;
+            foreach(var client in NetworkManager.ConnectedClients)
+            {
+                NetworkManager.ConnectedClients[client.Key].PlayerObject.GetComponent<Cursor>().canPlay.Value = true;
+            }
             return;
         }
 
