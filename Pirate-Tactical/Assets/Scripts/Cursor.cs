@@ -130,7 +130,7 @@ public class Cursor : NetworkBehaviour
 
         while (path.Count > 0)
         {
-            UnitNewPosServerRpc(path[value].pos.Value);
+            UnitNewPosServerRpc(path[value].pos.Value, currentShipIndex);
             
             if(path.Count == 1) unitManager.ships[currentShipIndex].currentTile = path[0];
             path.RemoveAt(value);
@@ -171,9 +171,9 @@ public class Cursor : NetworkBehaviour
     #region ServerRpcMethods
 
     [ServerRpc(RequireOwnership = false)]
-    void UnitNewPosServerRpc(Vector2 pos)
+    void UnitNewPosServerRpc(Vector2 pos, int index)
     {
-        unitManager.ships[currentShipIndex].unitPos.Value = pos;
+        unitManager.ships[index].unitPos.Value = pos;
     }
 
     [ServerRpc]
