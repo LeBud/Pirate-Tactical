@@ -6,8 +6,8 @@ using UnityEngine;
 public class GameManager : NetworkBehaviour
 {
     public static GameManager Instance { get; private set; }
-    public int player1unitLeft = 1;
-    public int player2unitLeft = 1;
+    public int player1unitLeft = 5;
+    public int player2unitLeft = 5;
 
     public enum GameState
     {

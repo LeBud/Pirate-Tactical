@@ -8,8 +8,8 @@ public class ShipUnit : NetworkBehaviour
 {
     public TileScript currentTile;
 
-    public float shipSpeed = .0015f;
-
+    //public float shipSpeed = .0015f;
+    public float maxHealth;
     public NetworkVariable<int> unitLife = new NetworkVariable<int>(10);
     public NetworkVariable<Vector2> unitPos = new NetworkVariable<Vector2>(Vector2.zero, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);
 
@@ -27,6 +27,17 @@ public class ShipUnit : NetworkBehaviour
     //Point d'actions
     public int movePoint;
     public int attackPoint;
+
+    [SerializeField] Transform healthDisplay;
+
+    float healthPercent;
+
+    private void Start()
+    {
+        healthPercent = (float)unitLife.Value / maxHealth;
+        Debug.Log(healthPercent);
+        healthDisplay.localScale = new Vector3(healthPercent, 1, 1);
+    }
 
     private void Update()
     {
@@ -53,10 +64,17 @@ public class ShipUnit : NetworkBehaviour
     public void TakeDamage(int dmg)
     {
         unitLife.Value -= dmg;
+
         if(unitLife.Value <= 0)
         {
             DestroyUnitOnServerRpc(NetworkManager.LocalClientId);
         }
+    }
+
+    [ClientRpc]
+    public void SetHealthBarClientRpc(float percent)
+    {
+        healthDisplay.localScale = new Vector3(percent, 1, 1);
     }
 
     [ServerRpc(RequireOwnership = false)]

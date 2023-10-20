@@ -4962,8 +4962,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a6ed6e9b922aba741a073ba0086b2b0a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  player1unitLeft: 1
-  player2unitLeft: 1
+  player1unitLeft: 5
+  player2unitLeft: 5
   state: 4
 --- !u!4 &1381260906
 Transform:

@@ -76,7 +76,13 @@ public class GridManager : NetworkBehaviour
             if (ships[i].unitPos.Value == pos)
             {
                 if (ships[i].GetComponent<NetworkObject>().OwnerClientId != id)
+                {
                     ships[i].TakeDamage(damage);
+
+
+                    float percent = (float)ships[i].unitLife.Value / ships[i].maxHealth;
+                    ships[i].SetHealthBarClientRpc(percent);
+                }
 
                 break;
             }
