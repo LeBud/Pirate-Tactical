@@ -89,4 +89,16 @@ public class GridManager : NetworkBehaviour
         }
 
     }
+
+    [ServerRpc(RequireOwnership = false)]
+    public void SetShipOnTileServerRpc(Vector2 tilePos, bool active)
+    {
+        if(!IsServer) return;
+
+        if (!dictionnary.Contains(tilePos)) return;
+
+        TileScript t = GetTileAtPosition(tilePos);
+        t.shipOnTile.Value = active;
+    }
+
 }

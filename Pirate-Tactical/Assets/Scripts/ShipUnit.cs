@@ -67,6 +67,7 @@ public class ShipUnit : NetworkBehaviour
 
         if(unitLife.Value <= 0)
         {
+            GridManager.Instance.SetShipOnTileServerRpc(currentTile.pos.Value, false);
             DestroyUnitOnServerRpc(NetworkManager.LocalClientId);
         }
     }

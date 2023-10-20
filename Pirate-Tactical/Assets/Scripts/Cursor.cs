@@ -137,7 +137,7 @@ public class Cursor : NetworkBehaviour
         unitMoving = true;
         int value = path.Count - 1;
 
-        SetShipOnTileServerRpc(unitManager.ships[currentShipIndex].currentTile.pos.Value, false);
+        GridManager.Instance.SetShipOnTileServerRpc(unitManager.ships[currentShipIndex].currentTile.pos.Value, false);
 
         while (path.Count > 0)
         {
@@ -157,7 +157,7 @@ public class Cursor : NetworkBehaviour
         }
 
         GameManager.Instance.UpdateGameStateServerRpc();
-        SetShipOnTileServerRpc(unitManager.ships[currentShipIndex].currentTile.pos.Value, true);
+        GridManager.Instance.SetShipOnTileServerRpc(unitManager.ships[currentShipIndex].currentTile.pos.Value, true);
         GetInRangeTiles();
         unitMoving = false;
     }
@@ -175,7 +175,7 @@ public class Cursor : NetworkBehaviour
         unitManager.numShipSpawned++;
         currentShipIndex++;
 
-        SetShipOnTileServerRpc(pos, true);
+        GridManager.Instance.SetShipOnTileServerRpc(pos, true);
         //GetInRangeTiles();
     }
 
@@ -211,15 +211,6 @@ public class Cursor : NetworkBehaviour
                 break;
             }
         }
-    }
-
-    [ServerRpc(RequireOwnership = false)]
-    void SetShipOnTileServerRpc(Vector2 tilePos, bool active)
-    {
-        if (!GridManager.Instance.dictionnary.Contains(tilePos)) return;
-
-        TileScript t = GridManager.Instance.GetTileAtPosition(tilePos);
-        t.shipOnTile.Value = active;
     }
 
     #endregion
