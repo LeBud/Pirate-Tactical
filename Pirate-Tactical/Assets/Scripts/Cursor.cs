@@ -38,7 +38,12 @@ public class Cursor : NetworkBehaviour
     {
         if(!IsOwner) return;
 
-        if (!canPlay.Value) return;
+        if (!canPlay.Value)
+        {
+            shipSelected = false;
+            HideTiles();
+            return;
+        }
 
         MyInputs();
 
@@ -46,6 +51,12 @@ public class Cursor : NetworkBehaviour
 
     void MyInputs()
     {
+        if (Input.GetButtonDown("Cancel"))
+        {
+            shipSelected = false;
+            HideTiles();
+        }
+
         Vector3 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
         Vector2 pos = new Vector2(mousePos.x, mousePos.y);
         transform.position = new Vector3(pos.x, pos.y, -5);
