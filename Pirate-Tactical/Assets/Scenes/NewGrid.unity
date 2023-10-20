@@ -4964,7 +4964,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   player1unitLeft: 5
   player2unitLeft: 5
-  state: 4
+  state: 0
 --- !u!4 &1381260906
 Transform:
   m_ObjectHideFlags: 0

@@ -107,9 +107,33 @@ public class GameManager : NetworkBehaviour
     void GivePlayerAction()
     {
         if (state == GameState.Player1Turn)
-            NetworkManager.ConnectedClients[0].PlayerObject.GetComponent<Cursor>().canPlay.Value = true;
+        {
+            Cursor currentP = NetworkManager.ConnectedClients[0].PlayerObject.GetComponent<Cursor>();
+            currentP.canPlay.Value = true;
+            for(int i = 0; i < currentP.unitManager.ships.Length; i++)
+            {
+                currentP.unitManager.ships[i].canMove.Value = true;
+                currentP.unitManager.ships[i].canShoot.Value = true;
+                currentP.unitManager.ships[i].canBeSelected.Value = true;
+                currentP.totalMovePoint++;
+                currentP.totalShootPoint++;
+            }
+            currentP.TotalActionPoint();
+        }
         else if (state == GameState.Player2Turn)
-            NetworkManager.ConnectedClients[1].PlayerObject.GetComponent<Cursor>().canPlay.Value = true;
+        {
+            Cursor currentP = NetworkManager.ConnectedClients[1].PlayerObject.GetComponent<Cursor>();
+            currentP.canPlay.Value = true;
+            for (int i = 0; i < currentP.unitManager.ships.Length; i++)
+            {
+                currentP.unitManager.ships[i].canMove.Value = true;
+                currentP.unitManager.ships[i].canShoot.Value = true;
+                currentP.unitManager.ships[i].canBeSelected.Value = true;
+                currentP.totalMovePoint++;
+                currentP.totalShootPoint++;
+            }
+            currentP.TotalActionPoint();
+        }
     }
 
     #endregion

@@ -19,7 +19,11 @@ public class Cursor : NetworkBehaviour
 
     bool unitMoving = false;
 
-    [SerializeField] UnitManager unitManager;
+    public UnitManager unitManager;
+
+    public float totalMovePoint;
+    public float totalShootPoint;
+    float totalActionPoint;
 
     private void Start()
     {
@@ -49,6 +53,14 @@ public class Cursor : NetworkBehaviour
 
     }
 
+    public void TotalActionPoint()
+    {
+        totalActionPoint = totalMovePoint + totalShootPoint;
+
+        if(totalActionPoint <= 0)
+            GameManager.Instance.UpdateGameStateServerRpc();
+    }
+
     void MyInputs()
     {
         if (Input.GetButtonDown("Cancel"))
@@ -71,7 +83,14 @@ public class Cursor : NetworkBehaviour
             if (t.shipOnTile.Value)
             {
                 GridManager.Instance.DamageUnitServerRpc(unitManager.ships[currentShipIndex].damage, t.pos.Value, NetworkManager.LocalClientId);
-                GameManager.Instance.UpdateGameStateServerRpc();
+                unitManager.ships[currentShipIndex].canShoot.Value = false;
+                totalActionPoint--;
+                if (unitManager.ships[currentShipIndex].canMove.Value)
+                {
+                    unitManager.ships[currentShipIndex].canMove.Value = false;
+                    totalMovePoint--;
+                }
+                TotalActionPoint();
             }
             else if (CanMoveUnit(t))
             {
@@ -96,7 +115,7 @@ public class Cursor : NetworkBehaviour
             {
                 foreach(var ship in unitManager.ships)
                 {
-                    if(ship.unitPos.Value == t.pos.Value && ship.clientIdOwner == NetworkManager.LocalClientId)
+                    if(ship.unitPos.Value == t.pos.Value && ship.clientIdOwner == NetworkManager.LocalClientId && ship.canBeSelected.Value)
                     {
                         currentShipIndex = ship.index;
                         shipSelected = true;
@@ -156,7 +175,9 @@ public class Cursor : NetworkBehaviour
             }
         }
 
-        GameManager.Instance.UpdateGameStateServerRpc();
+        TotalActionPoint();
+        totalMovePoint--;
+        unitManager.ships[currentShipIndex].canMove.Value = false;
         GridManager.Instance.SetShipOnTileServerRpc(unitManager.ships[currentShipIndex].currentTile.pos.Value, true);
         GetInRangeTiles();
         unitMoving = false;

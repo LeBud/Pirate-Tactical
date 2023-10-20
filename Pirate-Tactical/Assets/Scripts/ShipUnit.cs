@@ -25,8 +25,12 @@ public class ShipUnit : NetworkBehaviour
     public ulong clientIdOwner;
 
     //Point d'actions
-    public int movePoint;
-    public int attackPoint;
+    public int movePoint = 1;
+    public int attackPoint = 1;
+
+    public NetworkVariable<bool> canMove = new NetworkVariable<bool>(false);
+    public NetworkVariable<bool> canShoot = new NetworkVariable<bool>(false);
+    public NetworkVariable<bool> canBeSelected = new NetworkVariable<bool>(false);
 
     [SerializeField] Transform healthDisplay;
 
@@ -35,8 +39,10 @@ public class ShipUnit : NetworkBehaviour
     private void Start()
     {
         healthPercent = (float)unitLife.Value / maxHealth;
-        Debug.Log(healthPercent);
         healthDisplay.localScale = new Vector3(healthPercent, 1, 1);
+
+        if(canMove.Value || canShoot.Value) 
+            canBeSelected.Value = true;
     }
 
     private void Update()
@@ -44,6 +50,14 @@ public class ShipUnit : NetworkBehaviour
         //unitPos.OnValueChanged += (Vector2 previousPos, Vector2 newPos) => { StartCoroutine(MoveShip()); };
         if (transform.position != new Vector3(unitPos.Value.x, unitPos.Value.y, -1))
             StartCoroutine(MoveShip());
+
+        if (canBeSelected.Value)
+        {
+            if(!canMove.Value && !canShoot.Value)
+            {
+                canBeSelected.Value = false;
+            }
+        }
     }
 
     [ClientRpc]
