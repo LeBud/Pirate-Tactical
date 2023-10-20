@@ -106,6 +106,7 @@ public class GameManager : NetworkBehaviour
 
     void GivePlayerAction()
     {
+        //Setup pour que seulement le joueur puisse spawn ses unités puis l'autre joueur eznsuite
         if (state == GameState.Player1Turn)
         {
             Cursor currentP = NetworkManager.ConnectedClients[0].PlayerObject.GetComponent<Cursor>();
