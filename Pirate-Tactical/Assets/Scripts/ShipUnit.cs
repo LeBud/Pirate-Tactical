@@ -41,8 +41,8 @@ public class ShipUnit : NetworkBehaviour
         healthPercent = (float)unitLife.Value / maxHealth;
         healthDisplay.localScale = new Vector3(healthPercent, 1, 1);
 
-        if(canMove.Value || canShoot.Value) 
-            canBeSelected.Value = true;
+        /*if(canMove.Value || canShoot.Value) 
+            canBeSelected.Value = true;*/
     }
 
     private void Update()

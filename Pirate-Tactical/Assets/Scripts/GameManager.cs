@@ -82,7 +82,7 @@ public class GameManager : NetworkBehaviour
         else if(state == GameState.Player2Turn)
             state = GameState.Player1Turn;
 
-        GivePlayerAction();
+        GivePlayerActionServerRpc();
         HUD.Instance.SetGameStateClientRpc(SetGameStateString(state));
     }
 
@@ -104,13 +104,19 @@ public class GameManager : NetworkBehaviour
         return returnState;
     }
 
-    void GivePlayerAction()
+    [ServerRpc(RequireOwnership = false)]
+    void GivePlayerActionServerRpc()
     {
+        if(!IsServer) return;
+
         //Setup pour que seulement le joueur puisse spawn ses unités puis l'autre joueur eznsuite
         if (state == GameState.Player1Turn)
         {
             Cursor currentP = NetworkManager.ConnectedClients[0].PlayerObject.GetComponent<Cursor>();
             currentP.canPlay.Value = true;
+
+            if (!currentP.unitManager.allShipSpawned) return;
+            
             for(int i = 0; i < currentP.unitManager.ships.Length; i++)
             {
                 currentP.unitManager.ships[i].canMove.Value = true;
@@ -125,6 +131,9 @@ public class GameManager : NetworkBehaviour
         {
             Cursor currentP = NetworkManager.ConnectedClients[1].PlayerObject.GetComponent<Cursor>();
             currentP.canPlay.Value = true;
+
+            if (!currentP.unitManager.allShipSpawned) return;
+
             for (int i = 0; i < currentP.unitManager.ships.Length; i++)
             {
                 currentP.unitManager.ships[i].canMove.Value = true;

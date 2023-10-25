@@ -11,9 +11,5 @@ public class UnitManager : MonoBehaviour
     public bool allShipSpawned = false;
 
 
-    private void Update()
-    {
-        if (allShipSpawned) return;
-        else if (numShipSpawned >= ships.Length) allShipSpawned = true;
-    }
+  
 }

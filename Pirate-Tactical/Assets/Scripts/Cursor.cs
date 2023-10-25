@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using Unity.Netcode;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class Cursor : NetworkBehaviour
@@ -42,32 +43,31 @@ public class Cursor : NetworkBehaviour
     {
         if(!IsOwner) return;
 
-        if (!canPlay.Value)
-        {
-            shipSelected = false;
-            HideTiles();
-            return;
-        }
-
         MyInputs();
 
     }
 
     public void TotalActionPoint()
     {
+        if(totalShootPoint < 0) totalShootPoint = 0;
+        if (totalMovePoint < 0) totalMovePoint = 0;
+        
         totalActionPoint = totalMovePoint + totalShootPoint;
 
-        if(totalActionPoint <= 0)
+        if(totalActionPoint <= 0 && unitManager.allShipSpawned)
+        {
+            for(int i = 0; i < unitManager.ships.Length; i++)
+            {
+                unitManager.ships[i].canBeSelected.Value = false;
+                unitManager.ships[i].canShoot.Value = false;
+                unitManager.ships[i].canMove.Value = false;
+            }
             GameManager.Instance.UpdateGameStateServerRpc();
+        }
     }
 
     void MyInputs()
     {
-        if (Input.GetButtonDown("Cancel"))
-        {
-            shipSelected = false;
-            HideTiles();
-        }
 
         Vector3 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
         Vector2 pos = new Vector2(mousePos.x, mousePos.y);
@@ -78,13 +78,22 @@ public class Cursor : NetworkBehaviour
         if (!tile.HasValue) return;
         TileScript t = tile.Value.transform.GetComponent<TileScript>();
 
+        if (!canPlay.Value)
+        {
+            shipSelected = false;
+            HideTiles();
+            return;
+        }
+
         if (Input.GetMouseButtonDown(0) && shipSelected)
         {
             if (t.shipOnTile.Value)
             {
+                if (!unitManager.ships[currentShipIndex].canShoot.Value) return;
+
                 GridManager.Instance.DamageUnitServerRpc(unitManager.ships[currentShipIndex].damage, t.pos.Value, NetworkManager.LocalClientId);
                 unitManager.ships[currentShipIndex].canShoot.Value = false;
-                totalActionPoint--;
+                totalShootPoint--;
                 if (unitManager.ships[currentShipIndex].canMove.Value)
                 {
                     unitManager.ships[currentShipIndex].canMove.Value = false;
@@ -94,7 +103,8 @@ public class Cursor : NetworkBehaviour
             }
             else if (CanMoveUnit(t))
             {
-                StartCoroutine(UpdateShipPlacementOnGrid());
+                if (unitManager.ships[currentShipIndex].canMove.Value)
+                    StartCoroutine(UpdateShipPlacementOnGrid());
             }
             else if (!CanMoveUnit(t) && !unitMoving)
             {
@@ -107,7 +117,7 @@ public class Cursor : NetworkBehaviour
             if (!unitManager.allShipSpawned)
             {
                 SpawnShip(t.pos.Value, t);
-
+                TotalActionPoint();
                 if (currentShipIndex >= unitManager.ships.Length) currentShipIndex = 0;
 
             }
@@ -125,11 +135,19 @@ public class Cursor : NetworkBehaviour
                 }
             }
         }
+
+        if (Input.GetButtonDown("Cancel"))
+        {
+            shipSelected = false;
+            HideTiles();
+        }
+
     }
 
     void GetInRangeTiles()
     {
         foreach (var t in inRangeTiles) t.HighLightRange(false);
+
         inRangeTiles.Clear();
         inRangeTiles = PathFindTesting.GetInRangeTiles(unitManager.ships[currentShipIndex].currentTile, unitManager.ships[currentShipIndex].unitRange);
 
@@ -144,7 +162,7 @@ public class Cursor : NetworkBehaviour
 
     void OnTileHover(TileScript tile)
     {
-        if (unitManager.ships[currentShipIndex].currentTile == null || unitMoving || !inRangeTiles.Contains(tile) || !canPlay.Value || !shipSelected) return;
+        if (CantPathfind(tile)) return;
 
         goalTile = tile;
         path.Clear();
@@ -175,11 +193,11 @@ public class Cursor : NetworkBehaviour
             }
         }
 
-        TotalActionPoint();
         totalMovePoint--;
         unitManager.ships[currentShipIndex].canMove.Value = false;
         GridManager.Instance.SetShipOnTileServerRpc(unitManager.ships[currentShipIndex].currentTile.pos.Value, true);
         GetInRangeTiles();
+        TotalActionPoint();
         unitMoving = false;
     }
 
@@ -197,7 +215,8 @@ public class Cursor : NetworkBehaviour
         currentShipIndex++;
 
         GridManager.Instance.SetShipOnTileServerRpc(pos, true);
-        //GetInRangeTiles();
+
+        if (unitManager.numShipSpawned >= unitManager.ships.Length && !unitManager.allShipSpawned) unitManager.allShipSpawned = true;
     }
 
     #region ServerRpcMethods
@@ -234,6 +253,12 @@ public class Cursor : NetworkBehaviour
         }
     }
 
+    [ServerRpc(RequireOwnership = false)]
+    void SetUnitActionServerRpc(bool)
+    {
+        if (!IsServer) return;
+    }
+
     #endregion
 
     RaycastHit2D? GetCurrentTile(Vector2 pos)
@@ -246,6 +271,11 @@ public class Cursor : NetworkBehaviour
     bool CanMoveUnit(TileScript t)
     {
         return unitManager.allShipSpawned && shipSelected && path.Count > 0 && !unitMoving && inRangeTiles.Contains(t);
+    }
+
+    bool CantPathfind(TileScript tile)
+    {
+        return unitManager.ships[currentShipIndex].currentTile == null || unitMoving || !inRangeTiles.Contains(tile) || !canPlay.Value || !shipSelected || !unitManager.ships[currentShipIndex].canMove.Value;
     }
 
 }
