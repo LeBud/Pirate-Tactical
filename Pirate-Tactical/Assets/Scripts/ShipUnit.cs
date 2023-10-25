@@ -55,9 +55,15 @@ public class ShipUnit : NetworkBehaviour
         {
             if(!canMove.Value && !canShoot.Value)
             {
-                canBeSelected.Value = false;
+                SetCanBeSelectedServerRpc();
             }
         }
+    }
+
+    [ServerRpc]
+    void SetCanBeSelectedServerRpc()
+    {
+        canBeSelected.Value = false;
     }
 
     [ClientRpc]

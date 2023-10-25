@@ -92,12 +92,12 @@ public class Cursor : NetworkBehaviour
                 if (!unitManager.ships[currentShipIndex].canShoot.Value) return;
 
                 GridManager.Instance.DamageUnitServerRpc(unitManager.ships[currentShipIndex].damage, t.pos.Value, NetworkManager.LocalClientId);
-                unitManager.ships[currentShipIndex].canShoot.Value = false;
+                SetUnitActionServerRpc(1);
                 totalShootPoint--;
                 if (unitManager.ships[currentShipIndex].canMove.Value)
                 {
-                    unitManager.ships[currentShipIndex].canMove.Value = false;
                     totalMovePoint--;
+                    SetUnitActionServerRpc(2);
                 }
                 TotalActionPoint();
             }
@@ -194,7 +194,7 @@ public class Cursor : NetworkBehaviour
         }
 
         totalMovePoint--;
-        unitManager.ships[currentShipIndex].canMove.Value = false;
+        SetUnitActionServerRpc(0);
         GridManager.Instance.SetShipOnTileServerRpc(unitManager.ships[currentShipIndex].currentTile.pos.Value, true);
         GetInRangeTiles();
         TotalActionPoint();
@@ -254,9 +254,18 @@ public class Cursor : NetworkBehaviour
     }
 
     [ServerRpc(RequireOwnership = false)]
-    void SetUnitActionServerRpc(bool)
+    void SetUnitActionServerRpc(int i)
     {
-        if (!IsServer) return;
+        if(i == 0)
+            unitManager.ships[currentShipIndex].canMove.Value = false;
+        else if(i == 1)
+            unitManager.ships[currentShipIndex].canShoot.Value = false;
+        else if(i == 2)
+        {
+            unitManager.ships[currentShipIndex].canShoot.Value = false;
+            unitManager.ships[currentShipIndex].canMove.Value = false;
+            unitManager.ships[currentShipIndex].canBeSelected.Value = false;
+        }
     }
 
     #endregion
