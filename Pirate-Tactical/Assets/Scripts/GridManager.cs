@@ -82,9 +82,9 @@ public class GridManager : NetworkBehaviour
 
                     float percent = (float)ships[i].unitLife.Value / ships[i].maxHealth;
                     ships[i].SetHealthBarClientRpc(percent);
+                    break;
                 }
 
-                break;
             }
         }
 

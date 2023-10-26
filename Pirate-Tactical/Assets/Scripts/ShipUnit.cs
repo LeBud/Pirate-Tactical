@@ -28,9 +28,9 @@ public class ShipUnit : NetworkBehaviour
     public int movePoint = 1;
     public int attackPoint = 1;
 
-    public NetworkVariable<bool> canMove = new NetworkVariable<bool>(false);
-    public NetworkVariable<bool> canShoot = new NetworkVariable<bool>(false);
-    public NetworkVariable<bool> canBeSelected = new NetworkVariable<bool>(false);
+    public NetworkVariable<bool> canMove = new NetworkVariable<bool>(false, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
+    public NetworkVariable<bool> canShoot = new NetworkVariable<bool>(false, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
+    public NetworkVariable<bool> canBeSelected = new NetworkVariable<bool>(false, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
 
     [SerializeField] Transform healthDisplay;
 
@@ -40,14 +40,10 @@ public class ShipUnit : NetworkBehaviour
     {
         healthPercent = (float)unitLife.Value / maxHealth;
         healthDisplay.localScale = new Vector3(healthPercent, 1, 1);
-
-        /*if(canMove.Value || canShoot.Value) 
-            canBeSelected.Value = true;*/
     }
 
     private void Update()
     {
-        //unitPos.OnValueChanged += (Vector2 previousPos, Vector2 newPos) => { StartCoroutine(MoveShip()); };
         if (transform.position != new Vector3(unitPos.Value.x, unitPos.Value.y, -1))
             StartCoroutine(MoveShip());
 
@@ -55,15 +51,9 @@ public class ShipUnit : NetworkBehaviour
         {
             if(!canMove.Value && !canShoot.Value)
             {
-                SetCanBeSelectedServerRpc();
+                canBeSelected.Value = false;
             }
         }
-    }
-
-    [ServerRpc]
-    void SetCanBeSelectedServerRpc()
-    {
-        canBeSelected.Value = false;
     }
 
     [ClientRpc]

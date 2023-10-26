@@ -2,13 +2,12 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using Unity.Netcode;
-using Unity.VisualScripting;
 using UnityEngine;
 
 public class Cursor : NetworkBehaviour
 {
-    [SerializeField] int currentShipIndex;
-    [SerializeField] bool shipSelected = false;
+    public int currentShipIndex;
+    public bool shipSelected = false;
 
     public NetworkVariable<bool> canPlay = new NetworkVariable<bool>(false);
 
@@ -54,7 +53,7 @@ public class Cursor : NetworkBehaviour
         
         totalActionPoint = totalMovePoint + totalShootPoint;
 
-        if(totalActionPoint <= 0 && unitManager.allShipSpawned)
+        if(totalActionPoint <= 0 && unitManager.allShipSpawned.Value)
         {
             for(int i = 0; i < unitManager.ships.Length; i++)
             {
@@ -63,6 +62,19 @@ public class Cursor : NetworkBehaviour
                 unitManager.ships[i].canMove.Value = false;
             }
             GameManager.Instance.UpdateGameStateServerRpc();
+        }
+    }
+
+    [ClientRpc]
+    public void ResetShipsActionClientRpc()
+    {
+        for (int i = 0; i < unitManager.ships.Length; i++)
+        {
+            unitManager.ships[i].canBeSelected.Value = true;
+            unitManager.ships[i].canShoot.Value = true;
+            unitManager.ships[i].canMove.Value = true;
+            totalShootPoint++;
+            totalMovePoint++;
         }
     }
 
@@ -92,12 +104,12 @@ public class Cursor : NetworkBehaviour
                 if (!unitManager.ships[currentShipIndex].canShoot.Value) return;
 
                 GridManager.Instance.DamageUnitServerRpc(unitManager.ships[currentShipIndex].damage, t.pos.Value, NetworkManager.LocalClientId);
-                SetUnitActionServerRpc(1);
                 totalShootPoint--;
+                unitManager.ships[currentShipIndex].canShoot.Value = false;
                 if (unitManager.ships[currentShipIndex].canMove.Value)
                 {
                     totalMovePoint--;
-                    SetUnitActionServerRpc(2);
+                    unitManager.ships[currentShipIndex].canMove.Value = false;
                 }
                 TotalActionPoint();
             }
@@ -114,14 +126,13 @@ public class Cursor : NetworkBehaviour
         }
         else if (Input.GetMouseButtonDown(0) && !shipSelected)
         {
-            if (!unitManager.allShipSpawned)
+            if (!unitManager.allShipSpawned.Value)
             {
                 SpawnShip(t.pos.Value, t);
-                TotalActionPoint();
                 if (currentShipIndex >= unitManager.ships.Length) currentShipIndex = 0;
 
             }
-            else if (t.shipOnTile.Value && unitManager.allShipSpawned)
+            else if (t.shipOnTile.Value && unitManager.allShipSpawned.Value)
             {
                 foreach(var ship in unitManager.ships)
                 {
@@ -194,7 +205,7 @@ public class Cursor : NetworkBehaviour
         }
 
         totalMovePoint--;
-        SetUnitActionServerRpc(0);
+        unitManager.ships[currentShipIndex].canMove.Value = false;
         GridManager.Instance.SetShipOnTileServerRpc(unitManager.ships[currentShipIndex].currentTile.pos.Value, true);
         GetInRangeTiles();
         TotalActionPoint();
@@ -204,7 +215,6 @@ public class Cursor : NetworkBehaviour
     void SpawnShip(Vector2 pos, TileScript t)
     {
         if (!IsOwner) return;
-
 
         SpawnUnitServerRpc(pos, NetworkManager.LocalClientId, currentShipIndex);
 
@@ -216,7 +226,11 @@ public class Cursor : NetworkBehaviour
 
         GridManager.Instance.SetShipOnTileServerRpc(pos, true);
 
-        if (unitManager.numShipSpawned >= unitManager.ships.Length && !unitManager.allShipSpawned) unitManager.allShipSpawned = true;
+        if (unitManager.numShipSpawned >= unitManager.ships.Length && !unitManager.allShipSpawned.Value)
+        {
+            unitManager.allShipSpawned.Value = true;
+            TotalActionPoint();
+        }
     }
 
     #region ServerRpcMethods
@@ -253,21 +267,6 @@ public class Cursor : NetworkBehaviour
         }
     }
 
-    [ServerRpc(RequireOwnership = false)]
-    void SetUnitActionServerRpc(int i)
-    {
-        if(i == 0)
-            unitManager.ships[currentShipIndex].canMove.Value = false;
-        else if(i == 1)
-            unitManager.ships[currentShipIndex].canShoot.Value = false;
-        else if(i == 2)
-        {
-            unitManager.ships[currentShipIndex].canShoot.Value = false;
-            unitManager.ships[currentShipIndex].canMove.Value = false;
-            unitManager.ships[currentShipIndex].canBeSelected.Value = false;
-        }
-    }
-
     #endregion
 
     RaycastHit2D? GetCurrentTile(Vector2 pos)
@@ -279,7 +278,7 @@ public class Cursor : NetworkBehaviour
 
     bool CanMoveUnit(TileScript t)
     {
-        return unitManager.allShipSpawned && shipSelected && path.Count > 0 && !unitMoving && inRangeTiles.Contains(t);
+        return unitManager.allShipSpawned.Value && shipSelected && path.Count > 0 && !unitMoving && inRangeTiles.Contains(t);
     }
 
     bool CantPathfind(TileScript tile)

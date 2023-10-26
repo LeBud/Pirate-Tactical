@@ -115,16 +115,8 @@ public class GameManager : NetworkBehaviour
             Cursor currentP = NetworkManager.ConnectedClients[0].PlayerObject.GetComponent<Cursor>();
             currentP.canPlay.Value = true;
 
-            if (!currentP.unitManager.allShipSpawned) return;
-            
-            for(int i = 0; i < currentP.unitManager.ships.Length; i++)
-            {
-                currentP.unitManager.ships[i].canMove.Value = true;
-                currentP.unitManager.ships[i].canShoot.Value = true;
-                currentP.unitManager.ships[i].canBeSelected.Value = true;
-                currentP.totalMovePoint++;
-                currentP.totalShootPoint++;
-            }
+            if (!currentP.unitManager.allShipSpawned.Value) return;
+            currentP.ResetShipsActionClientRpc();
             currentP.TotalActionPoint();
         }
         else if (state == GameState.Player2Turn)
@@ -132,16 +124,8 @@ public class GameManager : NetworkBehaviour
             Cursor currentP = NetworkManager.ConnectedClients[1].PlayerObject.GetComponent<Cursor>();
             currentP.canPlay.Value = true;
 
-            if (!currentP.unitManager.allShipSpawned) return;
-
-            for (int i = 0; i < currentP.unitManager.ships.Length; i++)
-            {
-                currentP.unitManager.ships[i].canMove.Value = true;
-                currentP.unitManager.ships[i].canShoot.Value = true;
-                currentP.unitManager.ships[i].canBeSelected.Value = true;
-                currentP.totalMovePoint++;
-                currentP.totalShootPoint++;
-            }
+            if (!currentP.unitManager.allShipSpawned.Value) return;
+            currentP.ResetShipsActionClientRpc();
             currentP.TotalActionPoint();
         }
     }

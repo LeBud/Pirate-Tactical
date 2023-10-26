@@ -9,6 +9,9 @@ public class HUD : NetworkBehaviour
 {
     public static HUD Instance { get; private set; }
     [SerializeField] TextMeshProUGUI gameStateTxt;
+    [SerializeField] TextMeshProUGUI currentShipInfo;
+
+    Cursor player;
 
     private void Awake()
     {
@@ -18,13 +21,17 @@ public class HUD : NetworkBehaviour
 
     private void LateUpdate()
     {
-
+        if (player == null) return;
+        currentShipInfo.text = "ship selected : " + player.shipSelected + "\nCan move : " + player.unitManager.ships[player.currentShipIndex].canMove.Value 
+            + "\nCan shoot : " + player.unitManager.ships[player.currentShipIndex].canShoot.Value;
     }
 
     [ClientRpc]
     public void SetGameStateClientRpc(string gameState)
     {
         gameStateTxt.text = gameState;
+        if(gameState == "Player 1 Turn" && player == null)
+            player = NetworkManager.LocalClient.PlayerObject.GetComponent<Cursor>();
     }
 
 }
