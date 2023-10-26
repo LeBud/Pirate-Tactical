@@ -111,7 +111,7 @@ public class Cursor : NetworkBehaviour
 
         if (Input.GetMouseButtonDown(0) && shipSelected)
         {
-            if (t.shipOnTile.Value && canShoot)
+            if (t.shipOnTile.Value && canShoot && inRangeTiles.Contains(t))
             {
                 if (!unitManager.ships[currentShipIndex].canShoot.Value) return;
 
