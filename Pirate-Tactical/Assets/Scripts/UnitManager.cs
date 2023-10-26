@@ -11,6 +11,4 @@ public class UnitManager : NetworkBehaviour
     public int numShipSpawned = 0;
     public NetworkVariable<bool> allShipSpawned = new NetworkVariable<bool>(false, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
 
-
-  
 }

@@ -25,6 +25,11 @@ public class Cursor : NetworkBehaviour
     public float totalShootPoint;
     float totalActionPoint;
 
+    public float currentModeIndex;
+    float currentModeInputIndex;
+    bool canShoot;
+    bool canMove;
+
     private void Start()
     {
         TileScript.OnHoverTile += OnTileHover;
@@ -43,7 +48,7 @@ public class Cursor : NetworkBehaviour
         if(!IsOwner) return;
 
         MyInputs();
-
+        HandleCurrentMode();
     }
 
     public void TotalActionPoint()
@@ -52,6 +57,8 @@ public class Cursor : NetworkBehaviour
         if (totalMovePoint < 0) totalMovePoint = 0;
         
         totalActionPoint = totalMovePoint + totalShootPoint;
+
+        if (GameManager.Instance.gametesting.Value) return;
 
         if(totalActionPoint <= 0 && unitManager.allShipSpawned.Value)
         {
@@ -97,9 +104,14 @@ public class Cursor : NetworkBehaviour
             return;
         }
 
+        if (Input.GetAxis("Mouse ScrollWheel") > 0)
+            currentModeIndex++;
+        else if(Input.GetAxis("Mouse ScrollWheel") < 0)
+            currentModeIndex--;
+
         if (Input.GetMouseButtonDown(0) && shipSelected)
         {
-            if (t.shipOnTile.Value)
+            if (t.shipOnTile.Value && canShoot)
             {
                 if (!unitManager.ships[currentShipIndex].canShoot.Value) return;
 
@@ -132,7 +144,7 @@ public class Cursor : NetworkBehaviour
                     {
                         currentShipIndex = ship.index;
                         shipSelected = true;
-                        GetInRangeTiles();
+                        DisplayOnSelectedUnit();
                         break;
                     }
                 }
@@ -145,6 +157,61 @@ public class Cursor : NetworkBehaviour
             HideTiles();
         }
 
+    }
+
+    void DisplayOnSelectedUnit()
+    {
+        if (unitManager.ships[currentShipIndex].canMove.Value)
+        {
+            currentModeIndex = 0;
+            currentModeInputIndex = currentModeIndex;
+            canMove = true;
+            canShoot = false;
+            HideTiles();
+            GetInRangeTiles();
+        }
+        else
+        {
+            currentModeIndex = 1;
+            currentModeInputIndex = currentModeIndex;
+            canMove = false;
+            canShoot = true;
+            HideTiles();
+            GetInRangeShootTiles();
+        }
+    }
+
+    void HandleCurrentMode()
+    {
+        if (currentModeIndex > 1) currentModeIndex = 0;
+        else if (currentModeIndex < 0) currentModeIndex = 1;
+
+        if (!shipSelected || !unitManager.ships[currentShipIndex].canBeSelected.Value) return;
+
+        if (currentModeIndex == 0) 
+        {
+            if (!unitManager.ships[currentShipIndex].canMove.Value) return;
+            canMove = true;
+            canShoot = false;
+            if(currentModeInputIndex != currentModeIndex)
+            {
+                currentModeInputIndex = currentModeIndex;
+                HideTiles();
+                GetInRangeTiles();
+            }
+        }
+        else if(currentModeIndex == 1)
+        {
+            canMove = false;
+            canShoot = true;
+            if (!unitManager.ships[currentShipIndex].canShoot.Value) return;
+            if (currentModeInputIndex != currentModeIndex)
+            {
+                currentModeInputIndex = currentModeIndex;
+                HideTiles();
+                GetInRangeShootTiles();
+            }
+        }
     }
 
     [ClientRpc]
@@ -167,7 +234,17 @@ public class Cursor : NetworkBehaviour
         foreach (var t in inRangeTiles) t.HighLightRange(false);
 
         inRangeTiles.Clear();
-        inRangeTiles = PathFindTesting.GetInRangeTiles(unitManager.ships[currentShipIndex].currentTile, unitManager.ships[currentShipIndex].unitRange);
+        inRangeTiles = PathFindTesting.GetInRangeTiles(unitManager.ships[currentShipIndex].currentTile, unitManager.ships[currentShipIndex].unitMoveRange);
+
+        foreach (var t in inRangeTiles) t.HighLightRange(true);
+    }
+
+    void GetInRangeShootTiles()
+    {
+        foreach (var t in inRangeTiles) t.HighLightRange(false);
+
+        inRangeTiles.Clear();
+        inRangeTiles = PathFindTesting.GetInRangeTilesCross(unitManager.ships[currentShipIndex].currentTile, unitManager.ships[currentShipIndex].unitShootRange);
 
         foreach (var t in inRangeTiles) t.HighLightRange(true);
     }
@@ -285,12 +362,12 @@ public class Cursor : NetworkBehaviour
 
     bool CanMoveUnit(TileScript t)
     {
-        return unitManager.allShipSpawned.Value && shipSelected && path.Count > 0 && !unitMoving && inRangeTiles.Contains(t);
+        return unitManager.allShipSpawned.Value && shipSelected && path.Count > 0 && !unitMoving && inRangeTiles.Contains(t) && canMove;
     }
 
     bool CantPathfind(TileScript tile)
     {
-        return unitManager.ships[currentShipIndex].currentTile == null || unitMoving || !inRangeTiles.Contains(tile) || !canPlay.Value || !shipSelected || !unitManager.ships[currentShipIndex].canMove.Value;
+        return unitManager.ships[currentShipIndex].currentTile == null || unitMoving || !inRangeTiles.Contains(tile) || !canPlay.Value || !shipSelected || !unitManager.ships[currentShipIndex].canMove.Value || !canMove;
     }
 
 }

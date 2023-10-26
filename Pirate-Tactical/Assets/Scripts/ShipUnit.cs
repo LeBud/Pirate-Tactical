@@ -18,7 +18,8 @@ public class ShipUnit : NetworkBehaviour
 
     public SpriteRenderer unitSprite;
 
-    public int unitRange = 4;
+    public int unitMoveRange = 4;
+    public int unitShootRange = 4;
     public int damage = 4;
     public int index;
 
@@ -46,6 +47,13 @@ public class ShipUnit : NetworkBehaviour
     {
         if (transform.position != new Vector3(unitPos.Value.x, unitPos.Value.y, -1))
             StartCoroutine(MoveShip());
+
+        if (GameManager.Instance.gametesting.Value)
+        {
+            canMove.Value = true;
+            canShoot.Value = true;
+            canBeSelected.Value = true;
+        }
 
         if (canBeSelected.Value)
         {

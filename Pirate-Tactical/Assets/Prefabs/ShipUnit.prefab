@@ -109,12 +109,19 @@ MonoBehaviour:
   player1Color: {r: 0.9622642, g: 0.55039275, b: 0.004538993, a: 1}
   player2Color: {r: 0.5994166, g: 0, b: 0.8113208, a: 1}
   unitSprite: {fileID: 4475007845721384360}
-  unitRange: 4
+  unitMoveRange: 4
+  unitShootRange: 6
   damage: 4
   index: 0
   clientIdOwner: 1
   movePoint: 1
   attackPoint: 1
+  canMove:
+    m_InternalValue: 0
+  canShoot:
+    m_InternalValue: 0
+  canBeSelected:
+    m_InternalValue: 0
   healthDisplay: {fileID: 7182534892917447299}
 --- !u!114 &810226246150426423
 MonoBehaviour:

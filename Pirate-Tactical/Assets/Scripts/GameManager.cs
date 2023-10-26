@@ -9,6 +9,8 @@ public class GameManager : NetworkBehaviour
     public int player1unitLeft = 5;
     public int player2unitLeft = 5;
 
+    public NetworkVariable<bool> gametesting = new NetworkVariable<bool>();
+
     public enum GameState
     {
         GameStarting,
@@ -61,6 +63,7 @@ public class GameManager : NetworkBehaviour
     {
         if(state == GameState.GameTesting)
         {
+            gametesting.Value = true;
             foreach(var client in NetworkManager.ConnectedClients)
             {
                 NetworkManager.ConnectedClients[client.Key].PlayerObject.GetComponent<Cursor>().canPlay.Value = true;

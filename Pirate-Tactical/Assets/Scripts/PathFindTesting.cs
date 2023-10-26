@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
-public static class PathFindTesting
+public class PathFindTesting : MonoBehaviour
 {
     public static List<TileScript> PathTest(TileScript startNode, TileScript targetNode)
     {
@@ -87,6 +87,62 @@ public static class PathFindTesting
             tileForPreviousStep = surroundingTiles.Distinct().ToList();
             stepCount++;
         }
+
+        return inRangeTile.Distinct().ToList();
+    }
+
+    public static List<TileScript> GetInRangeTilesCross(TileScript startTile, int range)
+    {
+        TileScript[] neighbors = FindObjectsOfType<TileScript>();
+
+        var inRangeTile = new List<TileScript>();
+        int stepCount = 0;
+
+        inRangeTile.Add(startTile);
+
+        var tileForPreviousStep = new List<TileScript>();
+        tileForPreviousStep.Add(startTile);
+
+        
+        var surroundingTiles = new List<TileScript>();
+            
+        for(int x = 1; x < range; x++)
+        {
+            Vector2 posToAdd = new Vector2(startTile.pos.Value.x + x, startTile.pos.Value.y);
+            if (GridManager.Instance.dictionnary.Contains(posToAdd))
+                foreach (var n in neighbors)
+                    if (n.pos.Value == posToAdd)
+                        surroundingTiles.Add(n);
+        }
+        for (int x = 1; x < range; x++)
+        {
+            Vector2 posToAdd = new Vector2(startTile.pos.Value.x - x, startTile.pos.Value.y);
+            if (GridManager.Instance.dictionnary.Contains(posToAdd))
+                foreach (var n in neighbors)
+                    if (n.pos.Value == posToAdd)
+                        surroundingTiles.Add(n);
+        }
+        for (int y = 1; y < range; y++)
+        {
+            Vector2 posToAdd = new Vector2(startTile.pos.Value.x, startTile.pos.Value.y + y);
+            if (GridManager.Instance.dictionnary.Contains(posToAdd))
+                foreach (var n in neighbors)
+                    if (n.pos.Value == posToAdd)
+                        surroundingTiles.Add(n);
+        }
+        for (int y = 1; y < range; y++)
+        {
+            Vector2 posToAdd = new Vector2(startTile.pos.Value.x, startTile.pos.Value.y - y);
+            if (GridManager.Instance.dictionnary.Contains(posToAdd))
+                foreach (var n in neighbors)
+                    if (n.pos.Value == posToAdd)
+                        surroundingTiles.Add(n);
+        }
+        surroundingTiles.Add(startTile);
+
+        inRangeTile.AddRange(surroundingTiles);
+        tileForPreviousStep = surroundingTiles.Distinct().ToList();
+        
 
         return inRangeTile.Distinct().ToList();
     }
