@@ -75,6 +75,8 @@ public class Cursor : NetworkBehaviour
     [ClientRpc]
     public void ResetShipsActionClientRpc()
     {
+        if (!IsOwner) return;
+
         for (int i = 0; i < unitManager.ships.Length; i++)
         {
             unitManager.ships[i].canBeSelected.Value = true;
