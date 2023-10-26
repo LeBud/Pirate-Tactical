@@ -11,6 +11,8 @@ public class GameManager : NetworkBehaviour
 
     public NetworkVariable<bool> gametesting = new NetworkVariable<bool>();
 
+    public NetworkVariable<int> currentRound = new NetworkVariable<int>();
+
     public enum GameState
     {
         GameStarting,
@@ -86,7 +88,7 @@ public class GameManager : NetworkBehaviour
             state = GameState.Player1Turn;
 
         GivePlayerActionServerRpc();
-        HUD.Instance.SetGameStateClientRpc(SetGameStateString(state));
+        HUD.Instance.SetGameStateClientRpc(SetGameStateString(state), currentRound.Value);
     }
 
     string SetGameStateString(GameState newState)
@@ -121,6 +123,7 @@ public class GameManager : NetworkBehaviour
             if (!currentP.unitManager.allShipSpawned.Value) return;
             currentP.ResetShipsActionClientRpc();
             currentP.TotalActionPoint();
+            currentRound.Value++;
         }
         else if (state == GameState.Player2Turn)
         {
@@ -142,7 +145,7 @@ public class GameManager : NetworkBehaviour
         if (!IsOwner) return;
         Camera.main.transform.position = new Vector3((float)19 / 2 - 0.5f, (float)9 / 2 - 0.5f, -10);
 
-        HUD.Instance.SetGameStateClientRpc(SetGameStateString(state));
+        HUD.Instance.SetGameStateClientRpc(SetGameStateString(state), currentRound.Value);
     }
 
 }

@@ -110,4 +110,18 @@ public class GridManager : NetworkBehaviour
         t.shipOnTile.Value = active;
     }
 
+    [ServerRpc(RequireOwnership = false)]
+    public void BlockedTileServerRpc(Vector2 tilePos)
+    {
+        if (dictionnary.Contains(tilePos))
+        {
+            foreach(var t in tilesGrid)
+                if(t.pos.Value == tilePos)
+                {
+                    t.SetTileColorInGameClientRpc(true);
+                    t.blockedTile.Value = true;
+                    break;
+                }
+        }
+    }
 }

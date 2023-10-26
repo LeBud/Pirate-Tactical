@@ -39,9 +39,9 @@ public class HUD : NetworkBehaviour
     }
 
     [ClientRpc]
-    public void SetGameStateClientRpc(string gameState)
+    public void SetGameStateClientRpc(string gameState, int round)
     {
-        gameStateTxt.text = gameState;
+        gameStateTxt.text = gameState + " round : " + round;
         if(gameState == "Player 1 Turn" && player == null)
             player = NetworkManager.LocalClient.PlayerObject.GetComponent<Cursor>();
     }

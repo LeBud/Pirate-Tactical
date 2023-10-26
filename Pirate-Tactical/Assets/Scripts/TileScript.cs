@@ -9,6 +9,7 @@ public class TileScript : NetworkBehaviour
     [SerializeField] SpriteRenderer _renderer;
     public GameObject _highlight;
     public GameObject _highlightRange;
+    public GameObject _highlightBlocked;
 
     [Header("Normals Colors")]
     public Color normalColor;
@@ -24,6 +25,7 @@ public class TileScript : NetworkBehaviour
     public NetworkVariable<Vector2> pos = new NetworkVariable<Vector2>(Vector2.zero, NetworkVariableReadPermission.Everyone);
     public NetworkVariable<bool> shipOnTile = new NetworkVariable<bool>(false, NetworkVariableReadPermission.Everyone);
     public NetworkVariable<bool> offsetTile = new NetworkVariable<bool>(false, NetworkVariableReadPermission.Everyone);
+    public NetworkVariable<bool> blockedTile = new NetworkVariable<bool>(false, NetworkVariableReadPermission.Everyone);
 
     #region PathFinding
 
@@ -117,6 +119,7 @@ public class TileScript : NetworkBehaviour
 
     public void HighLightRange(bool active)
     {
+
         _highlightRange.SetActive(active);
     }
 
@@ -138,6 +141,12 @@ public class TileScript : NetworkBehaviour
                 break;
                     
         }
+    }
+
+    [ClientRpc]
+    public void SetTileColorInGameClientRpc(bool blocked)
+    {
+        _highlightBlocked.SetActive(blocked);
     }
 
     #region HighlightTiles

@@ -122,6 +122,10 @@ public class Cursor : NetworkBehaviour
                 if (unitManager.ships[currentShipIndex].canMove.Value)
                     StartCoroutine(UpdateShipPlacementOnGrid());
             }
+            else if (currentModeIndex == 2)
+            {
+                GridManager.Instance.BlockedTileServerRpc(t.pos.Value);
+            }
             else if (!CanMoveUnit(t) && !unitMoving)
             {
                 shipSelected = false;
@@ -183,8 +187,8 @@ public class Cursor : NetworkBehaviour
 
     void HandleCurrentMode()
     {
-        if (currentModeIndex > 1) currentModeIndex = 0;
-        else if (currentModeIndex < 0) currentModeIndex = 1;
+        if (currentModeIndex > 2) currentModeIndex = 0;
+        else if (currentModeIndex < 0) currentModeIndex = 2;
 
         if (!shipSelected || !unitManager.ships[currentShipIndex].canBeSelected.Value) return;
 
@@ -212,6 +216,17 @@ public class Cursor : NetworkBehaviour
                 GetInRangeShootTiles();
             }
         }
+        else if (currentModeIndex == 2)
+        {
+            canMove = false;
+            canShoot = false;
+            if (currentModeInputIndex != currentModeIndex)
+            {
+                currentModeInputIndex = currentModeIndex;
+                HideTiles();
+            }
+        }
+
     }
 
     [ClientRpc]
@@ -362,12 +377,12 @@ public class Cursor : NetworkBehaviour
 
     bool CanMoveUnit(TileScript t)
     {
-        return unitManager.allShipSpawned.Value && shipSelected && path.Count > 0 && !unitMoving && inRangeTiles.Contains(t) && canMove;
+        return unitManager.allShipSpawned.Value && shipSelected && path.Count > 0 && !unitMoving && inRangeTiles.Contains(t) && canMove && !t.blockedTile.Value;
     }
 
     bool CantPathfind(TileScript tile)
     {
-        return unitManager.ships[currentShipIndex].currentTile == null || unitMoving || !inRangeTiles.Contains(tile) || !canPlay.Value || !shipSelected || !unitManager.ships[currentShipIndex].canMove.Value || !canMove;
+        return unitManager.ships[currentShipIndex].currentTile == null || unitMoving || !inRangeTiles.Contains(tile) || !canPlay.Value || !shipSelected || !unitManager.ships[currentShipIndex].canMove.Value || !canMove || tile.blockedTile.Value;
     }
 
 }

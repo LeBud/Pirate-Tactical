@@ -1,7 +1,9 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
+using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 
 public class PathFindTesting : MonoBehaviour
@@ -40,7 +42,7 @@ public class PathFindTesting : MonoBehaviour
                 return path;
             }
 
-            foreach (var neighbor in current.Neighbors.Where(t => t.Walkable && !processed.Contains(t) && (t != startNode && !t.shipOnTile.Value)))
+            foreach (var neighbor in current.Neighbors.Where(t => t.Walkable && !processed.Contains(t) && t != startNode && !t.shipOnTile.Value && !t.blockedTile.Value))
             {
                 var inSearch = toSearch.Contains(neighbor);
 
@@ -78,8 +80,9 @@ public class PathFindTesting : MonoBehaviour
             var surroundingTiles = new List<TileScript>();
             foreach (var tile in tileForPreviousStep)
             {
-                if (!tile.Walkable) continue; 
+                if (!tile.Walkable || tile.blockedTile.Value) continue; 
                     if(tile != startTile && tile.shipOnTile.Value) continue;
+                    
                 surroundingTiles.AddRange(tile.Neighbors);
             }
 
@@ -96,7 +99,6 @@ public class PathFindTesting : MonoBehaviour
         TileScript[] neighbors = FindObjectsOfType<TileScript>();
 
         var inRangeTile = new List<TileScript>();
-        int stepCount = 0;
 
         inRangeTile.Add(startTile);
 
