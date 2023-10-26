@@ -22,8 +22,15 @@ public class HUD : NetworkBehaviour
     private void LateUpdate()
     {
         if (player == null) return;
-        currentShipInfo.text = "ship selected : " + player.shipSelected + "\nCan move : " + player.unitManager.ships[player.currentShipIndex].canMove.Value 
+        if (player.shipSelected)
+        {
+            currentShipInfo.text = "ship selected : " + player.shipSelected + "\nCan move : " + player.unitManager.ships[player.currentShipIndex].canMove.Value 
             + "\nCan shoot : " + player.unitManager.ships[player.currentShipIndex].canShoot.Value;
+        }
+        else
+        {
+            currentShipInfo.text = "ship selected : " + player.shipSelected;
+        }
     }
 
     [ClientRpc]
