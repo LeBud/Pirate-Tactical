@@ -4,12 +4,14 @@ using TMPro;
 using Unity.Collections;
 using Unity.Netcode;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class HUD : NetworkBehaviour
 {
     public static HUD Instance { get; private set; }
     [SerializeField] TextMeshProUGUI gameStateTxt;
     [SerializeField] TextMeshProUGUI currentShipInfo;
+    [SerializeField] Button endTurnBtt;
 
     Cursor player;
 
@@ -17,6 +19,8 @@ public class HUD : NetworkBehaviour
     {
         if(Instance == null)
             Instance = this;
+
+        endTurnBtt.onClick.AddListener(() => { UpdateGameMode(); });
     }
 
     private void LateUpdate()
@@ -39,6 +43,12 @@ public class HUD : NetworkBehaviour
         gameStateTxt.text = gameState;
         if(gameState == "Player 1 Turn" && player == null)
             player = NetworkManager.LocalClient.PlayerObject.GetComponent<Cursor>();
+    }
+
+    public void UpdateGameMode()
+    {
+        if(player != null && player.canPlay.Value)
+            GameManager.Instance.UpdateGameStateServerRpc();
     }
 
 }

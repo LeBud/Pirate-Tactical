@@ -71,12 +71,15 @@ public class GridManager : NetworkBehaviour
     {
         ShipUnit[] ships = FindObjectsOfType<ShipUnit>();
 
+        bool isEnemy = false;
+
         for(int i = 0; i < ships.Length; i++)
         {
             if (ships[i].unitPos.Value == pos)
             {
                 if (ships[i].GetComponent<NetworkObject>().OwnerClientId != id)
                 {
+                    isEnemy = true;
                     ships[i].TakeDamage(damage);
 
 
@@ -86,6 +89,12 @@ public class GridManager : NetworkBehaviour
                 }
 
             }
+        }
+
+        if (isEnemy)
+        {
+            Cursor p = NetworkManager.ConnectedClients[id].PlayerObject.GetComponent<Cursor>();
+            p.HasAttackedEnemyClientRpc();
         }
 
     }

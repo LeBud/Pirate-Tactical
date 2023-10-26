@@ -104,14 +104,6 @@ public class Cursor : NetworkBehaviour
                 if (!unitManager.ships[currentShipIndex].canShoot.Value) return;
 
                 GridManager.Instance.DamageUnitServerRpc(unitManager.ships[currentShipIndex].damage, t.pos.Value, NetworkManager.LocalClientId);
-                totalShootPoint--;
-                unitManager.ships[currentShipIndex].canShoot.Value = false;
-                if (unitManager.ships[currentShipIndex].canMove.Value)
-                {
-                    totalMovePoint--;
-                    unitManager.ships[currentShipIndex].canMove.Value = false;
-                }
-                TotalActionPoint();
             }
             else if (CanMoveUnit(t))
             {
@@ -147,12 +139,27 @@ public class Cursor : NetworkBehaviour
             }
         }
 
-        if (Input.GetButtonDown("Cancel"))
+        if (Input.GetButtonDown("Cancel") || shipSelected && !unitManager.ships[currentShipIndex].canBeSelected.Value)
         {
             shipSelected = false;
             HideTiles();
         }
 
+    }
+
+    [ClientRpc]
+    public void HasAttackedEnemyClientRpc()
+    {
+        if (!IsOwner) return;
+
+        totalShootPoint--;
+        unitManager.ships[currentShipIndex].canShoot.Value = false;
+        if (unitManager.ships[currentShipIndex].canMove.Value)
+        {
+            totalMovePoint--;
+            unitManager.ships[currentShipIndex].canMove.Value = false;
+        }
+        TotalActionPoint();
     }
 
     void GetInRangeTiles()
