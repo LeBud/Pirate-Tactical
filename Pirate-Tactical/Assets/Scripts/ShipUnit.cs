@@ -64,12 +64,13 @@ public class ShipUnit : NetworkBehaviour
         }
     }
 
-    public void UpdateUnit(Vector2 pos)
+    [ClientRpc]
+    public void UpdateUnitClientRpc()
     {
-        if (currentTile.tileOutOfCombatZone.Value)
-        {
-            TakeDamageServerRpc(GridManager.Instance.combatZoneDamage, pos);
-        }
+        if (!IsOwner) return;
+        if(GameManager.Instance.currentRound.Value >= GameManager.Instance.startRoundCombatZone)
+            if (currentTile.tileOutOfCombatZone.Value)
+                TakeDamageServerRpc(GridManager.Instance.combatZoneDamage, unitPos.Value);
     }
 
     [ClientRpc]

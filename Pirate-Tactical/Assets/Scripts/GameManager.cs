@@ -23,17 +23,16 @@ public class GameManager : NetworkBehaviour
         GameFinish,
         GameTesting
     }
-    //public GameState state;
 
-    public NetworkVariable<GameState> gameState = new NetworkVariable<GameState>(0);
+    public GameState gameState;
 
     private void Awake()
     {
         if (Instance == null)
             Instance = this;
 
-        if (gameState.Value != GameState.GameTesting)
-            gameState.Value = GameState.GameStarting;
+        if (gameState != GameState.GameTesting)
+            gameState = GameState.GameStarting;
     }
 
 
@@ -41,18 +40,18 @@ public class GameManager : NetworkBehaviour
     {
         if (!IsServer) return;
 
-        if (gameState.Value == GameState.GameStarting && NetworkManager.ConnectedClients.Count >= 2)
+        if (gameState == GameState.GameStarting && NetworkManager.ConnectedClients.Count >= 2)
         {
             UpdateGameStateServerRpc();
         }
 
-        if (player1unitLeft == 0 || player2unitLeft == 0 && gameState.Value != GameState.GameFinish)
+        if (player1unitLeft == 0 || player2unitLeft == 0 && gameState != GameState.GameFinish)
         {
-            gameState.Value = GameState.GameFinish;
+            gameState = GameState.GameFinish;
             UpdateGameStateServerRpc();
         }
 
-        if(gameState.Value == GameState.GameTesting && NetworkManager.ConnectedClients.Count >= 1)
+        if(gameState == GameState.GameTesting && NetworkManager.ConnectedClients.Count >= 1)
         {
             UpdateGameStateServerRpc();
         }
@@ -65,7 +64,7 @@ public class GameManager : NetworkBehaviour
     {
         if(!IsServer) return;
 
-        if (gameState.Value == GameState.GameTesting)
+        if (gameState == GameState.GameTesting)
         {
             gametesting.Value = true;
             foreach(var client in NetworkManager.ConnectedClients)
@@ -78,20 +77,20 @@ public class GameManager : NetworkBehaviour
         NetworkManager.ConnectedClients[0].PlayerObject.GetComponent<Cursor>().canPlay.Value = false;
         NetworkManager.ConnectedClients[1].PlayerObject.GetComponent<Cursor>().canPlay.Value = false;
 
-        if(gameState.Value == GameState.GameFinish)
+        if(gameState == GameState.GameFinish)
         {
             Debug.Log("Game Finish");
         }
-        else if (gameState.Value == GameState.GameStarting)
-            gameState.Value = GameState.Player1Turn;
-        else if(gameState.Value == GameState.Player1Turn)
-            gameState.Value = GameState.Player2Turn;
-        else if(gameState.Value == GameState.Player2Turn)
-            gameState.Value = GameState.Player1Turn;
+        else if (gameState == GameState.GameStarting)
+            gameState = GameState.Player1Turn;
+        else if(gameState == GameState.Player1Turn)
+            gameState = GameState.Player2Turn;
+        else if(gameState == GameState.Player2Turn)
+            gameState = GameState.Player1Turn;
 
         GivePlayerActionServerRpc();
+        HUD.Instance.SetGameStateClientRpc(SetGameStateString(gameState), currentRound.Value);
         GridManager.Instance.UpdateTilesServerRpc();
-        HUD.Instance.SetGameStateClientRpc(SetGameStateString(gameState.Value), currentRound.Value);
     }
 
     string SetGameStateString(GameState newState)
@@ -118,7 +117,7 @@ public class GameManager : NetworkBehaviour
         if(!IsServer) return;
 
         //Setup pour que seulement le joueur puisse spawn ses unités puis l'autre joueur eznsuite
-        if (gameState.Value == GameState.Player1Turn)
+        if (gameState == GameState.Player1Turn)
         {
             Cursor currentP = NetworkManager.ConnectedClients[0].PlayerObject.GetComponent<Cursor>();
             currentP.canPlay.Value = true;
@@ -126,7 +125,7 @@ public class GameManager : NetworkBehaviour
             if (!currentP.unitManager.allShipSpawned.Value) return;
             currentP.ResetShipsActionClientRpc();
         }
-        else if (gameState.Value == GameState.Player2Turn)
+        else if (gameState == GameState.Player2Turn)
         {
             Cursor currentP = NetworkManager.ConnectedClients[1].PlayerObject.GetComponent<Cursor>();
             currentP.canPlay.Value = true;
@@ -135,7 +134,7 @@ public class GameManager : NetworkBehaviour
             currentP.ResetShipsActionClientRpc();
         }
 
-        if(gameState.Value == GameState.Player1Turn)
+        if(gameState == GameState.Player1Turn)
         {
             currentRound.Value++;
             
@@ -144,7 +143,7 @@ public class GameManager : NetworkBehaviour
             {
                 foreach (ShipUnit s in ships) 
                 { 
-                    s.UpdateUnit(s.unitPos.Value);
+                    s.UpdateUnitClientRpc();
                 }
             }
 
@@ -162,7 +161,7 @@ public class GameManager : NetworkBehaviour
         if (!IsOwner) return;
         Camera.main.transform.position = new Vector3((float)19 / 2 - 0.5f, (float)9 / 2 - 0.5f, -10);
 
-        HUD.Instance.SetGameStateClientRpc(SetGameStateString(gameState.Value), currentRound.Value);
+        HUD.Instance.SetGameStateClientRpc(SetGameStateString(gameState), currentRound.Value);
     }
 
 }
