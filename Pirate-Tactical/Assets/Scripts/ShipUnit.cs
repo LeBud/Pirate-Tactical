@@ -64,6 +64,14 @@ public class ShipUnit : NetworkBehaviour
         }
     }
 
+    public void UpdateUnit()
+    {
+        if (currentTile.tileOutOfCombatZone.Value)
+        {
+            TakeDamageServerRpc(GridManager.Instance.combatZoneDamage, unitPos.Value);
+        }
+    }
+
     [ClientRpc]
     public void SetShipColorClientRpc(ulong id)
     {
@@ -79,15 +87,20 @@ public class ShipUnit : NetworkBehaviour
         yield return null;
     }
 
-    public void TakeDamage(int dmg)
+    [ServerRpc(RequireOwnership = false)]
+    public void TakeDamageServerRpc(int dmg, Vector2 pos)
     {
         unitLife.Value -= dmg;
 
-        if(unitLife.Value <= 0)
+        float percent = (float)unitLife.Value / maxHealth;
+        SetHealthBarClientRpc(percent);
+
+        if (unitLife.Value <= 0)
         {
-            GridManager.Instance.SetShipOnTileServerRpc(currentTile.pos.Value, false);
-            DestroyUnitOnServerRpc(NetworkManager.LocalClientId);
+            GridManager.Instance.SetShipOnTileServerRpc(pos, false);
+            GetComponent<NetworkObject>().Despawn();
         }
+
     }
 
     [ClientRpc]
@@ -95,22 +108,5 @@ public class ShipUnit : NetworkBehaviour
     {
         healthDisplay.localScale = new Vector3(percent, 1, 1);
     }
-
-    [ServerRpc(RequireOwnership = false)]
-    void DestroyUnitOnServerRpc(ulong id)
-    {
-        if (id == 0)
-        {
-            GameManager.Instance.player1unitLeft--;
-            GetComponent<NetworkObject>().Despawn();
-        }
-        else if (id == 1)
-        {
-            GameManager.Instance.player2unitLeft--;
-            GetComponent<NetworkObject>().Despawn();
-        }
-
-    }
-
 }
 

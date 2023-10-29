@@ -13,6 +13,8 @@ public class HUD : NetworkBehaviour
     [SerializeField] TextMeshProUGUI currentShipInfo;
     [SerializeField] Button endTurnBtt;
 
+    public GameObject inGameHUD;
+
     Cursor player;
 
     private void Awake()

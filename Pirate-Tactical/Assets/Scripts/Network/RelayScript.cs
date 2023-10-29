@@ -50,7 +50,7 @@ public class RelayScript : MonoBehaviour
                 allocation.ConnectionData);*/
 
             NetworkManager.Singleton.StartHost();
-
+            HUD.Instance.inGameHUD.SetActive(true);
             GridManager.Instance.GenerateGridServerRpc();
 
             return joinCode;
@@ -82,7 +82,7 @@ public class RelayScript : MonoBehaviour
                 joinAllocation.HostConnectionData);*/
 
             NetworkManager.Singleton.StartClient();
-
+            HUD.Instance.inGameHUD.SetActive(true);
         }
         catch (RelayServiceException e)
         {

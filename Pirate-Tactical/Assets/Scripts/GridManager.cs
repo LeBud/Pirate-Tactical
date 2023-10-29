@@ -17,14 +17,19 @@ public class GridManager : NetworkBehaviour
     List<TileScript> blockedTiles = new List<TileScript>();
     List<TileScript> outOfCombatZoneTiles = new List<TileScript>();
 
-    int combatZoneSize;
+    //int combatZoneSize;
+    public NetworkVariable<int> combatZoneSize = new NetworkVariable<int>();
 
+    public int combatZoneDamage = 4;
+    
     private void Awake()
     {
         if(Instance == null)
             Instance = this;
 
         dictionnary = new NetworkList<Vector2>();
+
+        combatZoneSize.Value = _width / 2;
     }
 
     //Génère la grille de jeu et la setup
@@ -84,11 +89,8 @@ public class GridManager : NetworkBehaviour
                 if (ships[i].GetComponent<NetworkObject>().OwnerClientId != id)
                 {
                     isEnemy = true;
-                    ships[i].TakeDamage(damage);
+                    ships[i].TakeDamageServerRpc(damage, pos);
 
-
-                    float percent = (float)ships[i].unitLife.Value / ships[i].maxHealth;
-                    ships[i].SetHealthBarClientRpc(percent);
                     break;
                 }
 
@@ -151,11 +153,9 @@ public class GridManager : NetworkBehaviour
 
     void CombatZoneTiles()
     {
-        if (combatZoneSize == 0 && GameManager.Instance.currentRound.Value == GameManager.Instance.startRoundCombatZone) 
-            combatZoneSize = _width / 2;
 
         TileScript midTile = GetTileAtPosition(new Vector2(_width/ 2, _height/2));
-        List<TileScript> rangeTiles = PathFindTesting.GetCombatZoneSize(midTile, combatZoneSize);
+        List<TileScript> rangeTiles = PathFindTesting.GetCombatZoneSize(midTile, combatZoneSize.Value);
 
         foreach(var t in tilesGrid)
         {
@@ -166,8 +166,6 @@ public class GridManager : NetworkBehaviour
                 t.SetTileToOutOfZoneClientRpc();
             }
         }
-
-        combatZoneSize--;
 
     }
 }
