@@ -53,6 +53,8 @@ public class Cursor : NetworkBehaviour
 
     public void TotalActionPoint()
     {
+        if (!IsOwner) return;
+
         if(totalShootPoint < 0) totalShootPoint = 0;
         if (totalMovePoint < 0) totalMovePoint = 0;
         
@@ -87,6 +89,8 @@ public class Cursor : NetworkBehaviour
             totalShootPoint++;
             totalMovePoint++;
         }
+
+        TotalActionPoint();
     }
 
     void MyInputs()

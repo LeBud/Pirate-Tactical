@@ -14,8 +14,11 @@ public class GridManager : NetworkBehaviour
 
     public NetworkList<Vector2> dictionnary;
     List<TileScript> tilesGrid = new List<TileScript>();
-
     List<TileScript> blockedTiles = new List<TileScript>();
+    List<TileScript> outOfCombatZoneTiles = new List<TileScript>();
+
+    int combatZoneSize;
+
     private void Awake()
     {
         if(Instance == null)
@@ -131,6 +134,10 @@ public class GridManager : NetworkBehaviour
     public void UpdateTilesServerRpc()
     {
         if (!IsServer) return;
+
+        if(GameManager.Instance.currentRound.Value >= GameManager.Instance.startRoundCombatZone)
+            CombatZoneTiles();
+        
         if(blockedTiles.Count > 0)
         {
             foreach(var t in blockedTiles)
@@ -140,5 +147,27 @@ public class GridManager : NetworkBehaviour
                 if(!t.blockedTile.Value) blockedTiles.Remove(t);
             }
         }
+    }
+
+    void CombatZoneTiles()
+    {
+        if (combatZoneSize == 0 && GameManager.Instance.currentRound.Value == GameManager.Instance.startRoundCombatZone) 
+            combatZoneSize = _width / 2;
+
+        TileScript midTile = GetTileAtPosition(new Vector2(_width/ 2, _height/2));
+        List<TileScript> rangeTiles = PathFindTesting.GetCombatZoneSize(midTile, combatZoneSize);
+
+        foreach(var t in tilesGrid)
+        {
+            if (!rangeTiles.Contains(t) && !outOfCombatZoneTiles.Contains(t))
+            {
+                outOfCombatZoneTiles.Add(t);
+                t.tileOutOfCombatZone.Value = true;
+                t.SetTileToOutOfZoneClientRpc();
+            }
+        }
+
+        combatZoneSize--;
+
     }
 }

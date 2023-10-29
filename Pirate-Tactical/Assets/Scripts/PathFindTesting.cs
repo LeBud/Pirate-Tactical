@@ -147,4 +147,31 @@ public class PathFindTesting : MonoBehaviour
         return inRangeTile.Distinct().ToList();
     }
 
+
+    public static List<TileScript> GetCombatZoneSize(TileScript startTile, int range)
+    {
+        var inRangeTile = new List<TileScript>();
+        int stepCount = 0;
+
+        inRangeTile.Add(startTile);
+
+        var tileForPreviousStep = new List<TileScript>();
+        tileForPreviousStep.Add(startTile);
+
+        while (stepCount < range)
+        {
+            var surroundingTiles = new List<TileScript>();
+            foreach (var tile in tileForPreviousStep)
+            {
+                surroundingTiles.AddRange(tile.Neighbors);
+            }
+
+            inRangeTile.AddRange(surroundingTiles);
+            tileForPreviousStep = surroundingTiles.Distinct().ToList();
+            stepCount++;
+        }
+
+        return inRangeTile.Distinct().ToList();
+    }
+
 }

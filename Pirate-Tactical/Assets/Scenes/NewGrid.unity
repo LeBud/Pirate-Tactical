@@ -5359,7 +5359,9 @@ MonoBehaviour:
     m_InternalValue: 0
   currentRound:
     m_InternalValue: 0
-  state: 0
+  startRoundCombatZone: 4
+  gameState:
+    m_InternalValue: 0
 --- !u!4 &1381260906
 Transform:
   m_ObjectHideFlags: 0

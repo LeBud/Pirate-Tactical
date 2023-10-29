@@ -10,6 +10,7 @@ public class TileScript : NetworkBehaviour
     public GameObject _highlight;
     public GameObject _highlightRange;
     public GameObject _highlightBlocked;
+    public GameObject _highlightOutOfCombatZone;
 
     [Header("Normals Colors")]
     public Color normalColor;
@@ -26,6 +27,7 @@ public class TileScript : NetworkBehaviour
     public NetworkVariable<bool> shipOnTile = new NetworkVariable<bool>(false, NetworkVariableReadPermission.Everyone);
     public NetworkVariable<bool> offsetTile = new NetworkVariable<bool>(false, NetworkVariableReadPermission.Everyone);
     public NetworkVariable<bool> blockedTile = new NetworkVariable<bool>(false, NetworkVariableReadPermission.Everyone);
+    public NetworkVariable<bool> tileOutOfCombatZone = new NetworkVariable<bool>(false, NetworkVariableReadPermission.Everyone);
 
     #region PathFinding
 
@@ -163,6 +165,13 @@ public class TileScript : NetworkBehaviour
             SetTileToBlockTileClientRpc(false);
         }
     }
+
+    [ClientRpc]
+    public void SetTileToOutOfZoneClientRpc()
+    {
+        _highlightOutOfCombatZone.SetActive(true);
+    }
+
 
     #region HighlightTiles
 
