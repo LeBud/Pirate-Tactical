@@ -15,6 +15,7 @@ public class GridManager : NetworkBehaviour
     public NetworkList<Vector2> dictionnary;
     List<TileScript> tilesGrid = new List<TileScript>();
 
+    List<TileScript> blockedTiles = new List<TileScript>();
     private void Awake()
     {
         if(Instance == null)
@@ -118,10 +119,26 @@ public class GridManager : NetworkBehaviour
             foreach(var t in tilesGrid)
                 if(t.pos.Value == tilePos)
                 {
-                    t.SetTileColorInGameClientRpc(true);
+                    t.SetTileToBlockTileClientRpc(true);
                     t.blockedTile.Value = true;
+                    blockedTiles.Add(t);
                     break;
                 }
+        }
+    }
+
+    [ServerRpc(RequireOwnership = false)]
+    public void UpdateTilesServerRpc()
+    {
+        if (!IsServer) return;
+        if(blockedTiles.Count > 0)
+        {
+            foreach(var t in blockedTiles)
+            {
+                if (t.blockedTile.Value)
+                    t.UnblockTileServerRpc();
+                if(!t.blockedTile.Value) blockedTiles.Remove(t);
+            }
         }
     }
 }

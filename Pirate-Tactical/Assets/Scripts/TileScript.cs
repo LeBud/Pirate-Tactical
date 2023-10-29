@@ -49,6 +49,9 @@ public class TileScript : NetworkBehaviour
 
     #endregion
 
+
+    int roundToUnblock;
+    public int roundUntilBlock = 2;
     private void Start()
     {
         #region SetNeighbors
@@ -144,9 +147,21 @@ public class TileScript : NetworkBehaviour
     }
 
     [ClientRpc]
-    public void SetTileColorInGameClientRpc(bool blocked)
+    public void SetTileToBlockTileClientRpc(bool blocked)
     {
+        if (blocked)
+            roundToUnblock = GameManager.Instance.currentRound.Value + roundUntilBlock;
         _highlightBlocked.SetActive(blocked);
+    }
+
+    [ServerRpc]
+    public void UnblockTileServerRpc()
+    {
+        if(GameManager.Instance.currentRound.Value >= roundToUnblock)
+        {
+            blockedTile.Value = false;
+            SetTileToBlockTileClientRpc(false);
+        }
     }
 
     #region HighlightTiles

@@ -89,6 +89,7 @@ public class GameManager : NetworkBehaviour
 
         GivePlayerActionServerRpc();
         HUD.Instance.SetGameStateClientRpc(SetGameStateString(state), currentRound.Value);
+        GridManager.Instance.UpdateTilesServerRpc();
     }
 
     string SetGameStateString(GameState newState)

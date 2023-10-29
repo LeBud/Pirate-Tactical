@@ -79,6 +79,8 @@ public class Cursor : NetworkBehaviour
 
         for (int i = 0; i < unitManager.ships.Length; i++)
         {
+            if (unitManager.ships[i] == null) continue;
+
             unitManager.ships[i].canBeSelected.Value = true;
             unitManager.ships[i].canShoot.Value = true;
             unitManager.ships[i].canMove.Value = true;
