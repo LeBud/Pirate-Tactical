@@ -150,12 +150,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c5f47ab1fce98f64ab022280a582e656, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  currentSelectedShip: 0
+  currentShipIndex: 0
   shipSelected: 0
   canPlay:
     m_InternalValue: 0
   inRangeTiles: []
   unitManager: {fileID: 8773507901912881422}
+  totalMovePoint: 0
+  totalShootPoint: 0
+  currentModeIndex: 0
 --- !u!114 &8773507901912881422
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -172,4 +175,5 @@ MonoBehaviour:
   - {fileID: 3253718228688877990, guid: 97fefd33bba3d75428e533aacace6188, type: 3}
   - {fileID: 3253718228688877990, guid: 2579f04bf0728b2468056c4de7560ca0, type: 3}
   numShipSpawned: 0
-  allShipSpawned: 0
+  allShipSpawned:
+    m_InternalValue: 0

@@ -64,6 +64,9 @@ public class Cursor : NetworkBehaviour
 
         if(totalActionPoint <= 0 && unitManager.allShipSpawned.Value)
         {
+            totalMovePoint = 0;
+            totalShootPoint = 0;
+
             for(int i = 0; i < unitManager.ships.Length; i++)
             {
                 unitManager.ships[i].canBeSelected.Value = false;
@@ -113,9 +116,9 @@ public class Cursor : NetworkBehaviour
         }
 
         if (Input.GetAxis("Mouse ScrollWheel") > 0)
-            currentModeIndex++;
-        else if(Input.GetAxis("Mouse ScrollWheel") < 0)
             currentModeIndex--;
+        else if(Input.GetAxis("Mouse ScrollWheel") < 0)
+            currentModeIndex++;
 
         if (Input.GetMouseButtonDown(0) && shipSelected)
         {

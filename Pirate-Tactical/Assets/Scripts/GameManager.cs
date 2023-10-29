@@ -63,6 +63,7 @@ public class GameManager : NetworkBehaviour
     [ServerRpc(RequireOwnership = false)]
     public void UpdateGameStateServerRpc()
     {
+        if(!IsServer) return;
 
         if (gameState.Value == GameState.GameTesting)
         {
@@ -89,8 +90,8 @@ public class GameManager : NetworkBehaviour
             gameState.Value = GameState.Player1Turn;
 
         GivePlayerActionServerRpc();
-        HUD.Instance.SetGameStateClientRpc(SetGameStateString(gameState.Value), currentRound.Value);
         GridManager.Instance.UpdateTilesServerRpc();
+        HUD.Instance.SetGameStateClientRpc(SetGameStateString(gameState.Value), currentRound.Value);
     }
 
     string SetGameStateString(GameState newState)
@@ -139,11 +140,14 @@ public class GameManager : NetworkBehaviour
             currentRound.Value++;
             
             ShipUnit[] ships = FindObjectsOfType<ShipUnit>();
-            foreach (ShipUnit s in ships) 
-            { 
-                s.UpdateUnit(); 
-
+            if(ships.Length > 0)
+            {
+                foreach (ShipUnit s in ships) 
+                { 
+                    s.UpdateUnit(s.unitPos.Value);
+                }
             }
+
             if (currentRound.Value >= startRoundCombatZone)
                 GridManager.Instance.combatZoneSize.Value--;
         }

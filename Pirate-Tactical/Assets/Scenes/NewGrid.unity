@@ -5796,7 +5796,6 @@ MonoBehaviour:
   _width: 19
   _height: 9
   _tilePrefab: {fileID: 9178135446572580332, guid: 0bec297b910024c4da26c598d9b4902d, type: 3}
-  _cam: {fileID: 1390690773}
   combatZoneSize:
     m_InternalValue: 0
   combatZoneDamage: 4

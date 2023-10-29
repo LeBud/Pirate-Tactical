@@ -30,7 +30,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: -1}
-  m_LocalScale: {x: 0.5, y: 0.5, z: 0.5}
+  m_LocalScale: {x: 0.6, y: 0.6, z: 0.6}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 7677579010255428536}
@@ -101,17 +101,17 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   currentTile: {fileID: 0}
-  maxHealth: 10
+  maxHealth: 32
   unitLife:
-    m_InternalValue: 10
+    m_InternalValue: 32
   unitPos:
     m_InternalValue: {x: 8.172023, y: 5.4177694}
   player1Color: {r: 0.9622642, g: 0.55039275, b: 0.004538993, a: 1}
   player2Color: {r: 0.5994166, g: 0, b: 0.8113208, a: 1}
   unitSprite: {fileID: 4475007845721384360}
   unitMoveRange: 4
-  unitShootRange: 6
-  damage: 4
+  unitShootRange: 4
+  damage: 6
   index: 1
   clientIdOwner: 1
   movePoint: 1
@@ -232,7 +232,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0.8, y: 0.7, z: 0}
-  m_LocalScale: {x: 1.6, y: 0.15, z: 1}
+  m_LocalScale: {x: 1.35, y: 0.2, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 7677579010255428536}

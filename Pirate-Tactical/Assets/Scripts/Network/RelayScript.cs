@@ -41,14 +41,6 @@ public class RelayScript : MonoBehaviour
 
             NetworkManager.Singleton.GetComponent<UnityTransport>().SetRelayServerData(data);
 
-            //Autre méthode de serveur
-            /*NetworkManager.Singleton.GetComponent<UnityTransport>().SetRelayServerData(
-                allocation.RelayServer.IpV4, 
-                (ushort)allocation.RelayServer.Port, 
-                allocation.AllocationIdBytes,
-                allocation.Key,
-                allocation.ConnectionData);*/
-
             NetworkManager.Singleton.StartHost();
             HUD.Instance.inGameHUD.SetActive(true);
             GridManager.Instance.GenerateGridServerRpc();
@@ -72,14 +64,6 @@ public class RelayScript : MonoBehaviour
             RelayServerData data = new RelayServerData(joinAllocation, "dtls");
 
             NetworkManager.Singleton.GetComponent<UnityTransport>().SetRelayServerData(data);
-
-            /*NetworkManager.Singleton.GetComponent<UnityTransport>().SetClientRelayData(
-                joinAllocation.RelayServer.IpV4,
-                (ushort)joinAllocation.RelayServer.Port,
-                joinAllocation.AllocationIdBytes,
-                joinAllocation.Key,
-                joinAllocation.ConnectionData,
-                joinAllocation.HostConnectionData);*/
 
             NetworkManager.Singleton.StartClient();
             HUD.Instance.inGameHUD.SetActive(true);

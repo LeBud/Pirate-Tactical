@@ -10,7 +10,7 @@ public class GridManager : NetworkBehaviour
 
     [SerializeField] int _width, _height;
     [SerializeField] TileScript _tilePrefab;
-    [SerializeField] Transform _cam;
+    //[SerializeField] Transform _cam;
 
     public NetworkList<Vector2> dictionnary;
     List<TileScript> tilesGrid = new List<TileScript>();
