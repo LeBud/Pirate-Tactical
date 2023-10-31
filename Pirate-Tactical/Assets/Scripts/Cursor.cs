@@ -25,8 +25,8 @@ public class Cursor : NetworkBehaviour
     public float totalShootPoint;
     float totalActionPoint;
 
-    public float currentModeIndex;
-    float currentModeInputIndex;
+    public int currentModeIndex;
+    int currentModeInputIndex;
     bool canShoot;
     bool canMove;
 

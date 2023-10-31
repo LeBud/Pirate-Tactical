@@ -8,6 +8,8 @@ public class ShipUnit : NetworkBehaviour
 {
     public TileScript currentTile;
 
+    public string unitName;
+
     //public float shipSpeed = .0015f;
     public float maxHealth;
     public NetworkVariable<int> unitLife = new NetworkVariable<int>(10);
