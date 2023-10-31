@@ -8,9 +8,8 @@ public class GridManager : NetworkBehaviour
 {
     public static GridManager Instance { get; private set; }
 
-    [SerializeField] int _width, _height;
+    public int _width, _height;
     [SerializeField] TileScript _tilePrefab;
-    //[SerializeField] Transform _cam;
 
     public NetworkList<Vector2> dictionnary;
     List<TileScript> tilesGrid = new List<TileScript>();
@@ -29,7 +28,7 @@ public class GridManager : NetworkBehaviour
 
         dictionnary = new NetworkList<Vector2>();
 
-        combatZoneSize.Value = _width / 2;
+        combatZoneSize.Value = _width / 2 + (_height - 2) / 2;
     }
 
     //Génère la grille de jeu et la setup

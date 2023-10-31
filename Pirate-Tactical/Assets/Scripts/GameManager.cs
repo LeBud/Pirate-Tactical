@@ -147,7 +147,7 @@ public class GameManager : NetworkBehaviour
                 }
             }
 
-            if (currentRound.Value >= startRoundCombatZone)
+            if (currentRound.Value >= startRoundCombatZone && currentRound.Value % 2 != 1 && GridManager.Instance.combatZoneSize.Value > 4)
                 GridManager.Instance.combatZoneSize.Value--;
         }
     }
@@ -159,7 +159,10 @@ public class GameManager : NetworkBehaviour
     public void JoinServerServerRpc()
     {
         if (!IsOwner) return;
-        Camera.main.transform.position = new Vector3((float)19 / 2 - 0.5f, (float)9 / 2 - 0.5f, -10);
+
+        int width = GridManager.Instance._width;
+        int height = GridManager.Instance._height;
+        Camera.main.transform.position = new Vector3((float)width / 2 - 0.5f, (float)height / 2 - 0.5f, -10);
 
         HUD.Instance.SetGameStateClientRpc(SetGameStateString(gameState), currentRound.Value);
     }
