@@ -124,18 +124,34 @@ public class Cursor : NetworkBehaviour
         {
             if (t.shipOnTile.Value && canShoot && inRangeTiles.Contains(t))
             {
+                //Classic attack on another unit
+
                 if (!unitManager.ships[currentShipIndex].canShoot.Value) return;
 
                 GridManager.Instance.DamageUnitServerRpc(unitManager.ships[currentShipIndex].damage, t.pos.Value, NetworkManager.LocalClientId);
             }
             else if (CanMoveUnit(t))
             {
+                //Move unit to new position
+
                 if (unitManager.ships[currentShipIndex].canMove.Value)
                     StartCoroutine(UpdateShipPlacementOnGrid());
             }
-            else if (currentModeIndex == 2)
+            else if (currentModeIndex == 2 && inRangeTiles.Contains(t))
             {
+                //Special mode like blocking a tile or something else
+                if (!unitManager.ships[currentShipIndex].canShoot.Value) return;
+
                 GridManager.Instance.BlockedTileServerRpc(t.pos.Value);
+                totalShootPoint--;
+                unitManager.ships[currentShipIndex].canShoot.Value = false;
+                if (unitManager.ships[currentShipIndex].canMove.Value)
+                {
+                    totalMovePoint--;
+                    unitManager.ships[currentShipIndex].canMove.Value = false;
+                }
+                TotalActionPoint();
+
             }
             else if (!CanMoveUnit(t) && !unitMoving)
             {
@@ -235,6 +251,7 @@ public class Cursor : NetworkBehaviour
             {
                 currentModeInputIndex = currentModeIndex;
                 HideTiles();
+                GetInRangeTiles();
             }
         }
 
