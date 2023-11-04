@@ -103,6 +103,25 @@ public class GridManager : NetworkBehaviour
     }
 
     [ServerRpc(RequireOwnership = false)]
+    public void DamageUnitTShotServerRpc(int damage, Vector2 pos, ulong id, bool passiveAttack, int effectDuration)
+    {
+        ShipUnit[] ships = FindObjectsOfType<ShipUnit>();
+
+        for (int i = 0; i < ships.Length; i++)
+        {
+            if (ships[i].unitPos.Value == pos)
+            {
+                if (ships[i].GetComponent<NetworkObject>().OwnerClientId != id)
+                {
+                    ships[i].TakeDamageServerRpc(damage, pos, passiveAttack, effectDuration);
+                    break;
+                }
+
+            }
+        }
+    }
+
+    [ServerRpc(RequireOwnership = false)]
     public void DamageUnitByMineServerRpc(int damage, Vector2 pos, bool passiveAttack, int effectDuration)
     {
         ShipUnit[] ships = FindObjectsOfType<ShipUnit>();

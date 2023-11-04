@@ -286,6 +286,7 @@ public class Cursor : NetworkBehaviour
         else if(unitManager.ships[currentShipIndex].unitSpecialTile == ShipUnit.UnitSpecialTile.None)
         {
             //Do nothing, can't select if there is no special to the unit
+            return;
         }
 
         totalShootPoint--;
@@ -305,11 +306,11 @@ public class Cursor : NetworkBehaviour
         //If statement to check what is the special of the current unit
         if (unitManager.ships[currentShipIndex].unitSpecialShot == ShipUnit.UnitSpecialShot.PushUnit)
         {
-            
+            //A décider comment cette mécanique fonctionne concretement
         }
         else if (unitManager.ships[currentShipIndex].unitSpecialShot == ShipUnit.UnitSpecialShot.TShot)
         {
-
+            TShotFunction(t);
         }
         else if (unitManager.ships[currentShipIndex].unitSpecialShot == ShipUnit.UnitSpecialShot.FireShot)
         {
@@ -318,6 +319,72 @@ public class Cursor : NetworkBehaviour
         else if (unitManager.ships[currentShipIndex].unitSpecialShot == ShipUnit.UnitSpecialShot.None)
         {
             //Do nothing, can't select if there is no special to the unit
+        }
+    }
+
+    void TShotFunction(TileScript t)
+    {
+        if (t.pos.Value.x == unitManager.ships[currentShipIndex].currentTile.pos.Value.x)
+        {
+            Debug.Log("Same X");
+
+            //GetShips on Y axis with for loop
+            Vector2 posToCheck;
+            for (int x = 1; x < 3; x++)
+            {
+                posToCheck = new Vector2(t.pos.Value.x + x, t.pos.Value.y);
+                if (GridManager.Instance.GetTileAtPosition(posToCheck).shipOnTile.Value)
+                {
+                    Debug.Log("Ship");
+
+                    GridManager.Instance.DamageUnitTShotServerRpc(unitManager.ships[currentShipIndex].damage, posToCheck, NetworkManager.LocalClientId, false, 0);
+                    break;
+                }
+            }
+            for (int x = 1; x < 3; x++)
+            {
+                posToCheck = new Vector2(t.pos.Value.x - x, t.pos.Value.y);
+                if (GridManager.Instance.GetTileAtPosition(posToCheck).shipOnTile.Value)
+                {
+                    Debug.Log("Ship");
+
+                    GridManager.Instance.DamageUnitTShotServerRpc(unitManager.ships[currentShipIndex].damage, posToCheck, NetworkManager.LocalClientId, false, 0);
+                    break;
+                }
+            }
+            GridManager.Instance.DamageUnitServerRpc(unitManager.ships[currentShipIndex].damage, t.pos.Value, NetworkManager.LocalClientId, false, 0);
+
+        }
+        else if (t.pos.Value.y == unitManager.ships[currentShipIndex].currentTile.pos.Value.y)
+        {
+            Debug.Log("Same Y");
+
+            //GetShips on X axis with for loop
+            Vector2 posToCheck;
+            for (int y = 1; y < 3; y++)
+            {
+                posToCheck = new Vector2(t.pos.Value.x, t.pos.Value.y + y);
+                if (GridManager.Instance.GetTileAtPosition(posToCheck).shipOnTile.Value)
+                {
+                    Debug.Log("Ship");
+                    GridManager.Instance.DamageUnitTShotServerRpc(unitManager.ships[currentShipIndex].damage, posToCheck, NetworkManager.LocalClientId, false, 0);
+                    break;
+                }
+            }
+            for (int y = 1; y < 3; y++)
+            {
+                posToCheck = new Vector2(t.pos.Value.x, t.pos.Value.y - y);
+                if (GridManager.Instance.GetTileAtPosition(posToCheck).shipOnTile.Value)
+                {
+                    Debug.Log("Ship");
+
+                    GridManager.Instance.DamageUnitTShotServerRpc(unitManager.ships[currentShipIndex].damage, posToCheck, NetworkManager.LocalClientId, false, 0);
+                    break;
+                }
+            }
+
+            GridManager.Instance.DamageUnitServerRpc(unitManager.ships[currentShipIndex].damage, t.pos.Value, NetworkManager.LocalClientId, false, 0);
+
         }
     }
 
