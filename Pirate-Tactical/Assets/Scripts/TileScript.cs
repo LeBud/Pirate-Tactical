@@ -11,6 +11,7 @@ public class TileScript : NetworkBehaviour
     public GameObject _highlightRange;
     public GameObject _highlightBlocked;
     public GameObject _highlightOutOfCombatZone;
+    public GameObject _highlightMine;
 
     [Header("Normals Colors")]
     public Color normalColor;
@@ -166,6 +167,15 @@ public class TileScript : NetworkBehaviour
             blockedTile.Value = false;
             SetTileToBlockTileClientRpc(false);
         }
+    }
+
+    [ClientRpc]
+    public void SetMineTileToClientRpc(ulong id, bool active)
+    {
+        if(NetworkManager.LocalClientId == id && active)
+            _highlightMine.SetActive(true);
+        else if(!active)
+            _highlightMine.SetActive(false);
     }
 
 

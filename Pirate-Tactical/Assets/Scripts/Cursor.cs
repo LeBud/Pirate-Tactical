@@ -281,7 +281,7 @@ public class Cursor : NetworkBehaviour
         }
         else if(unitManager.ships[currentShipIndex].unitSpecialTile == ShipUnit.UnitSpecialTile.Mine)
         {
-            GridManager.Instance.SetMineOnTileServerRpc(t.pos.Value);
+            GridManager.Instance.SetMineOnTileServerRpc(t.pos.Value, NetworkManager.LocalClientId, true);
         }
         else if(unitManager.ships[currentShipIndex].unitSpecialTile == ShipUnit.UnitSpecialTile.None)
         {
@@ -374,8 +374,12 @@ public class Cursor : NetworkBehaviour
             {
                 unitManager.ships[currentShipIndex].currentTile = path[value];
                 stepOnMine = true;
+
                 foreach (var item in allTiles)
                     item.SetColor(3);
+
+                GridManager.Instance.SetMineOnTileServerRpc(path[value].pos.Value, NetworkManager.LocalClientId, false);
+
                 break;
             }
             

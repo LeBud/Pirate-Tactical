@@ -147,14 +147,25 @@ public class GridManager : NetworkBehaviour
     }
 
     [ServerRpc(RequireOwnership = false)]
-    public void SetMineOnTileServerRpc(Vector2 tilePos)
+    public void SetMineOnTileServerRpc(Vector2 tilePos, ulong id, bool active)
     {
-        if (dictionnary.Contains(tilePos))
+        if (!active && dictionnary.Contains(tilePos))
+        {
+            foreach (var t in tilesGrid)
+                if (t.pos.Value == tilePos)
+                {
+                    t.mineInTile.Value = false;
+                    t.SetMineTileToClientRpc(id, false);
+                    break;
+                }
+        }
+        else if (active && dictionnary.Contains(tilePos))
         {
             foreach (var t in tilesGrid)
                 if (t.pos.Value == tilePos)
                 {
                     t.mineInTile.Value = true;
+                    t.SetMineTileToClientRpc(id, true);
                     break;
                 }
         }
