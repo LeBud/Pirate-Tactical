@@ -73,9 +73,8 @@ public class GridManager : NetworkBehaviour
         return null;
     }
 
-    //Ca marche mais ca fait buggé de fou malade dri POW plaplaplaplaplapla PLA ca me saoule
     [ServerRpc(RequireOwnership = false)]
-    public void DamageUnitServerRpc(int damage, Vector2 pos, ulong id)
+    public void DamageUnitServerRpc(int damage, Vector2 pos, ulong id, bool passiveAttack, int effectDuration)
     {
         ShipUnit[] ships = FindObjectsOfType<ShipUnit>();
 
@@ -88,8 +87,7 @@ public class GridManager : NetworkBehaviour
                 if (ships[i].GetComponent<NetworkObject>().OwnerClientId != id)
                 {
                     isEnemy = true;
-                    ships[i].TakeDamageServerRpc(damage, pos);
-
+                    ships[i].TakeDamageServerRpc(damage, pos, passiveAttack, effectDuration);
                     break;
                 }
 
@@ -103,6 +101,23 @@ public class GridManager : NetworkBehaviour
         }
 
     }
+
+    [ServerRpc(RequireOwnership = false)]
+    public void DamageUnitByMineServerRpc(int damage, Vector2 pos, bool passiveAttack, int effectDuration)
+    {
+        ShipUnit[] ships = FindObjectsOfType<ShipUnit>();
+
+        for (int i = 0; i < ships.Length; i++)
+        {
+            if (ships[i].unitPos.Value == pos)
+            {
+                ships[i].TakeDamageServerRpc(damage, pos, passiveAttack, effectDuration);
+                break;
+
+            }
+        }
+    }
+
 
     [ServerRpc(RequireOwnership = false)]
     public void SetShipOnTileServerRpc(Vector2 tilePos, bool active)
@@ -126,6 +141,20 @@ public class GridManager : NetworkBehaviour
                     t.SetTileToBlockTileClientRpc(true);
                     t.blockedTile.Value = true;
                     blockedTiles.Add(t);
+                    break;
+                }
+        }
+    }
+
+    [ServerRpc(RequireOwnership = false)]
+    public void SetMineOnTileServerRpc(Vector2 tilePos)
+    {
+        if (dictionnary.Contains(tilePos))
+        {
+            foreach (var t in tilesGrid)
+                if (t.pos.Value == tilePos)
+                {
+                    t.mineInTile.Value = true;
                     break;
                 }
         }

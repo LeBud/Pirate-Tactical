@@ -155,10 +155,10 @@ MonoBehaviour:
   canPlay:
     m_InternalValue: 0
   inRangeTiles: []
+  currentModeIndex: 0
   unitManager: {fileID: 8773507901912881422}
   totalMovePoint: 0
   totalShootPoint: 0
-  currentModeIndex: 0
 --- !u!114 &8773507901912881422
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -173,9 +173,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ships:
   - {fileID: 3253718228688877990, guid: 97fefd33bba3d75428e533aacace6188, type: 3}
-  - {fileID: 3253718228688877990, guid: 2579f04bf0728b2468056c4de7560ca0, type: 3}
-  - {fileID: 3253718228688877990, guid: 2579f04bf0728b2468056c4de7560ca0, type: 3}
-  - {fileID: 3253718228688877990, guid: 91e69f55be3166446afbe10ad08d5149, type: 3}
   - {fileID: 3253718228688877990, guid: 91e69f55be3166446afbe10ad08d5149, type: 3}
   numShipSpawned: 0
   allShipSpawned:

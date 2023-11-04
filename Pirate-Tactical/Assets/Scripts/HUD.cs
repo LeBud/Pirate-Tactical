@@ -47,7 +47,9 @@ public class HUD : NetworkBehaviour
         else if (i == 1)
             return "attack enemy";
         else if (i == 2)
-            return "block a tile";
+            return "special unit tile";
+        else if (i == 3)
+            return "special unit attack";
 
         return null;
     }

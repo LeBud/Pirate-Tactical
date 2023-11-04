@@ -28,6 +28,7 @@ public class TileScript : NetworkBehaviour
     public NetworkVariable<bool> offsetTile = new NetworkVariable<bool>(false, NetworkVariableReadPermission.Everyone);
     public NetworkVariable<bool> blockedTile = new NetworkVariable<bool>(false, NetworkVariableReadPermission.Everyone);
     public NetworkVariable<bool> tileOutOfCombatZone = new NetworkVariable<bool>(false, NetworkVariableReadPermission.Everyone);
+    public NetworkVariable<bool> mineInTile = new NetworkVariable<bool>(false, NetworkVariableReadPermission.Everyone);
 
     #region PathFinding
 
@@ -53,7 +54,8 @@ public class TileScript : NetworkBehaviour
 
 
     int roundToUnblock;
-    public int roundUntilBlock = 2;
+    public int roundTillUnblock = 2;
+
     private void Start()
     {
         #region SetNeighbors
@@ -152,7 +154,7 @@ public class TileScript : NetworkBehaviour
     public void SetTileToBlockTileClientRpc(bool blocked)
     {
         if (blocked)
-            roundToUnblock = GameManager.Instance.currentRound.Value + roundUntilBlock;
+            roundToUnblock = GameManager.Instance.currentRound.Value + roundTillUnblock;
         _highlightBlocked.SetActive(blocked);
     }
 
@@ -165,6 +167,7 @@ public class TileScript : NetworkBehaviour
             SetTileToBlockTileClientRpc(false);
         }
     }
+
 
     [ClientRpc]
     public void SetTileToOutOfZoneClientRpc()

@@ -6,34 +6,49 @@ using UnityEngine;
 
 public class ShipUnit : NetworkBehaviour
 {
+
+    public enum UnitSpecialShot { None, PushUnit, TShot, FireShot}
+    public enum UnitSpecialTile { None, Mine, BlockTile}
+
+    [Header("NetworkVariables")]
+    public NetworkVariable<int> unitLife = new NetworkVariable<int>(10);
+    public NetworkVariable<Vector2> unitPos = new NetworkVariable<Vector2>(Vector2.zero, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);
+    public NetworkVariable<bool> canMove = new NetworkVariable<bool>(false, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
+    public NetworkVariable<bool> canShoot = new NetworkVariable<bool>(false, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
+    public NetworkVariable<bool> canBeSelected = new NetworkVariable<bool>(false, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
+
+    [HideInInspector]
     public TileScript currentTile;
 
     public string unitName;
 
-    //public float shipSpeed = .0015f;
+    [Header("Unit stats")]
     public float maxHealth;
-    public NetworkVariable<int> unitLife = new NetworkVariable<int>(10);
-    public NetworkVariable<Vector2> unitPos = new NetworkVariable<Vector2>(Vector2.zero, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);
-
-    public Color player1Color;
-    public Color player2Color;
-
-    public SpriteRenderer unitSprite;
-
     public int unitMoveRange = 4;
     public int unitShootRange = 4;
     public int damage = 4;
-    public int index;
+    public UnitSpecialShot unitSpecialShot;
+    public UnitSpecialTile unitSpecialTile;
+    public int specialAbilityCost;
+    public int specialAbilityPassiveDuration;
 
+    [Header("Colors")]
+    public Color player1Color;
+    public Color player2Color;
+
+    [Header("Others")]
+    public SpriteRenderer unitSprite;
+
+    [HideInInspector]
+    public int index;
+    [HideInInspector]
     public ulong clientIdOwner;
 
     //Point d'actions
     public int movePoint = 1;
     public int attackPoint = 1;
 
-    public NetworkVariable<bool> canMove = new NetworkVariable<bool>(false, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
-    public NetworkVariable<bool> canShoot = new NetworkVariable<bool>(false, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
-    public NetworkVariable<bool> canBeSelected = new NetworkVariable<bool>(false, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
+    int roundToStopEffect;
 
     [SerializeField] Transform healthDisplay;
 
@@ -72,7 +87,12 @@ public class ShipUnit : NetworkBehaviour
         if (!IsOwner) return;
         if(GameManager.Instance.currentRound.Value >= GameManager.Instance.startRoundCombatZone)
             if (currentTile.tileOutOfCombatZone.Value)
-                TakeDamageServerRpc(GridManager.Instance.combatZoneDamage, unitPos.Value);
+                TakeDamageServerRpc(GridManager.Instance.combatZoneDamage, unitPos.Value, false, 0);
+
+        if(roundToStopEffect > GameManager.Instance.currentRound.Value)
+        {
+            TakeDamageServerRpc(6, unitPos.Value, false, 0);
+        }
     }
 
     [ClientRpc]
@@ -91,12 +111,16 @@ public class ShipUnit : NetworkBehaviour
     }
 
     [ServerRpc(RequireOwnership = false)]
-    public void TakeDamageServerRpc(int dmg, Vector2 pos)
+    public void TakeDamageServerRpc(int dmg, Vector2 pos, bool passiveAttack, int effectDuration)
     {
         unitLife.Value -= dmg;
 
         float percent = (float)unitLife.Value / maxHealth;
         SetHealthBarClientRpc(percent);
+
+        //Only set to true when an enemy unit attack this one with his special and has a passive effect
+        if (passiveAttack)
+            GivePassiveEffectToUnitClientRpc(effectDuration);
 
         if (unitLife.Value <= 0)
         {
@@ -104,6 +128,12 @@ public class ShipUnit : NetworkBehaviour
             GetComponent<NetworkObject>().Despawn();
         }
 
+    }
+
+    [ClientRpc]
+    public void GivePassiveEffectToUnitClientRpc(int roundDuration)
+    {
+        roundToStopEffect = roundDuration + GameManager.Instance.currentRound.Value;
     }
 
     [ClientRpc]

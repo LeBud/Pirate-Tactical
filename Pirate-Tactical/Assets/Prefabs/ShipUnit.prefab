@@ -100,29 +100,33 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8235f83a23874fe4b9725a2425d45df8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  currentTile: {fileID: 0}
-  unitName: 
-  maxHealth: 48
   unitLife:
     m_InternalValue: 48
   unitPos:
     m_InternalValue: {x: 8.172023, y: 5.4177694}
-  player1Color: {r: 0.9622642, g: 0.55039275, b: 0.004538993, a: 1}
-  player2Color: {r: 0.5994166, g: 0, b: 0.8113208, a: 1}
-  unitSprite: {fileID: 4475007845721384360}
-  unitMoveRange: 1
-  unitShootRange: 4
-  damage: 10
-  index: 0
-  clientIdOwner: 1
-  movePoint: 1
-  attackPoint: 1
   canMove:
     m_InternalValue: 0
   canShoot:
     m_InternalValue: 0
   canBeSelected:
     m_InternalValue: 0
+  currentTile: {fileID: 0}
+  unitName: Galion
+  maxHealth: 48
+  unitMoveRange: 1
+  unitShootRange: 4
+  damage: 10
+  unitSpecialShot: 3
+  unitSpecialTile: 0
+  specialAbilityCost: 0
+  specialAbilityPassiveDuration: 2
+  player1Color: {r: 0.9622642, g: 0.55039275, b: 0.004538993, a: 1}
+  player2Color: {r: 0.5994166, g: 0, b: 0.8113208, a: 1}
+  unitSprite: {fileID: 4475007845721384360}
+  index: 0
+  clientIdOwner: 1
+  movePoint: 1
+  attackPoint: 1
   healthDisplay: {fileID: 7182534892917447299}
 --- !u!114 &810226246150426423
 MonoBehaviour:

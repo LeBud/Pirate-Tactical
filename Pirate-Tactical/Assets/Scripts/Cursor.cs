@@ -6,30 +6,32 @@ using UnityEngine;
 
 public class Cursor : NetworkBehaviour
 {
+    [Header("Ship Selected")]
     public int currentShipIndex;
     public bool shipSelected = false;
 
     public NetworkVariable<bool> canPlay = new NetworkVariable<bool>(false);
 
-    TileScript goalTile;
-
-    List<TileScript> path = new List<TileScript>();
-    List<TileScript> allTiles = new List<TileScript>();
     public List<TileScript> inRangeTiles = new List<TileScript>();
 
-    bool unitMoving = false;
+    public int currentModeIndex;
 
+    [Header("unitManager")]
     public UnitManager unitManager;
-
     public float totalMovePoint;
     public float totalShootPoint;
     float totalActionPoint;
 
-    public int currentModeIndex;
     int currentModeInputIndex;
+
+    bool unitMoving = false;
     bool canShoot;
     bool canMove;
 
+    TileScript goalTile;
+    List<TileScript> path = new List<TileScript>();
+    List<TileScript> allTiles = new List<TileScript>();
+    
     private void Start()
     {
         TileScript.OnHoverTile += OnTileHover;
@@ -128,7 +130,7 @@ public class Cursor : NetworkBehaviour
 
                 if (!unitManager.ships[currentShipIndex].canShoot.Value) return;
 
-                GridManager.Instance.DamageUnitServerRpc(unitManager.ships[currentShipIndex].damage, t.pos.Value, NetworkManager.LocalClientId);
+                GridManager.Instance.DamageUnitServerRpc(unitManager.ships[currentShipIndex].damage, t.pos.Value, NetworkManager.LocalClientId, false, 0);
             }
             else if (CanMoveUnit(t))
             {
@@ -139,19 +141,17 @@ public class Cursor : NetworkBehaviour
             }
             else if (currentModeIndex == 2 && inRangeTiles.Contains(t))
             {
-                //Special mode like blocking a tile or something else
+                //Special mode that act on terrain/tiles
                 if (!unitManager.ships[currentShipIndex].canShoot.Value) return;
 
-                GridManager.Instance.BlockedTileServerRpc(t.pos.Value);
-                totalShootPoint--;
-                unitManager.ships[currentShipIndex].canShoot.Value = false;
-                if (unitManager.ships[currentShipIndex].canMove.Value)
-                {
-                    totalMovePoint--;
-                    unitManager.ships[currentShipIndex].canMove.Value = false;
-                }
-                TotalActionPoint();
+                HandleSpecialUnitAttackOnTile(t);
+            }
+            else if (currentModeIndex == 3 && inRangeTiles.Contains(t))
+            {
+                //Special mode that act on unit
+                if (!unitManager.ships[currentShipIndex].canShoot.Value) return;
 
+                HandleSpecialUnitAttackOnUnit(t);
             }
             else if (!CanMoveUnit(t) && !unitMoving)
             {
@@ -214,13 +214,14 @@ public class Cursor : NetworkBehaviour
 
     void HandleCurrentMode()
     {
-        if (currentModeIndex > 2) currentModeIndex = 0;
-        else if (currentModeIndex < 0) currentModeIndex = 2;
+        if (currentModeIndex > 3) currentModeIndex = 0;
+        else if (currentModeIndex < 0) currentModeIndex = 3;
 
         if (!shipSelected || !unitManager.ships[currentShipIndex].canBeSelected.Value) return;
 
         if (currentModeIndex == 0) 
         {
+            //Move Mode
             if (!unitManager.ships[currentShipIndex].canMove.Value) return;
             canMove = true;
             canShoot = false;
@@ -233,6 +234,7 @@ public class Cursor : NetworkBehaviour
         }
         else if(currentModeIndex == 1)
         {
+            //shoot mode
             canMove = false;
             canShoot = true;
             if (!unitManager.ships[currentShipIndex].canShoot.Value) return;
@@ -245,6 +247,7 @@ public class Cursor : NetworkBehaviour
         }
         else if (currentModeIndex == 2)
         {
+            //Special tile
             canMove = false;
             canShoot = false;
             if (currentModeInputIndex != currentModeIndex)
@@ -254,24 +257,71 @@ public class Cursor : NetworkBehaviour
                 GetInRangeTiles();
             }
         }
+        else if (currentModeIndex == 3)
+        {
+            //Special Shot
+            canMove = false;
+            canShoot = false;
+            if (currentModeInputIndex != currentModeIndex)
+            {
+                currentModeInputIndex = currentModeIndex;
+                HideTiles();
+                GetInRangeShootTiles();
+            }
+        }
 
     }
 
-    [ClientRpc]
-    public void HasAttackedEnemyClientRpc()
+    void HandleSpecialUnitAttackOnTile(TileScript t)
     {
-        if (!IsOwner) return;
+        //If statement to check what is the special of the current unit
+        if (unitManager.ships[currentShipIndex].unitSpecialTile == ShipUnit.UnitSpecialTile.BlockTile)
+        {
+            GridManager.Instance.BlockedTileServerRpc(t.pos.Value);
+        }
+        else if(unitManager.ships[currentShipIndex].unitSpecialTile == ShipUnit.UnitSpecialTile.Mine)
+        {
+            GridManager.Instance.SetMineOnTileServerRpc(t.pos.Value);
+        }
+        else if(unitManager.ships[currentShipIndex].unitSpecialTile == ShipUnit.UnitSpecialTile.None)
+        {
+            //Do nothing, can't select if there is no special to the unit
+        }
 
         totalShootPoint--;
         unitManager.ships[currentShipIndex].canShoot.Value = false;
+        
         if (unitManager.ships[currentShipIndex].canMove.Value)
         {
             totalMovePoint--;
             unitManager.ships[currentShipIndex].canMove.Value = false;
         }
+        
         TotalActionPoint();
     }
 
+    void HandleSpecialUnitAttackOnUnit(TileScript t)
+    {
+        //If statement to check what is the special of the current unit
+        if (unitManager.ships[currentShipIndex].unitSpecialShot == ShipUnit.UnitSpecialShot.PushUnit)
+        {
+            
+        }
+        else if (unitManager.ships[currentShipIndex].unitSpecialShot == ShipUnit.UnitSpecialShot.TShot)
+        {
+
+        }
+        else if (unitManager.ships[currentShipIndex].unitSpecialShot == ShipUnit.UnitSpecialShot.FireShot)
+        {
+            GridManager.Instance.DamageUnitServerRpc(unitManager.ships[currentShipIndex].damage, t.pos.Value, NetworkManager.LocalClientId, true, unitManager.ships[currentShipIndex].specialAbilityPassiveDuration);
+        }
+        else if (unitManager.ships[currentShipIndex].unitSpecialShot == ShipUnit.UnitSpecialShot.None)
+        {
+            //Do nothing, can't select if there is no special to the unit
+        }
+    }
+
+    #region Tiles Function
     void GetInRangeTiles()
     {
         foreach (var t in inRangeTiles) t.HighLightRange(false);
@@ -306,21 +356,34 @@ public class Cursor : NetworkBehaviour
         path.Clear();
         path = PathFindTesting.PathTest(unitManager.ships[currentShipIndex].currentTile, goalTile);
     }
+    #endregion
 
     IEnumerator UpdateShipPlacementOnGrid()
     {
         unitMoving = true;
         int value = path.Count - 1;
+        bool stepOnMine = false;
 
         GridManager.Instance.SetShipOnTileServerRpc(unitManager.ships[currentShipIndex].currentTile.pos.Value, false);
 
         while (path.Count > 0)
         {
             UnitNewPosServerRpc(path[value].pos.Value, currentShipIndex);
+
+            if (path[value].mineInTile.Value)
+            {
+                unitManager.ships[currentShipIndex].currentTile = path[value];
+                stepOnMine = true;
+                foreach (var item in allTiles)
+                    item.SetColor(3);
+                break;
+            }
             
-            if(path.Count == 1) unitManager.ships[currentShipIndex].currentTile = path[0];
+            if(path.Count == 1) 
+                unitManager.ships[currentShipIndex].currentTile = path[0];
             path.RemoveAt(value);
             value--;
+
 
             yield return new WaitForSeconds(.25f);
 
@@ -334,6 +397,10 @@ public class Cursor : NetworkBehaviour
         totalMovePoint--;
         unitManager.ships[currentShipIndex].canMove.Value = false;
         GridManager.Instance.SetShipOnTileServerRpc(unitManager.ships[currentShipIndex].currentTile.pos.Value, true);
+
+        if(stepOnMine)
+            GridManager.Instance.DamageUnitByMineServerRpc(13, unitManager.ships[currentShipIndex].currentTile.pos.Value, false, 0);
+
         GetInRangeTiles();
         TotalActionPoint();
         unitMoving = false;
@@ -392,6 +459,21 @@ public class Cursor : NetworkBehaviour
                 break;
             }
         }
+    }
+
+    [ClientRpc]
+    public void HasAttackedEnemyClientRpc()
+    {
+        if (!IsOwner) return;
+
+        totalShootPoint--;
+        unitManager.ships[currentShipIndex].canShoot.Value = false;
+        if (unitManager.ships[currentShipIndex].canMove.Value)
+        {
+            totalMovePoint--;
+            unitManager.ships[currentShipIndex].canMove.Value = false;
+        }
+        TotalActionPoint();
     }
 
     #endregion
