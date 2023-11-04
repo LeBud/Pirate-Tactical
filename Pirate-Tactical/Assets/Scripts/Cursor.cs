@@ -6,6 +6,10 @@ using UnityEngine;
 
 public class Cursor : NetworkBehaviour
 {
+    [Header("Special Ability")]
+    public int maxSpecialCharge;
+    public int specialGainPerRound;
+
     [Header("Ship Selected")]
     public int currentShipIndex;
     public bool shipSelected = false;
@@ -23,6 +27,8 @@ public class Cursor : NetworkBehaviour
     float totalActionPoint;
 
     int currentModeInputIndex;
+    [HideInInspector]
+    public int currentSpecialCharge;
 
     bool unitMoving = false;
     bool canShoot;
@@ -31,7 +37,7 @@ public class Cursor : NetworkBehaviour
     TileScript goalTile;
     List<TileScript> path = new List<TileScript>();
     List<TileScript> allTiles = new List<TileScript>();
-    
+
     private void Start()
     {
         TileScript.OnHoverTile += OnTileHover;
@@ -43,6 +49,8 @@ public class Cursor : NetworkBehaviour
             allTiles.Add(t);
             t.SetColor(3);
         }
+
+        currentSpecialCharge = maxSpecialCharge;
     }
 
     void Update()
@@ -51,6 +59,14 @@ public class Cursor : NetworkBehaviour
 
         MyInputs();
         HandleCurrentMode();
+    }
+
+    public void RechargeSpecial()
+    {
+        currentSpecialCharge += specialGainPerRound;
+        
+        if(currentSpecialCharge > maxSpecialCharge) 
+            currentSpecialCharge = maxSpecialCharge;
     }
 
     public void TotalActionPoint()
@@ -143,15 +159,15 @@ public class Cursor : NetworkBehaviour
             {
                 //Special mode that act on terrain/tiles
                 if (!unitManager.ships[currentShipIndex].canShoot.Value) return;
-
-                HandleSpecialUnitAttackOnTile(t);
+                if (unitManager.ships[currentShipIndex].specialAbilityCost <= currentSpecialCharge)
+                    HandleSpecialUnitAttackOnTile(t);
             }
             else if (currentModeIndex == 3 && inRangeTiles.Contains(t))
             {
                 //Special mode that act on unit
                 if (!unitManager.ships[currentShipIndex].canShoot.Value) return;
-
-                HandleSpecialUnitAttackOnUnit(t);
+                if (unitManager.ships[currentShipIndex].specialAbilityCost <= currentSpecialCharge)
+                    HandleSpecialUnitAttackOnUnit(t);
             }
             else if (!CanMoveUnit(t) && !unitMoving)
             {
@@ -289,6 +305,8 @@ public class Cursor : NetworkBehaviour
             return;
         }
 
+        currentSpecialCharge -= unitManager.ships[currentShipIndex].specialAbilityCost;
+
         totalShootPoint--;
         unitManager.ships[currentShipIndex].canShoot.Value = false;
         
@@ -320,6 +338,9 @@ public class Cursor : NetworkBehaviour
         {
             //Do nothing, can't select if there is no special to the unit
         }
+
+        currentSpecialCharge -= unitManager.ships[currentShipIndex].specialAbilityCost;
+
     }
 
     void TShotFunction(TileScript t)

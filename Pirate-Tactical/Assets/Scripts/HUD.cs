@@ -12,6 +12,7 @@ public class HUD : NetworkBehaviour
     [SerializeField] TextMeshProUGUI gameStateTxt;
     [SerializeField] TextMeshProUGUI currentShipInfo;
     [SerializeField] Button endTurnBtt;
+    [SerializeField] Slider specialSlider;
 
     public GameObject inGameHUD;
 
@@ -38,6 +39,8 @@ public class HUD : NetworkBehaviour
         {
             currentShipInfo.text = "ship selected : none ";
         }
+
+        specialSlider.value = player.currentSpecialCharge;
     }
 
     string GetCurrentMode(int i)

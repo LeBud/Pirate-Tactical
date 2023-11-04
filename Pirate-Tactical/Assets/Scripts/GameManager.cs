@@ -134,10 +134,15 @@ public class GameManager : NetworkBehaviour
             currentP.ResetShipsActionClientRpc();
         }
 
-        if(gameState == GameState.Player1Turn)
+        if (gameState == GameState.Player1Turn)
         {
             currentRound.Value++;
-            
+            Cursor[] players = FindObjectsOfType<Cursor>();
+            foreach(Cursor player in players)
+            {
+                player.RechargeSpecial();
+            }
+
             ShipUnit[] ships = FindObjectsOfType<ShipUnit>();
             if(ships.Length > 0)
             {

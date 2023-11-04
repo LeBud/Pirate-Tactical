@@ -150,6 +150,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c5f47ab1fce98f64ab022280a582e656, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  maxSpecialCharge: 100
+  specialGainPerRound: 10
   currentShipIndex: 0
   shipSelected: 0
   canPlay:
@@ -159,6 +161,7 @@ MonoBehaviour:
   unitManager: {fileID: 8773507901912881422}
   totalMovePoint: 0
   totalShootPoint: 0
+  currentSpecialCharge: 0
 --- !u!114 &8773507901912881422
 MonoBehaviour:
   m_ObjectHideFlags: 0
