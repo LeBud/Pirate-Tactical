@@ -3,24 +3,31 @@ using System.Collections;
 using System.Collections.Generic;
 using Unity.Netcode;
 using UnityEngine;
+using UnityEngine.Tilemaps;
 
 public class GridManager : NetworkBehaviour
 {
     public static GridManager Instance { get; private set; }
 
     public int _width, _height;
-    [SerializeField] TileScript _tilePrefab;
+    [Header("Tiles")]
+    [SerializeField] TileScript seaTile;
+    [SerializeField] TileScript landTile;
 
     public NetworkList<Vector2> dictionnary;
+    public NetworkVariable<int> combatZoneSize = new NetworkVariable<int>();
+    
     List<TileScript> tilesGrid = new List<TileScript>();
     List<TileScript> blockedTiles = new List<TileScript>();
     List<TileScript> outOfCombatZoneTiles = new List<TileScript>();
 
-    //int combatZoneSize;
-    public NetworkVariable<int> combatZoneSize = new NetworkVariable<int>();
-
     public int combatZoneDamage = 4;
-    
+
+    [Header("TileMap Editor")]
+    public Tilemap map;
+    [SerializeField] Sprite waterSprite;
+    [SerializeField] Sprite landSprite;
+
     private void Awake()
     {
         if(Instance == null)
@@ -41,7 +48,7 @@ public class GridManager : NetworkBehaviour
         {
             for (int y = 0; y < _height; y++)
             {
-                var spawnedTile = Instantiate(_tilePrefab, new Vector3(x, y), Quaternion.identity);
+                var spawnedTile = Instantiate(seaTile, new Vector3(x, y), Quaternion.identity);
                 spawnedTile.name = $"Tile {x} {y}";
                 tilesGrid.Add(spawnedTile);
 
@@ -55,9 +62,46 @@ public class GridManager : NetworkBehaviour
             }
         }
 
-        //_cam.transform.position = new Vector3((float)_width / 2 - 0.5f, (float)_height / 2 - 0.5f, -10);
     }
 
+    [ServerRpc]
+    public void GenerateGridOnTileMapServerRpc()
+    {
+        if (!IsServer) return;
+
+        BoundsInt bounds = map.cellBounds;
+
+        combatZoneSize.Value = bounds.max.x / 2 + (bounds.max.y - 2) / 2;
+        
+        GameManager.Instance.cameraPos.Value = new Vector3((float)bounds.center.x - 0.5f, (float)bounds.center.y - 0.5f, -10);
+
+        for (int  x = bounds.min.x; x < bounds.max.x; x++)
+        {
+            for(int  y = bounds.min.y; y < bounds.max.y; y++)
+            {
+                if(map.HasTile(new Vector3Int(x, y)))
+                {
+                    TileScript toSpawn = seaTile;
+                    if (map.GetSprite(new Vector3Int(x, y)) == waterSprite)
+                        toSpawn = seaTile;
+                    else
+                        toSpawn = landTile;
+
+                    var spawnedTile = Instantiate(toSpawn, new Vector3Int(x, y), Quaternion.identity);
+                    spawnedTile.name = $"Tile {x} {y}";
+                    tilesGrid.Add(spawnedTile);
+
+                    spawnedTile.GetComponent<NetworkObject>().Spawn();
+                    spawnedTile.transform.parent = transform;
+
+                    spawnedTile.pos.Value = new Vector2(x, y);
+                    spawnedTile.offsetTile.Value = Mathf.Abs(x + y) % 2 == 1;
+
+                    dictionnary.Add(new Vector2(x, y));
+                }
+            }
+        }
+    }
 
     //Permet d'obtenir une tile avec sa position
     public TileScript GetTileAtPosition(Vector2 pos)

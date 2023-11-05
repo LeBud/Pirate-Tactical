@@ -13,6 +13,8 @@ public class GameManager : NetworkBehaviour
 
     public NetworkVariable<int> currentRound = new NetworkVariable<int>();
 
+    public NetworkVariable<Vector3> cameraPos = new NetworkVariable<Vector3>();
+
     public int startRoundCombatZone = 4;
 
     public enum GameState
@@ -167,9 +169,13 @@ public class GameManager : NetworkBehaviour
 
         int width = GridManager.Instance._width;
         int height = GridManager.Instance._height;
-        Camera.main.transform.position = new Vector3((float)width / 2 - 0.5f, (float)height / 2 - 0.5f, -10);
+
+        //Camera.main.transform.position = new Vector3((float)width / 2 - 0.5f, (float)height / 2 - 0.5f, -10);
+        Camera.main.transform.position = cameraPos.Value;
 
         HUD.Instance.SetGameStateClientRpc(SetGameStateString(gameState), currentRound.Value);
+
+        GridManager.Instance.map.gameObject.SetActive(false);
     }
 
 }

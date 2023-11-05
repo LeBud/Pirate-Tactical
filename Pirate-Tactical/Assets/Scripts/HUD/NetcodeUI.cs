@@ -16,7 +16,7 @@ public class NetcodeUI : MonoBehaviour
         {
             Debug.Log("Hosting...");
             NetworkManager.Singleton.StartHost();
-            GridManager.Instance.GenerateGridServerRpc();
+            GridManager.Instance.GenerateGridOnTileMapServerRpc();
             HUD.Instance.inGameHUD.SetActive(true);
             HideNetCodeUI();
         });
