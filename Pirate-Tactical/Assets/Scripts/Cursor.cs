@@ -1,7 +1,9 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using Unity.Collections;
 using Unity.Netcode;
+using Unity.Services.Lobbies.Models;
 using UnityEngine;
 
 public class Cursor : NetworkBehaviour
@@ -15,6 +17,7 @@ public class Cursor : NetworkBehaviour
     public bool shipSelected = false;
 
     public NetworkVariable<bool> canPlay = new NetworkVariable<bool>(false);
+    public NetworkVariable<int> totalPlayerHealth = new NetworkVariable<int>(0, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
 
     public List<TileScript> inRangeTiles = new List<TileScript>();
 
@@ -40,8 +43,11 @@ public class Cursor : NetworkBehaviour
 
     private void Start()
     {
+        if (!IsOwner) return;
         TileScript.OnHoverTile += OnTileHover;
         GameManager.Instance.JoinServerServerRpc();
+
+        GridManager.Instance.map.gameObject.SetActive(false);
 
         TileScript[] tiles = FindObjectsOfType<TileScript>();
         foreach (var t in tiles)
@@ -50,7 +56,12 @@ public class Cursor : NetworkBehaviour
             t.SetColor(3);
         }
 
+        foreach (ShipUnit s in unitManager.ships)
+        {
+            totalPlayerHealth.Value += s.maxHealth;
+        }
         currentSpecialCharge = maxSpecialCharge;
+        GameManager.Instance.SendGameManagerNameServerRpc(LobbyScript.Instance.playerName, NetworkManager.LocalClientId);
     }
 
     void Update()

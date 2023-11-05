@@ -23,7 +23,7 @@ public class ShipUnit : NetworkBehaviour
     public string unitName;
 
     [Header("Unit stats")]
-    public float maxHealth;
+    public int maxHealth;
     public int unitMoveRange = 4;
     public int unitShootRange = 4;
     public int damage = 4;

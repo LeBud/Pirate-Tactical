@@ -13,10 +13,16 @@ public class HUD : NetworkBehaviour
     [SerializeField] TextMeshProUGUI currentShipInfo;
     [SerializeField] Button endTurnBtt;
     [SerializeField] Slider specialSlider;
+    public Slider playerSlider;
+    public Slider enemyPlayerSlider;
+
+    public TextMeshProUGUI playerName;
+    public TextMeshProUGUI enemyPlayerName;
 
     public GameObject inGameHUD;
 
     Cursor player;
+    Cursor enemyPlayer;
 
     private void Awake()
     {
@@ -61,14 +67,49 @@ public class HUD : NetworkBehaviour
     public void SetGameStateClientRpc(string gameState, int round)
     {
         gameStateTxt.text = gameState + "\nround " + round;
-        if(gameState == "Player 1 Turn" && player == null)
-            player = NetworkManager.LocalClient.PlayerObject.GetComponent<Cursor>();
     }
 
     public void UpdateGameMode()
     {
         if(player != null && player.canPlay.Value)
             GameManager.Instance.UpdateGameStateServerRpc();
+    }
+
+    [ClientRpc]
+    public void SetUIClientRpc(ulong id)
+    {
+        Cursor[] c = FindObjectsOfType<Cursor>();
+        if(id == NetworkManager.LocalClientId)
+        {
+            foreach(Cursor cursor in c)
+            {
+                if(cursor.GetComponent<NetworkObject>().OwnerClientId == id)
+                {
+                    player = cursor;
+                    break;
+                }
+            }
+            playerSlider.maxValue = player.totalPlayerHealth.Value;
+            playerSlider.value = player.totalPlayerHealth.Value;
+            if (id == 0) playerName.text = GameManager.Instance.player1.Value.ToString();
+            else if (id == 1) playerName.text = GameManager.Instance.player2.Value.ToString();
+        }
+        else
+        {
+            foreach (Cursor cursor in c)
+            {
+                if (cursor.GetComponent<NetworkObject>().OwnerClientId == id)
+                {
+                    enemyPlayer = cursor;
+                    break;
+                }
+            }
+            enemyPlayerSlider.maxValue = enemyPlayer.totalPlayerHealth.Value;
+            enemyPlayerSlider.value = enemyPlayer.totalPlayerHealth.Value;
+            if (id == 0) enemyPlayerName.text = GameManager.Instance.player1.Value.ToString();
+            else if (id == 1) enemyPlayerName.text = GameManager.Instance.player2.Value.ToString();
+        }
+        
     }
 
 }

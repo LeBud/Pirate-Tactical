@@ -156,6 +156,8 @@ MonoBehaviour:
   shipSelected: 0
   canPlay:
     m_InternalValue: 0
+  totalPlayerHealth:
+    m_InternalValue: 0
   inRangeTiles: []
   currentModeIndex: 0
   unitManager: {fileID: 8773507901912881422}

@@ -255,8 +255,8 @@ public class GridManager : NetworkBehaviour
 
     void CombatZoneTiles()
     {
-
-        TileScript midTile = GetTileAtPosition(new Vector2(_width/ 2, _height/2));
+        BoundsInt bounds = map.cellBounds;
+        TileScript midTile = GetTileAtPosition(new Vector2(bounds.center.x, bounds.center.y));
         List<TileScript> rangeTiles = PathFindTesting.GetCombatZoneSize(midTile, combatZoneSize.Value);
 
         foreach(var t in tilesGrid)

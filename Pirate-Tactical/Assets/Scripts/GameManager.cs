@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.Collections;
 using Unity.Netcode;
 using UnityEngine;
 
@@ -16,6 +17,9 @@ public class GameManager : NetworkBehaviour
     public NetworkVariable<Vector3> cameraPos = new NetworkVariable<Vector3>();
 
     public int startRoundCombatZone = 4;
+
+    public NetworkVariable<FixedString128Bytes> player1 = new NetworkVariable<FixedString128Bytes>();
+    public NetworkVariable<FixedString128Bytes> player2 = new NetworkVariable<FixedString128Bytes>();
 
     public enum GameState
     {
@@ -44,7 +48,7 @@ public class GameManager : NetworkBehaviour
 
         if (gameState == GameState.GameStarting && NetworkManager.ConnectedClients.Count >= 2)
         {
-            UpdateGameStateServerRpc();
+            StartCoroutine(WaitToStartGame());
         }
 
         if (player1unitLeft == 0 || player2unitLeft == 0 && gameState != GameState.GameFinish)
@@ -57,6 +61,23 @@ public class GameManager : NetworkBehaviour
         {
             UpdateGameStateServerRpc();
         }
+    }
+
+    IEnumerator WaitToStartGame()
+    {
+        UpdateGameStateServerRpc();
+        yield return new WaitForSeconds(.5f);
+        SetUpGameBaseInfoServerRpc();
+    }
+
+    [ServerRpc]
+    void SetUpGameBaseInfoServerRpc()
+    {
+        foreach(ulong id in NetworkManager.ConnectedClientsIds)
+        {
+            HUD.Instance.SetUIClientRpc(id);
+        }
+
     }
 
     #region SetGameState
@@ -174,8 +195,15 @@ public class GameManager : NetworkBehaviour
         Camera.main.transform.position = cameraPos.Value;
 
         HUD.Instance.SetGameStateClientRpc(SetGameStateString(gameState), currentRound.Value);
+    }
 
-        GridManager.Instance.map.gameObject.SetActive(false);
+    [ServerRpc(RequireOwnership = false)]
+    public void SendGameManagerNameServerRpc(FixedString128Bytes name, ulong id)
+    {
+        if (id == 0)
+            player1.Value = name.Value;
+        else
+            player2.Value = name.Value;
     }
 
 }

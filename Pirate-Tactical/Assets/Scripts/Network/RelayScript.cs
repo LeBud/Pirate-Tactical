@@ -43,7 +43,7 @@ public class RelayScript : MonoBehaviour
 
             NetworkManager.Singleton.StartHost();
             HUD.Instance.inGameHUD.SetActive(true);
-            GridManager.Instance.GenerateGridServerRpc();
+            GridManager.Instance.GenerateGridOnTileMapServerRpc();
 
             return joinCode;
         }
