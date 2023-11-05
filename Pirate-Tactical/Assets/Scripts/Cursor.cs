@@ -17,7 +17,7 @@ public class Cursor : NetworkBehaviour
     public bool shipSelected = false;
 
     public NetworkVariable<bool> canPlay = new NetworkVariable<bool>(false);
-    public NetworkVariable<int> totalPlayerHealth = new NetworkVariable<int>(0, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
+    public NetworkVariable<int> totalPlayerHealth = new NetworkVariable<int>(0, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);
 
     public List<TileScript> inRangeTiles = new List<TileScript>();
 
@@ -43,7 +43,7 @@ public class Cursor : NetworkBehaviour
 
     private void Start()
     {
-        if (!IsOwner) return;
+        if (!IsClient) return;
         TileScript.OnHoverTile += OnTileHover;
         GameManager.Instance.JoinServerServerRpc();
 
@@ -56,10 +56,6 @@ public class Cursor : NetworkBehaviour
             t.SetColor(3);
         }
 
-        foreach (ShipUnit s in unitManager.ships)
-        {
-            totalPlayerHealth.Value += s.maxHealth;
-        }
         currentSpecialCharge = maxSpecialCharge;
         GameManager.Instance.SendGameManagerNameServerRpc(LobbyScript.Instance.playerName, NetworkManager.LocalClientId);
     }
@@ -72,7 +68,8 @@ public class Cursor : NetworkBehaviour
         HandleCurrentMode();
     }
 
-    public void RechargeSpecial()
+    [ClientRpc]
+    public void RechargeSpecialClientRpc()
     {
         currentSpecialCharge += specialGainPerRound;
         
@@ -104,6 +101,20 @@ public class Cursor : NetworkBehaviour
             }
             GameManager.Instance.UpdateGameStateServerRpc();
         }
+    }
+
+    [ClientRpc]
+    public void CalculateHealthClientRpc()
+    {
+        int newHealth = 0;
+        foreach (ShipUnit s in unitManager.ships)
+        {
+            newHealth += s.unitLife.Value;
+        }
+
+        totalPlayerHealth.Value = newHealth;
+        if(GameManager.Instance.currentRound.Value > 0)
+            HUD.Instance.UpdateHealthBarClientRpc();
     }
 
     [ClientRpc]

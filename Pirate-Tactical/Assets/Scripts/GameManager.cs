@@ -163,7 +163,8 @@ public class GameManager : NetworkBehaviour
             Cursor[] players = FindObjectsOfType<Cursor>();
             foreach(Cursor player in players)
             {
-                player.RechargeSpecial();
+                player.RechargeSpecialClientRpc();
+                player.CalculateHealthClientRpc();
             }
 
             ShipUnit[] ships = FindObjectsOfType<ShipUnit>();

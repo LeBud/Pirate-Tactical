@@ -76,6 +76,13 @@ public class HUD : NetworkBehaviour
     }
 
     [ClientRpc]
+    public void UpdateHealthBarClientRpc()
+    {
+        playerSlider.value = player.totalPlayerHealth.Value;
+        enemyPlayerSlider.value = enemyPlayer.totalPlayerHealth.Value;
+    }
+
+    [ClientRpc]
     public void SetUIClientRpc(ulong id)
     {
         Cursor[] c = FindObjectsOfType<Cursor>();

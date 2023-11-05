@@ -118,6 +118,10 @@ public class ShipUnit : NetworkBehaviour
         float percent = (float)unitLife.Value / maxHealth;
         SetHealthBarClientRpc(percent);
 
+        Cursor[] p = FindObjectsOfType<Cursor>();
+        foreach (Cursor c in p)
+            c.CalculateHealthClientRpc();
+
         //Only set to true when an enemy unit attack this one with his special and has a passive effect
         if (passiveAttack)
             GivePassiveEffectToUnitClientRpc(effectDuration);
