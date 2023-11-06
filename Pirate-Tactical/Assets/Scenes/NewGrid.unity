@@ -8083,7 +8083,10 @@ MonoBehaviour:
   enemyPlayerSlider: {fileID: 230958252}
   playerName: {fileID: 1100762965}
   enemyPlayerName: {fileID: 1171296084}
+  currentMode: {fileID: 479456680}
   inGameHUD: {fileID: 525094275}
+  shipsDisplay: {fileID: 1604753764}
+  shipHighlight: {fileID: 1848880736}
 --- !u!1 &1390690770
 GameObject:
   m_ObjectHideFlags: 0
