@@ -201,7 +201,8 @@ public class Cursor : NetworkBehaviour
         {
             if (!unitManager.allShipSpawned.Value)
             {
-                SpawnShip(t.pos.Value, t);
+                if(t.Walkable && !t.shipOnTile.Value)
+                    SpawnShip(t.pos.Value, t);
                 if (currentShipIndex >= unitManager.ships.Length) currentShipIndex = 0;
 
             }
@@ -312,6 +313,7 @@ public class Cursor : NetworkBehaviour
 
     void HandleSpecialUnitAttackOnTile(TileScript t)
     {
+        if (!t.Walkable && t.shipOnTile.Value) return;
         //If statement to check what is the special of the current unit
         if (unitManager.ships[currentShipIndex].unitSpecialTile == ShipUnit.UnitSpecialTile.BlockTile)
         {
