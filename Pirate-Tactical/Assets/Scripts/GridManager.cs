@@ -76,7 +76,7 @@ public class GridManager : NetworkBehaviour
 
         BoundsInt bounds = map.cellBounds;
         
-        GameManager.Instance.cameraPos.Value = new Vector3((float)bounds.center.x, (float)bounds.center.y - 0.5f, -10);
+        GameManager.Instance.cameraPos.Value = new Vector3((float)bounds.center.x - 1, (float)bounds.center.y - 0.5f, -10);
 
         for (int  x = bounds.min.x; x < bounds.max.x; x++)
         {
