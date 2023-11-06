@@ -106,7 +106,7 @@ public class PathFindTesting : MonoBehaviour
         
         var surroundingTiles = new List<TileScript>();
             
-        for(int x = 1; x < range; x++)
+        for(int x = 1; x <= range; x++)
         {
             bool breakForLoop = false;
             Vector2 posToAdd = new Vector2(startTile.pos.Value.x + x, startTile.pos.Value.y);
@@ -118,7 +118,7 @@ public class PathFindTesting : MonoBehaviour
                         breakForLoop = true;
             if (breakForLoop) break;
         }
-        for (int x = 1; x < range; x++)
+        for (int x = 1; x <= range; x++)
         {
             bool breakForLoop = false;
             Vector2 posToAdd = new Vector2(startTile.pos.Value.x - x, startTile.pos.Value.y);
@@ -130,7 +130,7 @@ public class PathFindTesting : MonoBehaviour
                         breakForLoop = true;
             if (breakForLoop) break;
         }
-        for (int y = 1; y < range; y++)
+        for (int y = 1; y <= range; y++)
         {
             bool breakForLoop = false;
             Vector2 posToAdd = new Vector2(startTile.pos.Value.x, startTile.pos.Value.y + y);
@@ -142,7 +142,7 @@ public class PathFindTesting : MonoBehaviour
                         breakForLoop = true;
             if (breakForLoop) break;
         }
-        for (int y = 1; y < range; y++)
+        for (int y = 1; y <= range; y++)
         {
             bool breakForLoop = false;
             Vector2 posToAdd = new Vector2(startTile.pos.Value.x, startTile.pos.Value.y - y);
