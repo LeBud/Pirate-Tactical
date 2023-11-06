@@ -42,8 +42,8 @@ public class HUD : NetworkBehaviour
 
         if (player.shipSelected)
         {
-            currentShipInfo.text = "ship selected : " + player.unitManager.ships[player.currentShipIndex].unitName + "\nCan move : " + player.unitManager.ships[player.currentShipIndex].canMove.Value 
-            + "\nCan shoot : " + player.unitManager.ships[player.currentShipIndex].canShoot.Value
+            currentShipInfo.text = "ship selected : " + player.unitManager.ships[player.currentShipIndex].unitName + "\nCan move : " + player.unitManager.ships[player.currentShipIndex].canMove.Value
+            + "\nCan shoot : " + player.unitManager.ships[player.currentShipIndex].canShoot.Value;
         }
         else
         {
