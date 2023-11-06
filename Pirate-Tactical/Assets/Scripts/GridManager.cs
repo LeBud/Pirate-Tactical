@@ -28,6 +28,8 @@ public class GridManager : NetworkBehaviour
     [SerializeField] Sprite waterSprite;
     [SerializeField] Sprite landSprite;
 
+    public TileScript midTile;
+
     private void Awake()
     {
         if(Instance == null)
@@ -35,7 +37,10 @@ public class GridManager : NetworkBehaviour
 
         dictionnary = new NetworkList<Vector2>();
 
-        combatZoneSize.Value = _width / 2 + (_height - 2) / 2;
+        if (map.cellBounds.size.x > map.cellBounds.size.y)
+            combatZoneSize.Value = map.cellBounds.size.x / 2;
+        else
+            combatZoneSize.Value = map.cellBounds.size.y / 2;
     }
 
     //Génère la grille de jeu et la setup
@@ -70,8 +75,6 @@ public class GridManager : NetworkBehaviour
         if (!IsServer) return;
 
         BoundsInt bounds = map.cellBounds;
-
-        combatZoneSize.Value = bounds.max.x / 2 + (bounds.max.y - 2) / 2;
         
         GameManager.Instance.cameraPos.Value = new Vector3((float)bounds.center.x - 0.5f, (float)bounds.center.y - 0.5f, -10);
 
@@ -256,7 +259,15 @@ public class GridManager : NetworkBehaviour
     void CombatZoneTiles()
     {
         BoundsInt bounds = map.cellBounds;
-        TileScript midTile = GetTileAtPosition(new Vector2(bounds.center.x, bounds.center.y));
+        float xPos = bounds.center.x;
+        float yPos = bounds.center.y;
+
+        xPos = Mathf.FloorToInt(xPos);
+        yPos = Mathf.FloorToInt(yPos);
+
+        midTile = GetTileAtPosition(new Vector2(xPos, yPos));
+        Debug.Log(new Vector2(xPos, yPos));
+
         List<TileScript> rangeTiles = PathFindTesting.GetCombatZoneSize(midTile, combatZoneSize.Value);
 
         foreach(var t in tilesGrid)
