@@ -48,7 +48,8 @@ public class GameManager : NetworkBehaviour
 
         if (gameState == GameState.GameStarting && NetworkManager.ConnectedClients.Count >= 2)
         {
-            StartCoroutine(WaitToStartGame());
+            UpdateGameStateServerRpc();
+            StartCoroutine(StartGame());
         }
 
         if (player1unitLeft == 0 || player2unitLeft == 0 && gameState != GameState.GameFinish)
@@ -63,17 +64,23 @@ public class GameManager : NetworkBehaviour
         }
     }
 
-    IEnumerator WaitToStartGame()
+    IEnumerator StartGame()
     {
-        UpdateGameStateServerRpc();
+        Cursor[] players = FindObjectsOfType<Cursor>();
+        foreach (Cursor player in players)
+        {
+            player.CalculateHealthClientRpc();
+        }
+
         yield return new WaitForSeconds(.5f);
+
         SetUpGameBaseInfoServerRpc();
     }
 
     [ServerRpc]
     void SetUpGameBaseInfoServerRpc()
     {
-        foreach(ulong id in NetworkManager.ConnectedClientsIds)
+        foreach (ulong id in NetworkManager.ConnectedClientsIds)
         {
             HUD.Instance.SetUIClientRpc(id);
         }
