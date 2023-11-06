@@ -22,11 +22,13 @@ public class ShipUnit : NetworkBehaviour
 
     public string unitName;
 
-    [Header("Unit stats")]
+    [Header("Unit Base stats")]
     public int maxHealth;
     public int unitMoveRange = 4;
     public int unitShootRange = 4;
     public int damage = 4;
+
+    [Header("Unit Special stats")]
     public UnitSpecialShot unitSpecialShot;
     public UnitSpecialTile unitSpecialTile;
     public int specialAbilityCost;
