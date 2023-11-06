@@ -349,6 +349,7 @@ public class Cursor : NetworkBehaviour
         if (unitManager.ships[currentShipIndex].unitSpecialShot == ShipUnit.UnitSpecialShot.PushUnit)
         {
             //A décider comment cette mécanique fonctionne concretement
+            return;
         }
         else if (unitManager.ships[currentShipIndex].unitSpecialShot == ShipUnit.UnitSpecialShot.TShot)
         {
@@ -361,6 +362,7 @@ public class Cursor : NetworkBehaviour
         else if (unitManager.ships[currentShipIndex].unitSpecialShot == ShipUnit.UnitSpecialShot.None)
         {
             //Do nothing, can't select if there is no special to the unit
+            return;
         }
 
         currentSpecialCharge -= unitManager.ships[currentShipIndex].specialAbilityCost;
