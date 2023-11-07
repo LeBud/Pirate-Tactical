@@ -150,6 +150,62 @@ public class GridManager : NetworkBehaviour
     }
 
     [ServerRpc(RequireOwnership = false)]
+    public void PushUnitServerRpc(Vector2 pushShip, Vector2 currentShip, ulong id)
+    {
+        ShipUnit[] ships = FindObjectsOfType<ShipUnit>();
+
+        for (int i = 0; i < ships.Length; i++)
+        {
+            if (ships[i].unitPos.Value == pushShip)
+            {
+                SetShipOnTileServerRpc(pushShip, false);
+                if(currentShip.y == pushShip.y)
+                {
+                    if(currentShip.x > pushShip.x)
+                    {
+                        //alors -1
+                        ships[i].unitPos.Value = new Vector3(ships[i].unitPos.Value.x - 1, ships[i].unitPos.Value.y, -1);
+                        ships[i].currentTile = GetTileAtPosition(ships[i].unitPos.Value);
+                        SetShipOnTileServerRpc(ships[i].unitPos.Value, true);
+                        break;
+                    }
+                    else
+                    {
+                        //alors +1
+                        ships[i].unitPos.Value = new Vector3(ships[i].unitPos.Value.x + 1, ships[i].unitPos.Value.y, -1);
+                        ships[i].currentTile = GetTileAtPosition(ships[i].unitPos.Value);
+                        SetShipOnTileServerRpc(ships[i].unitPos.Value, true);
+                        break;
+                    }
+                }
+                else if (currentShip.x == pushShip.x)
+                {
+                    if (currentShip.y > pushShip.y)
+                    {
+                        //alors -1
+                        ships[i].unitPos.Value = new Vector3(ships[i].unitPos.Value.x, ships[i].unitPos.Value.y - 1, -1);
+                        ships[i].currentTile = GetTileAtPosition(ships[i].unitPos.Value);
+                        SetShipOnTileServerRpc(ships[i].unitPos.Value, true);
+                        break;
+                    }
+                    else
+                    {
+                        //alors +1
+                        ships[i].unitPos.Value = new Vector3(ships[i].unitPos.Value.x, ships[i].unitPos.Value.y + 1, -1);
+                        ships[i].currentTile = GetTileAtPosition(ships[i].unitPos.Value);
+                        SetShipOnTileServerRpc(ships[i].unitPos.Value, true);
+                        break;
+                    }
+                }
+
+            }
+        }
+
+        Cursor p = NetworkManager.ConnectedClients[id].PlayerObject.GetComponent<Cursor>();
+        p.HasAttackedEnemyClientRpc();
+    }
+
+    [ServerRpc(RequireOwnership = false)]
     public void DamageUnitTShotServerRpc(int damage, Vector2 pos, ulong id, bool passiveAttack, int effectDuration)
     {
         ShipUnit[] ships = FindObjectsOfType<ShipUnit>();

@@ -380,7 +380,7 @@ public class Cursor : NetworkBehaviour
         if (unitManager.ships[currentShipIndex].unitSpecialShot == ShipUnit.UnitSpecialShot.PushUnit)
         {
             //A décider comment cette mécanique fonctionne concretement
-            return;
+            GridManager.Instance.PushUnitServerRpc(t.pos.Value, unitManager.ships[currentShipIndex].unitPos.Value, NetworkManager.LocalClientId);
         }
         else if (unitManager.ships[currentShipIndex].unitSpecialShot == ShipUnit.UnitSpecialShot.TShot)
         {
