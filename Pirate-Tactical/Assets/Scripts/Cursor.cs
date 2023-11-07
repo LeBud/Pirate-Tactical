@@ -415,7 +415,7 @@ public class Cursor : NetworkBehaviour
                 {
                     Debug.Log("Ship");
 
-                    GridManager.Instance.DamageUnitTShotServerRpc(unitManager.ships[currentShipIndex].damage, posToCheck, NetworkManager.LocalClientId, false, 0);
+                    GridManager.Instance.DamageUnitTShotServerRpc(unitManager.ships[currentShipIndex].specialAbilityDamage / 2, posToCheck, NetworkManager.LocalClientId, false, 0);
                     break;
                 }
             }
@@ -426,11 +426,11 @@ public class Cursor : NetworkBehaviour
                 {
                     Debug.Log("Ship");
 
-                    GridManager.Instance.DamageUnitTShotServerRpc(unitManager.ships[currentShipIndex].damage, posToCheck, NetworkManager.LocalClientId, false, 0);
+                    GridManager.Instance.DamageUnitTShotServerRpc(unitManager.ships[currentShipIndex].specialAbilityDamage / 2, posToCheck, NetworkManager.LocalClientId, false, 0);
                     break;
                 }
             }
-            GridManager.Instance.DamageUnitServerRpc(unitManager.ships[currentShipIndex].damage, t.pos.Value, NetworkManager.LocalClientId, false, 0);
+            GridManager.Instance.DamageUnitServerRpc(unitManager.ships[currentShipIndex].specialAbilityDamage, t.pos.Value, NetworkManager.LocalClientId, false, 0);
 
         }
         else if (t.pos.Value.y == unitManager.ships[currentShipIndex].currentTile.pos.Value.y)
@@ -445,7 +445,7 @@ public class Cursor : NetworkBehaviour
                 if (GridManager.Instance.GetTileAtPosition(posToCheck).shipOnTile.Value)
                 {
                     Debug.Log("Ship");
-                    GridManager.Instance.DamageUnitTShotServerRpc(unitManager.ships[currentShipIndex].damage, posToCheck, NetworkManager.LocalClientId, false, 0);
+                    GridManager.Instance.DamageUnitTShotServerRpc(unitManager.ships[currentShipIndex].specialAbilityDamage / 2, posToCheck, NetworkManager.LocalClientId, false, 0);
                     break;
                 }
             }
@@ -456,12 +456,12 @@ public class Cursor : NetworkBehaviour
                 {
                     Debug.Log("Ship");
 
-                    GridManager.Instance.DamageUnitTShotServerRpc(unitManager.ships[currentShipIndex].damage, posToCheck, NetworkManager.LocalClientId, false, 0);
+                    GridManager.Instance.DamageUnitTShotServerRpc(unitManager.ships[currentShipIndex].specialAbilityDamage / 2 , posToCheck, NetworkManager.LocalClientId, false, 0);
                     break;
                 }
             }
 
-            GridManager.Instance.DamageUnitServerRpc(unitManager.ships[currentShipIndex].damage, t.pos.Value, NetworkManager.LocalClientId, false, 0);
+            GridManager.Instance.DamageUnitServerRpc(unitManager.ships[currentShipIndex].specialAbilityDamage, t.pos.Value, NetworkManager.LocalClientId, false, 0);
 
         }
     }

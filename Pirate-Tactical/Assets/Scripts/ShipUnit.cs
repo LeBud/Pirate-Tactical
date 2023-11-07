@@ -34,6 +34,7 @@ public class ShipUnit : NetworkBehaviour
     public UnitSpecialTile unitSpecialTile;
     public int specialAbilityCost;
     public int specialAbilityPassiveDuration;
+    public int specialAbilityDamage;
 
     [Header("Colors")]
     public Color player1Color;
@@ -96,7 +97,7 @@ public class ShipUnit : NetworkBehaviour
 
         if(roundToStopEffect > GameManager.Instance.currentRound.Value)
         {
-            TakeDamageServerRpc(6, unitPos.Value, false, 0);
+            TakeDamageServerRpc(7, unitPos.Value, false, 0);
         }
     }
 
