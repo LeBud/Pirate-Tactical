@@ -9,24 +9,35 @@ using UnityEngine.UI;
 public class HUD : NetworkBehaviour
 {
     public static HUD Instance { get; private set; }
+
+    [Header("Texts")]
     [SerializeField] TextMeshProUGUI gameStateTxt;
     [SerializeField] TextMeshProUGUI currentShipInfo;
-    [SerializeField] Button endTurnBtt;
+    public TextMeshProUGUI playerName;
+    public TextMeshProUGUI enemyPlayerName;
+    public TextMeshProUGUI currentMode;
+    public TextMeshProUGUI playerHealthTxt;
+    public TextMeshProUGUI enemyHealthTxt;
+    public TextMeshProUGUI specialTxt;
+
+    [Header("Sliders")]
     [SerializeField] Slider specialSlider;
     public Slider playerSlider;
     public Slider enemyPlayerSlider;
 
-    public TextMeshProUGUI playerName;
-    public TextMeshProUGUI enemyPlayerName;
-    public TextMeshProUGUI currentMode;
+    [Header("Buttons")]
+    [SerializeField] Button endTurnBtt;
 
+    [Header("Others")]
     public GameObject inGameHUD;
+    public Transform shipsDisplay;
+    public Transform shipHighlight;
 
     Cursor player;
     Cursor enemyPlayer;
 
-    public Transform shipsDisplay;
-    public Transform shipHighlight;
+    int playerMaxHealth;
+    int enemyMaxHealth;
 
     private void Awake()
     {
@@ -51,6 +62,7 @@ public class HUD : NetworkBehaviour
         }
 
         specialSlider.value = player.currentSpecialCharge;
+        specialTxt.text = player.currentSpecialCharge.ToString() + " / " + player.maxSpecialCharge.ToString();
 
         if (player.shipSelected)
         {
@@ -107,6 +119,9 @@ public class HUD : NetworkBehaviour
         playerSlider.value = player.totalPlayerHealth.Value;
         enemyPlayerSlider.value = enemyPlayer.totalPlayerHealth.Value;
 
+        playerHealthTxt.text = player.totalPlayerHealth.Value.ToString() + " / " + playerHealthTxt;
+        enemyHealthTxt.text = enemyPlayer.totalPlayerHealth.Value.ToString() + " / " + enemyMaxHealth;
+
         SetShipOnHUD();
     }
 
@@ -126,6 +141,8 @@ public class HUD : NetworkBehaviour
             }
             playerSlider.maxValue = player.totalPlayerHealth.Value;
             playerSlider.value = player.totalPlayerHealth.Value;
+            playerMaxHealth = player.totalPlayerHealth.Value;
+            playerHealthTxt.text = player.totalPlayerHealth.Value.ToString() + " / " + playerHealthTxt;
             if (id == 0) playerName.text = GameManager.Instance.player1.Value.ToString();
             else if (id == 1) playerName.text = GameManager.Instance.player2.Value.ToString();
         }
@@ -141,6 +158,8 @@ public class HUD : NetworkBehaviour
             }
             enemyPlayerSlider.maxValue = enemyPlayer.totalPlayerHealth.Value;
             enemyPlayerSlider.value = enemyPlayer.totalPlayerHealth.Value;
+            enemyMaxHealth = enemyPlayer.totalPlayerHealth.Value;
+            enemyHealthTxt.text = enemyPlayer.totalPlayerHealth.Value.ToString() + " / " + enemyMaxHealth;
             if (id == 0) enemyPlayerName.text = GameManager.Instance.player1.Value.ToString();
             else if (id == 1) enemyPlayerName.text = GameManager.Instance.player2.Value.ToString();
         }
