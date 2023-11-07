@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using Unity.Netcode;
 using Unity.VisualScripting;
 using UnityEngine;
@@ -40,6 +41,7 @@ public class ShipUnit : NetworkBehaviour
 
     [Header("Others")]
     public SpriteRenderer unitSprite;
+    public TMP_Text health;
 
     [HideInInspector]
     public int index;
@@ -60,6 +62,7 @@ public class ShipUnit : NetworkBehaviour
     {
         healthPercent = (float)unitLife.Value / maxHealth;
         healthDisplay.localScale = new Vector3(healthPercent, 1, 1);
+        SetHealthBarClientRpc(healthPercent);
     }
 
     private void Update()
@@ -145,6 +148,7 @@ public class ShipUnit : NetworkBehaviour
     [ClientRpc]
     public void SetHealthBarClientRpc(float percent)
     {
+        health.text = unitLife.Value.ToString() + " / " + maxHealth;
         healthDisplay.localScale = new Vector3(percent, 1, 1);
     }
 }
