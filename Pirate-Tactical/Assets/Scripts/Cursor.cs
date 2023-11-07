@@ -155,10 +155,10 @@ public class Cursor : NetworkBehaviour
             return;
         }
 
-        if (Input.GetAxis("Mouse ScrollWheel") > 0)
+        /*if (Input.GetAxis("Mouse ScrollWheel") > 0)
             currentModeIndex--;
         else if(Input.GetAxis("Mouse ScrollWheel") < 0)
-            currentModeIndex++;
+            currentModeIndex++;*/
 
         if (Input.GetMouseButtonDown(0) && shipSelected)
         {
@@ -177,14 +177,14 @@ public class Cursor : NetworkBehaviour
                 if (unitManager.ships[currentShipIndex].canMove.Value)
                     StartCoroutine(UpdateShipPlacementOnGrid());
             }
-            else if (currentModeIndex == 2 && inRangeTiles.Contains(t))
+            else if (currentModeIndex == 3 && inRangeTiles.Contains(t))
             {
                 //Special mode that act on terrain/tiles
                 if (!unitManager.ships[currentShipIndex].canShoot.Value) return;
                 if (unitManager.ships[currentShipIndex].specialAbilityCost <= currentSpecialCharge)
                     HandleSpecialUnitAttackOnTile(t);
             }
-            else if (currentModeIndex == 3 && inRangeTiles.Contains(t))
+            else if (currentModeIndex == 4 && inRangeTiles.Contains(t))
             {
                 //Special mode that act on unit
                 if (!unitManager.ships[currentShipIndex].canShoot.Value) return;
@@ -195,6 +195,9 @@ public class Cursor : NetworkBehaviour
             {
                 shipSelected = false;
                 HideTiles();
+
+                if (t.shipOnTile.Value && currentModeIndex == 0)
+                    SelectShip(t);
             }
         }
         else if (Input.GetMouseButtonDown(0) && !shipSelected)
@@ -208,18 +211,10 @@ public class Cursor : NetworkBehaviour
             }
             else if (t.shipOnTile.Value && unitManager.allShipSpawned.Value)
             {
-                foreach(var ship in unitManager.ships)
-                {
-                    if(ship.unitPos.Value == t.pos.Value && ship.clientIdOwner == NetworkManager.LocalClientId && ship.canBeSelected.Value)
-                    {
-                        currentShipIndex = ship.index;
-                        shipSelected = true;
-                        DisplayOnSelectedUnit();
-                        break;
-                    }
-                }
+                SelectShip(t);
             }
         }
+
 
         if (Input.GetButtonDown("Cancel") || shipSelected && !unitManager.ships[currentShipIndex].canBeSelected.Value)
         {
@@ -229,9 +224,31 @@ public class Cursor : NetworkBehaviour
 
     }
 
+    void SelectShip(TileScript t)
+    {
+        foreach (var ship in unitManager.ships)
+        {
+            if (ship.unitPos.Value == t.pos.Value && ship.clientIdOwner == NetworkManager.LocalClientId && ship.canBeSelected.Value)
+            {
+                currentShipIndex = ship.index;
+                shipSelected = true;
+                DisplayOnSelectedUnit();
+                break;
+            }
+        }
+    }
+
     void DisplayOnSelectedUnit()
     {
-        if (unitManager.ships[currentShipIndex].canMove.Value)
+        if (unitManager.ships[currentShipIndex].canBeSelected.Value)
+        {
+            currentModeIndex = 0;
+            currentModeInputIndex = currentModeIndex;
+            canMove = false;
+            canShoot = false;
+            HideTiles();
+        }
+        /*if (unitManager.ships[currentShipIndex].canMove.Value)
         {
             currentModeIndex = 0;
             currentModeInputIndex = currentModeIndex;
@@ -248,17 +265,31 @@ public class Cursor : NetworkBehaviour
             canShoot = true;
             HideTiles();
             GetInRangeShootTiles();
-        }
+        }*/
     }
 
     void HandleCurrentMode()
     {
-        if (currentModeIndex > 3) currentModeIndex = 0;
-        else if (currentModeIndex < 0) currentModeIndex = 3;
+        if (currentModeIndex > 4) currentModeIndex = 0;
+        else if (currentModeIndex < 0) currentModeIndex = 4;
 
         if (!shipSelected || !unitManager.ships[currentShipIndex].canBeSelected.Value) return;
 
-        if (currentModeIndex == 0) 
+        if(currentModeIndex == 0)
+        {
+            //InteractMode
+            if (!unitManager.ships[currentShipIndex].canBeSelected.Value) return;
+            canMove = false;
+            canShoot = false;
+
+            if (currentModeInputIndex != currentModeIndex)
+            {
+                currentModeInputIndex = currentModeIndex;
+                HideTiles();
+            }
+
+        }
+        else if (currentModeIndex == 1) 
         {
             //Move Mode
             if (!unitManager.ships[currentShipIndex].canMove.Value) return;
@@ -271,7 +302,7 @@ public class Cursor : NetworkBehaviour
                 GetInRangeTiles();
             }
         }
-        else if(currentModeIndex == 1)
+        else if(currentModeIndex == 2)
         {
             //shoot mode
             canMove = false;
@@ -284,7 +315,7 @@ public class Cursor : NetworkBehaviour
                 GetInRangeShootTiles();
             }
         }
-        else if (currentModeIndex == 2)
+        else if (currentModeIndex == 3)
         {
             //Special tile
             canMove = false;
@@ -296,7 +327,7 @@ public class Cursor : NetworkBehaviour
                 GetInRangeTiles();
             }
         }
-        else if (currentModeIndex == 3)
+        else if (currentModeIndex == 4)
         {
             //Special Shot
             canMove = false;

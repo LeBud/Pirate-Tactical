@@ -27,6 +27,11 @@ public class HUD : NetworkBehaviour
 
     [Header("Buttons")]
     [SerializeField] Button endTurnBtt;
+    [SerializeField] Button moveBtt;
+    [SerializeField] Button attackBtt;
+    [SerializeField] Button specialAttackBtt;
+    [SerializeField] Button specialTileBtt;
+    [SerializeField] Button interactBtt;
 
     [Header("Others")]
     public GameObject inGameHUD;
@@ -90,12 +95,14 @@ public class HUD : NetworkBehaviour
     string GetCurrentMode(int i)
     {
         if (i == 0)
-            return "Move unit";
+            return "Interact";
         else if (i == 1)
-            return "attack enemy";
+            return "Move unit";
         else if (i == 2)
-            return "special unit tile";
+            return "attack enemy";
         else if (i == 3)
+            return "special unit tile";
+        else if (i == 4)
             return "special unit attack";
 
         return null;
@@ -145,6 +152,13 @@ public class HUD : NetworkBehaviour
             playerHealthTxt.text = player.totalPlayerHealth.Value.ToString() + " / " + playerMaxHealth;
             if (id == 0) playerName.text = GameManager.Instance.player1.Value.ToString();
             else if (id == 1) playerName.text = GameManager.Instance.player2.Value.ToString();
+
+            moveBtt.onClick.AddListener(() => { player.currentModeIndex = 1; });
+            attackBtt.onClick.AddListener(() => { player.currentModeIndex = 2; });
+            specialTileBtt.onClick.AddListener(() => { player.currentModeIndex = 3; });
+            specialAttackBtt.onClick.AddListener(() => { player.currentModeIndex = 4; });
+            interactBtt.onClick.AddListener(() => { player.currentModeIndex = 0; });
+
         }
         else
         {
