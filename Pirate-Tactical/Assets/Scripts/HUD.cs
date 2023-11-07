@@ -82,8 +82,8 @@ public class HUD : NetworkBehaviour
     {
         for(int i = 0; i<player.unitManager.ships.Length; i++)
         {
-            shipsDisplay.GetChild(i).GetChild(3).GetComponent<TextMeshProUGUI>().text = player.unitManager.ships[i].unitLife.Value.ToString();
-            shipsDisplay.GetChild(i).GetChild(4).GetComponent<TextMeshProUGUI>().text = player.unitManager.ships[i].damage.ToString();
+            shipsDisplay.GetChild(i).GetChild(3).GetComponent<TextMeshProUGUI>().text = player.unitManager.ships[i].damage.ToString();
+            shipsDisplay.GetChild(i).GetChild(4).GetComponent<TextMeshProUGUI>().text = player.unitManager.ships[i].specialAbilityCost.ToString();
         }
     }
 
@@ -119,7 +119,7 @@ public class HUD : NetworkBehaviour
         playerSlider.value = player.totalPlayerHealth.Value;
         enemyPlayerSlider.value = enemyPlayer.totalPlayerHealth.Value;
 
-        playerHealthTxt.text = player.totalPlayerHealth.Value.ToString() + " / " + playerHealthTxt;
+        playerHealthTxt.text = player.totalPlayerHealth.Value.ToString() + " / " + playerMaxHealth;
         enemyHealthTxt.text = enemyPlayer.totalPlayerHealth.Value.ToString() + " / " + enemyMaxHealth;
 
         SetShipOnHUD();
@@ -142,7 +142,7 @@ public class HUD : NetworkBehaviour
             playerSlider.maxValue = player.totalPlayerHealth.Value;
             playerSlider.value = player.totalPlayerHealth.Value;
             playerMaxHealth = player.totalPlayerHealth.Value;
-            playerHealthTxt.text = player.totalPlayerHealth.Value.ToString() + " / " + playerHealthTxt;
+            playerHealthTxt.text = player.totalPlayerHealth.Value.ToString() + " / " + playerMaxHealth;
             if (id == 0) playerName.text = GameManager.Instance.player1.Value.ToString();
             else if (id == 1) playerName.text = GameManager.Instance.player2.Value.ToString();
         }
