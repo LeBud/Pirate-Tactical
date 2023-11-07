@@ -21,6 +21,8 @@ public class GameManager : NetworkBehaviour
     public NetworkVariable<FixedString128Bytes> player1 = new NetworkVariable<FixedString128Bytes>();
     public NetworkVariable<FixedString128Bytes> player2 = new NetworkVariable<FixedString128Bytes>();
 
+    public bool combatZoneShrinkEveryRound = false;
+
     public enum GameState
     {
         GameStarting,
@@ -183,7 +185,9 @@ public class GameManager : NetworkBehaviour
                 }
             }
 
-            if (currentRound.Value >= startRoundCombatZone && currentRound.Value % 2 != 1 && GridManager.Instance.combatZoneSize.Value > 4)
+            if (currentRound.Value >= startRoundCombatZone && currentRound.Value % 2 != 1 && GridManager.Instance.combatZoneSize.Value > 4 && !combatZoneShrinkEveryRound)
+                GridManager.Instance.combatZoneSize.Value--;
+            else if(currentRound.Value >= startRoundCombatZone && GridManager.Instance.combatZoneSize.Value > 4 && combatZoneShrinkEveryRound)
                 GridManager.Instance.combatZoneSize.Value--;
         }
     }

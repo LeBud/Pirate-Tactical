@@ -264,7 +264,7 @@ public class GridManager : NetworkBehaviour
         float xPos = bounds.center.x;
         float yPos = bounds.center.y;
 
-        xPos = Mathf.FloorToInt(xPos);
+        xPos = Mathf.RoundToInt(xPos);
         yPos = Mathf.FloorToInt(yPos);
 
         midTile = GetTileAtPosition(new Vector2(xPos, yPos));
