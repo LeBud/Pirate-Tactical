@@ -118,7 +118,8 @@ public class ShipUnit : NetworkBehaviour
     [ServerRpc(RequireOwnership = false)]
     public void TakeDamageServerRpc(int dmg, Vector2 pos, bool passiveAttack, int effectDuration)
     {
-        unitLife.Value -= dmg;
+        int randomDmg = Random.Range(dmg - 1, dmg + 2);
+        unitLife.Value -= randomDmg;
 
         float percent = (float)unitLife.Value / maxHealth;
         SetHealthBarClientRpc(percent);
