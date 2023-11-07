@@ -182,6 +182,7 @@ public class GridManager : NetworkBehaviour
 
             }
         }
+
     }
 
 
@@ -221,7 +222,8 @@ public class GridManager : NetworkBehaviour
                 if (t.pos.Value == tilePos)
                 {
                     t.mineInTile.Value = false;
-                    t.SetMineTileToClientRpc(id, false);
+                    foreach(ulong _id in NetworkManager.ConnectedClientsIds)
+                        t.SetMineTileToClientRpc(_id, false);
                     break;
                 }
         }
@@ -277,6 +279,7 @@ public class GridManager : NetworkBehaviour
                 outOfCombatZoneTiles.Add(t);
                 t.tileOutOfCombatZone.Value = true;
                 t.SetTileToOutOfZoneClientRpc();
+                SetMineOnTileServerRpc(t.pos.Value, 0, false);
             }
         }
 
