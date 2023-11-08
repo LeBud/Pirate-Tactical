@@ -118,7 +118,7 @@ MonoBehaviour:
   unitShootRange: 4
   damage: 10
   unitSpecialShot: 3
-  unitSpecialTile: 0
+  unitSpecialTile: 3
   specialAbilityCost: 40
   specialAbilityPassiveDuration: 2
   specialAbilityDamage: 7

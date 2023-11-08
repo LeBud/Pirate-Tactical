@@ -169,7 +169,7 @@ public class Cursor : NetworkBehaviour
 
                 if (!unitManager.ships[currentShipIndex].canShoot.Value) return;
 
-                GridManager.Instance.DamageUnitServerRpc(unitManager.ships[currentShipIndex].damage, t.pos.Value, NetworkManager.LocalClientId, false, 0);
+                GridManager.Instance.DamageUnitServerRpc(unitManager.ships[currentShipIndex].damage, t.pos.Value, NetworkManager.LocalClientId, false, 0, false);
             }
             else if (CanMoveUnit(t))
             {
@@ -365,7 +365,7 @@ public class Cursor : NetworkBehaviour
             return;
         }
 
-        currentSpecialCharge -= unitManager.ships[currentShipIndex].specialAbilityCost;
+        UseMana();
 
         totalShootPoint--;
         unitManager.ships[currentShipIndex].canShoot.Value = false;
@@ -393,7 +393,7 @@ public class Cursor : NetworkBehaviour
         }
         else if (unitManager.ships[currentShipIndex].unitSpecialShot == ShipUnit.UnitSpecialShot.FireShot)
         {
-            GridManager.Instance.DamageUnitServerRpc(unitManager.ships[currentShipIndex].specialAbilityDamage, t.pos.Value, NetworkManager.LocalClientId, true, unitManager.ships[currentShipIndex].specialAbilityPassiveDuration);
+            GridManager.Instance.DamageUnitServerRpc(unitManager.ships[currentShipIndex].specialAbilityDamage, t.pos.Value, NetworkManager.LocalClientId, true, unitManager.ships[currentShipIndex].specialAbilityPassiveDuration, true);
         }
         else if (unitManager.ships[currentShipIndex].unitSpecialShot == ShipUnit.UnitSpecialShot.None)
         {
@@ -401,14 +401,18 @@ public class Cursor : NetworkBehaviour
             return;
         }
 
-        currentSpecialCharge -= unitManager.ships[currentShipIndex].specialAbilityCost;
+    }
 
+    public void UseMana()
+    {
+        currentSpecialCharge -= unitManager.ships[currentShipIndex].specialAbilityCost;
     }
 
     void TeleportShip(TileScript t)
     {
         GridManager.Instance.SetShipOnTileServerRpc(unitManager.ships[currentShipIndex].currentTile.pos.Value, false);
         UnitNewPosServerRpc(t.pos.Value, currentShipIndex);
+        GridManager.Instance.SetShipOnTileServerRpc(unitManager.ships[currentShipIndex].currentTile.pos.Value, true);
 
         bool stepOnMine = false;
         if (t.mineInTile.Value)
@@ -417,7 +421,6 @@ public class Cursor : NetworkBehaviour
             GridManager.Instance.SetMineOnTileServerRpc(t.pos.Value, NetworkManager.LocalClientId, false);
         }
 
-        GridManager.Instance.SetShipOnTileServerRpc(unitManager.ships[currentShipIndex].currentTile.pos.Value, true);
 
         if (stepOnMine)
             GridManager.Instance.DamageUnitByMineServerRpc(GridManager.Instance.mineDamage, unitManager.ships[currentShipIndex].currentTile.pos.Value, false, 0);
@@ -453,7 +456,8 @@ public class Cursor : NetworkBehaviour
                     break;
                 }
             }
-            GridManager.Instance.DamageUnitServerRpc(unitManager.ships[currentShipIndex].specialAbilityDamage, t.pos.Value, NetworkManager.LocalClientId, false, 0);
+            GridManager.Instance.DamageUnitServerRpc(unitManager.ships[currentShipIndex].specialAbilityDamage, t.pos.Value, NetworkManager.LocalClientId, false, 0, false);
+            UseMana();
 
         }
         else if (t.pos.Value.y == unitManager.ships[currentShipIndex].currentTile.pos.Value.y)
@@ -484,8 +488,8 @@ public class Cursor : NetworkBehaviour
                 }
             }
 
-            GridManager.Instance.DamageUnitServerRpc(unitManager.ships[currentShipIndex].specialAbilityDamage, t.pos.Value, NetworkManager.LocalClientId, false, 0);
-
+            GridManager.Instance.DamageUnitServerRpc(unitManager.ships[currentShipIndex].specialAbilityDamage, t.pos.Value, NetworkManager.LocalClientId, false, 0, false);
+            UseMana();
         }
     }
 

@@ -151,7 +151,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   maxSpecialCharge: 100
-  specialGainPerRound: 10
+  specialGainPerRound: 30
   currentShipIndex: 0
   shipSelected: 0
   canPlay:

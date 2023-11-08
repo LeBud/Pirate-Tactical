@@ -123,7 +123,7 @@ public class GridManager : NetworkBehaviour
     }
 
     [ServerRpc(RequireOwnership = false)]
-    public void DamageUnitServerRpc(int damage, Vector2 pos, ulong id, bool passiveAttack, int effectDuration)
+    public void DamageUnitServerRpc(int damage, Vector2 pos, ulong id, bool passiveAttack, int effectDuration, bool special)
     {
         ShipUnit[] ships = FindObjectsOfType<ShipUnit>();
 
@@ -147,7 +147,10 @@ public class GridManager : NetworkBehaviour
         {
             Cursor p = NetworkManager.ConnectedClients[id].PlayerObject.GetComponent<Cursor>();
             p.HasAttackedEnemyClientRpc();
+            if (special) p.UseMana();
         }
+
+
 
     }
 
@@ -253,6 +256,7 @@ public class GridManager : NetworkBehaviour
             }
             Cursor p = NetworkManager.ConnectedClients[id].PlayerObject.GetComponent<Cursor>();
             p.HasAttackedEnemyClientRpc();
+            p.UseMana();
         }
     }
 
