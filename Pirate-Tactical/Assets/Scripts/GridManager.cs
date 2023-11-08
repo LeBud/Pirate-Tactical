@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.Tilemaps;
+using static UnityEngine.Rendering.DebugUI;
 
 public class GridManager : NetworkBehaviour
 {
@@ -22,13 +23,14 @@ public class GridManager : NetworkBehaviour
     List<TileScript> outOfCombatZoneTiles = new List<TileScript>();
 
     public int combatZoneDamage = 4;
+    public int mineDamage = 13;
 
     [Header("TileMap Editor")]
     public Tilemap map;
     [SerializeField] Sprite waterSprite;
     [SerializeField] Sprite landSprite;
 
-    public TileScript midTile;
+    TileScript midTile;
 
     private void Awake()
     {
@@ -156,6 +158,7 @@ public class GridManager : NetworkBehaviour
         Vector2 posToCheck = new Vector2();
 
         bool hasPush = false;
+        TileScript t = new TileScript();
 
         for (int i = 0; i < ships.Length; i++)
         {
@@ -170,7 +173,7 @@ public class GridManager : NetworkBehaviour
                         posToCheck = new Vector2(ships[i].unitPos.Value.x - 1, ships[i].unitPos.Value.y);
                         if (dictionnary.Contains(posToCheck))
                         {
-                            TileScript t = GetTileAtPosition(posToCheck);
+                            t = GetTileAtPosition(posToCheck);
                             if(t.Walkable && !t.shipOnTile.Value && !t.blockedTile.Value)
                             {
                                 ships[i].unitPos.Value = new Vector3(posToCheck.x, posToCheck.y, -1);
@@ -187,7 +190,7 @@ public class GridManager : NetworkBehaviour
                         posToCheck = new Vector2(ships[i].unitPos.Value.x + 1, ships[i].unitPos.Value.y);
                         if (dictionnary.Contains(posToCheck))
                         {
-                            TileScript t = GetTileAtPosition(posToCheck);
+                            t = GetTileAtPosition(posToCheck);
                             if (t.Walkable && !t.shipOnTile.Value && !t.blockedTile.Value)
                             {
                                 ships[i].unitPos.Value = new Vector3(posToCheck.x, posToCheck.y, -1);
@@ -207,7 +210,7 @@ public class GridManager : NetworkBehaviour
                         posToCheck = new Vector2(ships[i].unitPos.Value.x, ships[i].unitPos.Value.y - 1);
                         if (dictionnary.Contains(posToCheck))
                         {
-                            TileScript t = GetTileAtPosition(posToCheck);
+                            t = GetTileAtPosition(posToCheck);
                             if (t.Walkable && !t.shipOnTile.Value && !t.blockedTile.Value)
                             {
                                 ships[i].unitPos.Value = new Vector3(posToCheck.x, posToCheck.y, -1);
@@ -224,7 +227,7 @@ public class GridManager : NetworkBehaviour
                         posToCheck = new Vector2(ships[i].unitPos.Value.x, ships[i].unitPos.Value.y + 1);
                         if (dictionnary.Contains(posToCheck))
                         {
-                            TileScript t = GetTileAtPosition(posToCheck);
+                            t = GetTileAtPosition(posToCheck);
                             if (t.Walkable && !t.shipOnTile.Value && !t.blockedTile.Value)
                             {
                                 ships[i].unitPos.Value = new Vector3(posToCheck.x, posToCheck.y, -1);
@@ -243,6 +246,11 @@ public class GridManager : NetworkBehaviour
 
         if (hasPush)
         {
+            if (t.mineInTile.Value)
+            {
+                SetMineOnTileServerRpc(posToCheck, 0, false);
+                DamageUnitByMineServerRpc(mineDamage, posToCheck, false, 0);
+            }
             Cursor p = NetworkManager.ConnectedClients[id].PlayerObject.GetComponent<Cursor>();
             p.HasAttackedEnemyClientRpc();
         }

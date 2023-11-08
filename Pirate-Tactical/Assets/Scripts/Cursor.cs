@@ -388,7 +388,7 @@ public class Cursor : NetworkBehaviour
         }
         else if (unitManager.ships[currentShipIndex].unitSpecialShot == ShipUnit.UnitSpecialShot.FireShot)
         {
-            GridManager.Instance.DamageUnitServerRpc(unitManager.ships[currentShipIndex].damage, t.pos.Value, NetworkManager.LocalClientId, true, unitManager.ships[currentShipIndex].specialAbilityPassiveDuration);
+            GridManager.Instance.DamageUnitServerRpc(unitManager.ships[currentShipIndex].specialAbilityDamage, t.pos.Value, NetworkManager.LocalClientId, true, unitManager.ships[currentShipIndex].specialAbilityPassiveDuration);
         }
         else if (unitManager.ships[currentShipIndex].unitSpecialShot == ShipUnit.UnitSpecialShot.None)
         {
@@ -548,7 +548,7 @@ public class Cursor : NetworkBehaviour
         GridManager.Instance.SetShipOnTileServerRpc(unitManager.ships[currentShipIndex].currentTile.pos.Value, true);
 
         if(stepOnMine)
-            GridManager.Instance.DamageUnitByMineServerRpc(13, unitManager.ships[currentShipIndex].currentTile.pos.Value, false, 0);
+            GridManager.Instance.DamageUnitByMineServerRpc(GridManager.Instance.mineDamage, unitManager.ships[currentShipIndex].currentTile.pos.Value, false, 0);
 
         GetInRangeTiles();
         TotalActionPoint();
