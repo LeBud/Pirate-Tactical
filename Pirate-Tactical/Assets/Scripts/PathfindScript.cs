@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
-public class PathFindTesting : MonoBehaviour
+public class PathfindScript : MonoBehaviour
 {
     public static List<TileScript> PathTest(TileScript startNode, TileScript targetNode)
     {

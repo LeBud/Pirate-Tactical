@@ -472,7 +472,7 @@ public class Cursor : NetworkBehaviour
         foreach (var t in inRangeTiles) t.HighLightRange(false);
 
         inRangeTiles.Clear();
-        inRangeTiles = PathFindTesting.GetInRangeTiles(unitManager.ships[currentShipIndex].currentTile, unitManager.ships[currentShipIndex].unitMoveRange);
+        inRangeTiles = PathfindScript.GetInRangeTiles(unitManager.ships[currentShipIndex].currentTile, unitManager.ships[currentShipIndex].unitMoveRange);
 
         foreach (var t in inRangeTiles) t.HighLightRange(true);
     }
@@ -482,7 +482,7 @@ public class Cursor : NetworkBehaviour
         foreach (var t in inRangeTiles) t.HighLightRange(false);
 
         inRangeTiles.Clear();
-        inRangeTiles = PathFindTesting.GetInRangeTilesCross(unitManager.ships[currentShipIndex].currentTile, unitManager.ships[currentShipIndex].unitShootRange);
+        inRangeTiles = PathfindScript.GetInRangeTilesCross(unitManager.ships[currentShipIndex].currentTile, unitManager.ships[currentShipIndex].unitShootRange);
 
         foreach (var t in inRangeTiles) t.HighLightRange(true);
     }
@@ -499,7 +499,7 @@ public class Cursor : NetworkBehaviour
 
         goalTile = tile;
         path.Clear();
-        path = PathFindTesting.PathTest(unitManager.ships[currentShipIndex].currentTile, goalTile);
+        path = PathfindScript.PathTest(unitManager.ships[currentShipIndex].currentTile, goalTile);
     }
     #endregion
 

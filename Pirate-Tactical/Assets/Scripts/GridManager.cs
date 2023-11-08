@@ -360,7 +360,7 @@ public class GridManager : NetworkBehaviour
         midTile = GetTileAtPosition(new Vector2(xPos, yPos));
         Debug.Log(new Vector2(xPos, yPos));
 
-        List<TileScript> rangeTiles = PathFindTesting.GetCombatZoneSize(midTile, combatZoneSize.Value);
+        List<TileScript> rangeTiles = PathfindScript.GetCombatZoneSize(midTile, combatZoneSize.Value);
 
         foreach(var t in tilesGrid)
         {
