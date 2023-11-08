@@ -9,7 +9,7 @@ public class ShipUnit : NetworkBehaviour
 {
 
     public enum UnitSpecialShot { None, PushUnit, TShot, FireShot}
-    public enum UnitSpecialTile { None, Mine, BlockTile}
+    public enum UnitSpecialTile { None, Mine, BlockTile, Teleport}
 
     [Header("NetworkVariables")]
     public NetworkVariable<int> unitLife = new NetworkVariable<int>(10);
@@ -35,6 +35,8 @@ public class ShipUnit : NetworkBehaviour
     public int specialAbilityCost;
     public int specialAbilityPassiveDuration;
     public int specialAbilityDamage;
+    public int specialTileRange;
+    public int specialShootRange;
 
     [Header("Colors")]
     public Color player1Color;

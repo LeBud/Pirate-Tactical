@@ -5,6 +5,7 @@ using Unity.Collections;
 using Unity.Netcode;
 using Unity.Services.Lobbies.Models;
 using UnityEngine;
+using static UnityEngine.Rendering.DebugUI;
 
 public class Cursor : NetworkBehaviour
 {
@@ -324,7 +325,7 @@ public class Cursor : NetworkBehaviour
             {
                 currentModeInputIndex = currentModeIndex;
                 HideTiles();
-                GetInRangeTiles();
+                GetInRangeSpecialTiles();
             }
         }
         else if (currentModeIndex == 4)
@@ -336,7 +337,7 @@ public class Cursor : NetworkBehaviour
             {
                 currentModeInputIndex = currentModeIndex;
                 HideTiles();
-                GetInRangeShootTiles();
+                GetInRangeSpecialShootTiles();
             }
         }
 
@@ -353,6 +354,10 @@ public class Cursor : NetworkBehaviour
         else if(unitManager.ships[currentShipIndex].unitSpecialTile == ShipUnit.UnitSpecialTile.Mine)
         {
             GridManager.Instance.SetMineOnTileServerRpc(t.pos.Value, NetworkManager.LocalClientId, true);
+        }
+        else if(unitManager.ships[currentShipIndex].unitSpecialTile == ShipUnit.UnitSpecialTile.Teleport)
+        {
+            TeleportShip(t);
         }
         else if(unitManager.ships[currentShipIndex].unitSpecialTile == ShipUnit.UnitSpecialTile.None)
         {
@@ -398,6 +403,24 @@ public class Cursor : NetworkBehaviour
 
         currentSpecialCharge -= unitManager.ships[currentShipIndex].specialAbilityCost;
 
+    }
+
+    void TeleportShip(TileScript t)
+    {
+        GridManager.Instance.SetShipOnTileServerRpc(unitManager.ships[currentShipIndex].currentTile.pos.Value, false);
+        UnitNewPosServerRpc(t.pos.Value, currentShipIndex);
+
+        bool stepOnMine = false;
+        if (t.mineInTile.Value)
+        {
+            stepOnMine = true;
+            GridManager.Instance.SetMineOnTileServerRpc(t.pos.Value, NetworkManager.LocalClientId, false);
+        }
+
+        GridManager.Instance.SetShipOnTileServerRpc(unitManager.ships[currentShipIndex].currentTile.pos.Value, true);
+
+        if (stepOnMine)
+            GridManager.Instance.DamageUnitByMineServerRpc(GridManager.Instance.mineDamage, unitManager.ships[currentShipIndex].currentTile.pos.Value, false, 0);
     }
 
     void TShotFunction(TileScript t)
@@ -483,6 +506,26 @@ public class Cursor : NetworkBehaviour
 
         inRangeTiles.Clear();
         inRangeTiles = PathfindScript.GetInRangeTilesCross(unitManager.ships[currentShipIndex].currentTile, unitManager.ships[currentShipIndex].unitShootRange);
+
+        foreach (var t in inRangeTiles) t.HighLightRange(true);
+    }
+
+    void GetInRangeSpecialTiles()
+    {
+        foreach (var t in inRangeTiles) t.HighLightRange(false);
+
+        inRangeTiles.Clear();
+        inRangeTiles = PathfindScript.GetInRangeTiles(unitManager.ships[currentShipIndex].currentTile, unitManager.ships[currentShipIndex].specialTileRange);
+
+        foreach (var t in inRangeTiles) t.HighLightRange(true);
+    }
+
+    void GetInRangeSpecialShootTiles()
+    {
+        foreach (var t in inRangeTiles) t.HighLightRange(false);
+
+        inRangeTiles.Clear();
+        inRangeTiles = PathfindScript.GetInRangeTilesCross(unitManager.ships[currentShipIndex].currentTile, unitManager.ships[currentShipIndex].specialShootRange);
 
         foreach (var t in inRangeTiles) t.HighLightRange(true);
     }
