@@ -156,5 +156,11 @@ public class ShipUnit : NetworkBehaviour
         health.text = unitLife.Value.ToString() + " / " + maxHealth;
         healthDisplay.localScale = new Vector3(percent, 1, 1);
     }
+
+    [ClientRpc]
+    public void SetNewTileClientRpc(Vector2 newTilePos)
+    {
+        currentTile = GridManager.Instance.GetTileAtPosition(newTilePos);
+    }
 }
 
