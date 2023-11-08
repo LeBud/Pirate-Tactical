@@ -153,6 +153,7 @@ public class GridManager : NetworkBehaviour
     public void PushUnitServerRpc(Vector2 pushShip, Vector2 currentShip, ulong id)
     {
         ShipUnit[] ships = FindObjectsOfType<ShipUnit>();
+        Vector2 posToCheck = new Vector2();
 
         for (int i = 0; i < ships.Length; i++)
         {
@@ -164,17 +165,33 @@ public class GridManager : NetworkBehaviour
                     if(currentShip.x > pushShip.x)
                     {
                         //alors -1
-                        ships[i].unitPos.Value = new Vector3(ships[i].unitPos.Value.x - 1, ships[i].unitPos.Value.y, -1);
-                        ships[i].currentTile = GetTileAtPosition(ships[i].unitPos.Value);
-                        SetShipOnTileServerRpc(ships[i].unitPos.Value, true);
+                        posToCheck = new Vector2(ships[i].unitPos.Value.x - 1, ships[i].unitPos.Value.y);
+                        if (dictionnary.Contains(posToCheck))
+                        {
+                            TileScript t = GetTileAtPosition(posToCheck);
+                            if(t.Walkable && !t.shipOnTile.Value && !t.blockedTile.Value)
+                            {
+                                ships[i].unitPos.Value = new Vector3(posToCheck.x, posToCheck.y, -1);
+                                ships[i].currentTile = GetTileAtPosition(posToCheck);
+                                SetShipOnTileServerRpc(ships[i].unitPos.Value, true);
+                            }
+                        }
                         break;
                     }
                     else
                     {
                         //alors +1
-                        ships[i].unitPos.Value = new Vector3(ships[i].unitPos.Value.x + 1, ships[i].unitPos.Value.y, -1);
-                        ships[i].currentTile = GetTileAtPosition(ships[i].unitPos.Value);
-                        SetShipOnTileServerRpc(ships[i].unitPos.Value, true);
+                        posToCheck = new Vector2(ships[i].unitPos.Value.x + 1, ships[i].unitPos.Value.y);
+                        if (dictionnary.Contains(posToCheck))
+                        {
+                            TileScript t = GetTileAtPosition(posToCheck);
+                            if (t.Walkable && !t.shipOnTile.Value && !t.blockedTile.Value)
+                            {
+                                ships[i].unitPos.Value = new Vector3(posToCheck.x, posToCheck.y, -1);
+                                ships[i].currentTile = GetTileAtPosition(posToCheck);
+                                SetShipOnTileServerRpc(ships[i].unitPos.Value, true);
+                            }
+                        }
                         break;
                     }
                 }
@@ -183,18 +200,35 @@ public class GridManager : NetworkBehaviour
                     if (currentShip.y > pushShip.y)
                     {
                         //alors -1
-                        ships[i].unitPos.Value = new Vector3(ships[i].unitPos.Value.x, ships[i].unitPos.Value.y - 1, -1);
-                        ships[i].currentTile = GetTileAtPosition(ships[i].unitPos.Value);
-                        SetShipOnTileServerRpc(ships[i].unitPos.Value, true);
+                        posToCheck = new Vector2(ships[i].unitPos.Value.x, ships[i].unitPos.Value.y - 1);
+                        if (dictionnary.Contains(posToCheck))
+                        {
+                            TileScript t = GetTileAtPosition(posToCheck);
+                            if (t.Walkable && !t.shipOnTile.Value && !t.blockedTile.Value)
+                            {
+                                ships[i].unitPos.Value = new Vector3(posToCheck.x, posToCheck.y, -1);
+                                ships[i].currentTile = GetTileAtPosition(posToCheck);
+                                SetShipOnTileServerRpc(ships[i].unitPos.Value, true);
+                            }
+                        }
                         break;
                     }
                     else
                     {
                         //alors +1
-                        ships[i].unitPos.Value = new Vector3(ships[i].unitPos.Value.x, ships[i].unitPos.Value.y + 1, -1);
-                        ships[i].currentTile = GetTileAtPosition(ships[i].unitPos.Value);
-                        SetShipOnTileServerRpc(ships[i].unitPos.Value, true);
+                        posToCheck = new Vector2(ships[i].unitPos.Value.x, ships[i].unitPos.Value.y + 1);
+                        if (dictionnary.Contains(posToCheck))
+                        {
+                            TileScript t = GetTileAtPosition(posToCheck);
+                            if (t.Walkable && !t.shipOnTile.Value && !t.blockedTile.Value)
+                            {
+                                ships[i].unitPos.Value = new Vector3(posToCheck.x, posToCheck.y, -1);
+                                ships[i].currentTile = GetTileAtPosition(posToCheck);
+                                SetShipOnTileServerRpc(ships[i].unitPos.Value, true);
+                            }
+                        }
                         break;
+
                     }
                 }
 
