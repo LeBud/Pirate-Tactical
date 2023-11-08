@@ -155,6 +155,8 @@ public class GridManager : NetworkBehaviour
         ShipUnit[] ships = FindObjectsOfType<ShipUnit>();
         Vector2 posToCheck = new Vector2();
 
+        bool hasPush = false;
+
         for (int i = 0; i < ships.Length; i++)
         {
             if (ships[i].unitPos.Value == pushShip)
@@ -174,6 +176,7 @@ public class GridManager : NetworkBehaviour
                                 ships[i].unitPos.Value = new Vector3(posToCheck.x, posToCheck.y, -1);
                                 ships[i].currentTile = GetTileAtPosition(posToCheck);
                                 SetShipOnTileServerRpc(ships[i].unitPos.Value, true);
+                                hasPush = true;
                             }
                         }
                         break;
@@ -190,6 +193,7 @@ public class GridManager : NetworkBehaviour
                                 ships[i].unitPos.Value = new Vector3(posToCheck.x, posToCheck.y, -1);
                                 ships[i].currentTile = GetTileAtPosition(posToCheck);
                                 SetShipOnTileServerRpc(ships[i].unitPos.Value, true);
+                                hasPush = true;
                             }
                         }
                         break;
@@ -209,6 +213,7 @@ public class GridManager : NetworkBehaviour
                                 ships[i].unitPos.Value = new Vector3(posToCheck.x, posToCheck.y, -1);
                                 ships[i].currentTile = GetTileAtPosition(posToCheck);
                                 SetShipOnTileServerRpc(ships[i].unitPos.Value, true);
+                                hasPush = true;
                             }
                         }
                         break;
@@ -225,6 +230,7 @@ public class GridManager : NetworkBehaviour
                                 ships[i].unitPos.Value = new Vector3(posToCheck.x, posToCheck.y, -1);
                                 ships[i].currentTile = GetTileAtPosition(posToCheck);
                                 SetShipOnTileServerRpc(ships[i].unitPos.Value, true);
+                                hasPush = true;
                             }
                         }
                         break;
@@ -235,8 +241,11 @@ public class GridManager : NetworkBehaviour
             }
         }
 
-        Cursor p = NetworkManager.ConnectedClients[id].PlayerObject.GetComponent<Cursor>();
-        p.HasAttackedEnemyClientRpc();
+        if (hasPush)
+        {
+            Cursor p = NetworkManager.ConnectedClients[id].PlayerObject.GetComponent<Cursor>();
+            p.HasAttackedEnemyClientRpc();
+        }
     }
 
     [ServerRpc(RequireOwnership = false)]
