@@ -316,7 +316,7 @@ public class GridManager : NetworkBehaviour
         if (dictionnary.Contains(tilePos))
         {
             foreach(var t in tilesGrid)
-                if(t.pos.Value == tilePos)
+                if(t.pos.Value == tilePos && !t.shipOnTile.Value)
                 {
                     t.SetTileToBlockTileClientRpc(true);
                     t.blockedTile.Value = true;
@@ -343,7 +343,7 @@ public class GridManager : NetworkBehaviour
         else if (active && dictionnary.Contains(tilePos))
         {
             foreach (var t in tilesGrid)
-                if (t.pos.Value == tilePos)
+                if (t.pos.Value == tilePos && !t.shipOnTile.Value)
                 {
                     t.mineInTile.Value = true;
                     t.SetMineTileToClientRpc(id, true);

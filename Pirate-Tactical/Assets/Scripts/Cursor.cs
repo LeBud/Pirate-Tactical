@@ -219,7 +219,7 @@ public class Cursor : NetworkBehaviour
         }
 
 
-        if (Input.GetButtonDown("Cancel") || shipSelected && !unitManager.ships[currentShipIndex].canBeSelected.Value)
+        if (Input.GetButtonDown("Cancel") || (shipSelected && !unitManager.ships[currentShipIndex].canBeSelected.Value))
         {
             shipSelected = false;
             HideTiles();
@@ -422,7 +422,7 @@ public class Cursor : NetworkBehaviour
     {
         GridManager.Instance.SetShipOnTileServerRpc(unitManager.ships[currentShipIndex].currentTile.pos.Value, false);
         UnitNewPosServerRpc(t.pos.Value, currentShipIndex);
-        GridManager.Instance.SetShipOnTileServerRpc(unitManager.ships[currentShipIndex].currentTile.pos.Value, true);
+        GridManager.Instance.SetShipOnTileServerRpc(t.pos.Value, true);
 
         bool stepOnMine = false;
         if (t.mineInTile.Value)
@@ -433,7 +433,7 @@ public class Cursor : NetworkBehaviour
 
 
         if (stepOnMine)
-            GridManager.Instance.DamageUnitByMineServerRpc(GridManager.Instance.mineDamage, unitManager.ships[currentShipIndex].currentTile.pos.Value, false, 0);
+            GridManager.Instance.DamageUnitByMineServerRpc(GridManager.Instance.mineDamage, t.pos.Value, false, 0);
     }
 
     void TShotFunction(TileScript t)
