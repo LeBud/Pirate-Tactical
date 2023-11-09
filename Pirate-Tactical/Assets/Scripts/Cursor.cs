@@ -18,7 +18,7 @@ public class Cursor : NetworkBehaviour
     public bool shipSelected = false;
 
     public NetworkVariable<bool> canPlay = new NetworkVariable<bool>(false);
-    public NetworkVariable<int> totalPlayerHealth = new NetworkVariable<int>(0, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);
+    public NetworkVariable<int> totalPlayerHealth = new NetworkVariable<int>(0, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
 
     public List<TileScript> inRangeTiles = new List<TileScript>();
 
@@ -359,7 +359,7 @@ public class Cursor : NetworkBehaviour
         //If statement to check what is the special of the current unit
         if (unitManager.ships[currentShipIndex].unitSpecialTile == ShipUnit.UnitSpecialTile.BlockTile)
         {
-            GridManager.Instance.BlockedTileServerRpc(t.pos.Value);
+            GridManager.Instance.BlockedTileServerRpc(t.pos.Value, NetworkManager.LocalClientId);
         }
         else if(unitManager.ships[currentShipIndex].unitSpecialTile == ShipUnit.UnitSpecialTile.Mine)
         {
@@ -374,19 +374,6 @@ public class Cursor : NetworkBehaviour
             //Do nothing, can't select if there is no special to the unit
             return;
         }
-
-        UseMana();
-
-        totalShootPoint--;
-        unitManager.ships[currentShipIndex].canShoot.Value = false;
-        
-        if (unitManager.ships[currentShipIndex].canMove.Value)
-        {
-            totalMovePoint--;
-            unitManager.ships[currentShipIndex].canMove.Value = false;
-        }
-        
-        TotalActionPoint();
     }
 
     void HandleSpecialUnitAttackOnUnit(TileScript t)
@@ -420,6 +407,9 @@ public class Cursor : NetworkBehaviour
 
     void TeleportShip(TileScript t)
     {
+        //Ajouter tout des chekcs
+
+        if (t.shipOnTile.Value || !t.Walkable || t.blockedTile.Value) return;
         GridManager.Instance.SetShipOnTileServerRpc(unitManager.ships[currentShipIndex].currentTile.pos.Value, false);
         UnitNewPosServerRpc(t.pos.Value, currentShipIndex);
         GridManager.Instance.SetShipOnTileServerRpc(t.pos.Value, true);
@@ -434,6 +424,9 @@ public class Cursor : NetworkBehaviour
 
         if (stepOnMine)
             GridManager.Instance.DamageUnitByMineServerRpc(GridManager.Instance.mineDamage, t.pos.Value, false, 0);
+
+        UseMana();
+        HasDidAnActionClientRpc();
     }
 
     void TShotFunction(TileScript t)
@@ -668,7 +661,7 @@ public class Cursor : NetworkBehaviour
     }
 
     [ClientRpc]
-    public void HasAttackedEnemyClientRpc()
+    public void HasDidAnActionClientRpc()
     {
         if (!IsOwner) return;
 

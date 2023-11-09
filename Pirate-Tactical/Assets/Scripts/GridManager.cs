@@ -149,7 +149,7 @@ public class GridManager : NetworkBehaviour
         if (isEnemy)
         {
             Cursor p = NetworkManager.ConnectedClients[id].PlayerObject.GetComponent<Cursor>();
-            p.HasAttackedEnemyClientRpc();
+            p.HasDidAnActionClientRpc();
             if (special) p.UseMana();
         }
 
@@ -257,7 +257,7 @@ public class GridManager : NetworkBehaviour
                 DamageUnitByMineServerRpc(mineDamage, posToCheck, false, 0);
             }
             Cursor p = NetworkManager.ConnectedClients[id].PlayerObject.GetComponent<Cursor>();
-            p.HasAttackedEnemyClientRpc();
+            p.HasDidAnActionClientRpc();
             p.UseMana();
         }
     }
@@ -311,7 +311,7 @@ public class GridManager : NetworkBehaviour
     }
 
     [ServerRpc(RequireOwnership = false)]
-    public void BlockedTileServerRpc(Vector2 tilePos)
+    public void BlockedTileServerRpc(Vector2 tilePos, ulong id)
     {
         if (dictionnary.Contains(tilePos))
         {
@@ -321,6 +321,10 @@ public class GridManager : NetworkBehaviour
                     t.SetTileToBlockTileClientRpc(true);
                     t.blockedTile.Value = true;
                     blockedTiles.Add(t);
+
+                    Cursor p = NetworkManager.ConnectedClients[id].PlayerObject.GetComponent<Cursor>();
+                    p.UseMana();
+                    p.HasDidAnActionClientRpc();
                     break;
                 }
         }
@@ -347,6 +351,9 @@ public class GridManager : NetworkBehaviour
                 {
                     t.mineInTile.Value = true;
                     t.SetMineTileToClientRpc(id, true);
+                    Cursor p = NetworkManager.ConnectedClients[id].PlayerObject.GetComponent<Cursor>();
+                    p.UseMana();
+                    p.HasDidAnActionClientRpc();
                     break;
                 }
         }
