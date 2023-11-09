@@ -65,7 +65,7 @@ public class ShipUnit : NetworkBehaviour
     {
         healthPercent = (float)unitLife.Value / maxHealth;
         healthDisplay.localScale = new Vector3(healthPercent, 1, 1);
-        SetHealthBarClientRpc(healthPercent);
+        SetHealthBarClientRpc(healthPercent, unitLife.Value);
     }
 
     private void Update()
@@ -126,7 +126,7 @@ public class ShipUnit : NetworkBehaviour
         unitLife.Value -= randomDmg;
 
         float percent = (float)unitLife.Value / maxHealth;
-        SetHealthBarClientRpc(percent);
+        SetHealthBarClientRpc(percent, unitLife.Value);
 
         Cursor[] p = FindObjectsOfType<Cursor>();
         foreach (Cursor c in p)
@@ -151,9 +151,9 @@ public class ShipUnit : NetworkBehaviour
     }
 
     [ClientRpc]
-    public void SetHealthBarClientRpc(float percent)
+    public void SetHealthBarClientRpc(float percent, int life)
     {
-        health.text = unitLife.Value.ToString() + " / " + maxHealth;
+        health.text = life + " / " + maxHealth;
         healthDisplay.localScale = new Vector3(percent, 1, 1);
     }
 

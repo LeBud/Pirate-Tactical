@@ -406,8 +406,10 @@ public class Cursor : NetworkBehaviour
 
     }
 
-    public void UseMana()
+    [ClientRpc]
+    public void UseManaClientRpc()
     {
+        if(!IsOwner) return;
         currentSpecialCharge -= unitManager.ships[currentShipIndex].specialAbilityCost;
     }
 
@@ -419,6 +421,7 @@ public class Cursor : NetworkBehaviour
         GridManager.Instance.SetShipOnTileServerRpc(unitManager.ships[currentShipIndex].currentTile.pos.Value, false);
         UnitNewPosServerRpc(t.pos.Value, currentShipIndex);
         GridManager.Instance.SetShipOnTileServerRpc(t.pos.Value, true);
+        unitManager.ships[currentShipIndex].currentTile = t;
 
         bool stepOnMine = false;
         if (t.mineInTile.Value)
@@ -431,7 +434,7 @@ public class Cursor : NetworkBehaviour
         if (stepOnMine)
             GridManager.Instance.DamageUnitByMineServerRpc(GridManager.Instance.mineDamage, t.pos.Value, false, 0);
 
-        UseMana();
+        UseManaClientRpc();
         HasDidAnActionClientRpc();
     }
 
@@ -465,8 +468,7 @@ public class Cursor : NetworkBehaviour
                     break;
                 }
             }
-            GridManager.Instance.DamageUnitServerRpc(unitManager.ships[currentShipIndex].specialAbilityDamage, t.pos.Value, NetworkManager.LocalClientId, false, 0, false);
-            UseMana();
+            GridManager.Instance.DamageUnitServerRpc(unitManager.ships[currentShipIndex].specialAbilityDamage, t.pos.Value, NetworkManager.LocalClientId, false, 0, true);
 
         }
         else if (t.pos.Value.y == unitManager.ships[currentShipIndex].currentTile.pos.Value.y)
@@ -497,8 +499,7 @@ public class Cursor : NetworkBehaviour
                 }
             }
 
-            GridManager.Instance.DamageUnitServerRpc(unitManager.ships[currentShipIndex].specialAbilityDamage, t.pos.Value, NetworkManager.LocalClientId, false, 0, false);
-            UseMana();
+            GridManager.Instance.DamageUnitServerRpc(unitManager.ships[currentShipIndex].specialAbilityDamage, t.pos.Value, NetworkManager.LocalClientId, false, 0, true);
         }
     }
 

@@ -150,7 +150,7 @@ public class GridManager : NetworkBehaviour
         {
             Cursor p = NetworkManager.ConnectedClients[id].PlayerObject.GetComponent<Cursor>();
             p.HasDidAnActionClientRpc();
-            if (special) p.UseMana();
+            if (special) p.UseManaClientRpc();
         }
 
 
@@ -258,7 +258,7 @@ public class GridManager : NetworkBehaviour
             }
             Cursor p = NetworkManager.ConnectedClients[id].PlayerObject.GetComponent<Cursor>();
             p.HasDidAnActionClientRpc();
-            p.UseMana();
+            p.UseManaClientRpc();
         }
     }
 
@@ -323,7 +323,7 @@ public class GridManager : NetworkBehaviour
                     blockedTiles.Add(t);
 
                     Cursor p = NetworkManager.ConnectedClients[id].PlayerObject.GetComponent<Cursor>();
-                    p.UseMana();
+                    p.UseManaClientRpc();
                     p.HasDidAnActionClientRpc();
                     break;
                 }
@@ -352,7 +352,7 @@ public class GridManager : NetworkBehaviour
                     t.mineInTile.Value = true;
                     t.SetMineTileToClientRpc(id, true);
                     Cursor p = NetworkManager.ConnectedClients[id].PlayerObject.GetComponent<Cursor>();
-                    p.UseMana();
+                    p.UseManaClientRpc();
                     p.HasDidAnActionClientRpc();
                     break;
                 }

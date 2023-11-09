@@ -22,6 +22,7 @@ public class GameManager : NetworkBehaviour
     public NetworkVariable<FixedString128Bytes> player2 = new NetworkVariable<FixedString128Bytes>();
 
     public bool combatZoneShrinkEveryRound = false;
+    bool poolingStarted = false;
 
     public enum GameState
     {
@@ -77,6 +78,28 @@ public class GameManager : NetworkBehaviour
         yield return new WaitForSeconds(.5f);
 
         SetUpGameBaseInfoServerRpc();
+    }
+
+    IEnumerator PoolingInfosToUpdate()
+    {
+        if (!IsServer) yield break;
+
+        poolingStarted = true;
+        ShipUnit[] ships = FindObjectsOfType<ShipUnit>();
+        while (true)
+        {
+            HUD.Instance.UpdateHealthBarClientRpc();
+            foreach(ShipUnit s in ships)
+            {
+                if(s == null) continue;
+
+                float percent = (float)s.unitLife.Value / s.maxHealth;
+                s.SetHealthBarClientRpc(percent, s.unitLife.Value);
+            }
+            yield return new WaitForSeconds(.25f);
+            if(gameState == GameState.GameFinish)
+                yield break;
+        }
     }
 
     [ServerRpc]
@@ -189,6 +212,9 @@ public class GameManager : NetworkBehaviour
                 GridManager.Instance.combatZoneSize.Value--;
             else if(currentRound.Value >= startRoundCombatZone && GridManager.Instance.combatZoneSize.Value > 4 && combatZoneShrinkEveryRound)
                 GridManager.Instance.combatZoneSize.Value--;
+
+            if(currentRound.Value > 0 && !poolingStarted)
+                PoolingInfosToUpdate();
         }
     }
 
