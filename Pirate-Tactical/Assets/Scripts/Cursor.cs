@@ -161,6 +161,8 @@ public class Cursor : NetworkBehaviour
         else if(Input.GetAxis("Mouse ScrollWheel") < 0)
             currentModeIndex++;*/
 
+        HandleKeyboardInputs();
+
         if (Input.GetMouseButtonDown(0) && shipSelected)
         {
             if (t.shipOnTile.Value && canShoot && inRangeTiles.Contains(t))
@@ -225,6 +227,18 @@ public class Cursor : NetworkBehaviour
 
     }
 
+    void HandleKeyboardInputs()
+    {
+        if(Input.GetKeyDown(KeyCode.Alpha1))
+            currentModeIndex = 1;
+        if(Input.GetKeyDown(KeyCode.Alpha2))
+            currentModeIndex = 2;
+        if(Input.GetKeyDown(KeyCode.Alpha3))
+            currentModeIndex = 3;
+        if(Input.GetKeyDown(KeyCode.Alpha4))
+            currentModeIndex = 4;
+    }
+
     void SelectShip(TileScript t)
     {
         foreach (var ship in unitManager.ships)
@@ -241,31 +255,27 @@ public class Cursor : NetworkBehaviour
 
     void DisplayOnSelectedUnit()
     {
-        if (unitManager.ships[currentShipIndex].canBeSelected.Value)
+        if (unitManager.ships[currentShipIndex].canMove.Value)
         {
-            currentModeIndex = 0;
-            currentModeInputIndex = currentModeIndex;
-            canMove = false;
-            canShoot = false;
-            HideTiles();
-        }
-        /*if (unitManager.ships[currentShipIndex].canMove.Value)
-        {
-            currentModeIndex = 0;
+            currentModeIndex = 1;
             currentModeInputIndex = currentModeIndex;
             canMove = true;
             canShoot = false;
             HideTiles();
             GetInRangeTiles();
         }
-        else
+        else if (unitManager.ships[currentShipIndex].canBeSelected.Value)
         {
-            currentModeIndex = 1;
+            currentModeIndex = 0;
             currentModeInputIndex = currentModeIndex;
             canMove = false;
-            canShoot = true;
+            canShoot = false;
             HideTiles();
-            GetInRangeShootTiles();
+        }
+        /*else
+        {
+            currentModeIndex = 2;
+            currentModeInputIndex = currentModeIndex;
         }*/
     }
 

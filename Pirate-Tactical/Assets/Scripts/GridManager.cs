@@ -38,7 +38,10 @@ public class GridManager : NetworkBehaviour
             Instance = this;
 
         dictionnary = new NetworkList<Vector2>();
+    }
 
+    private void Start()
+    {
         if (map.cellBounds.size.x > map.cellBounds.size.y)
             combatZoneSize.Value = map.cellBounds.size.x / 2;
         else
@@ -161,7 +164,6 @@ public class GridManager : NetworkBehaviour
         Vector2 posToCheck = new Vector2();
 
         bool hasPush = false;
-        TileScript t = new TileScript();
 
         for (int i = 0; i < ships.Length; i++)
         {
@@ -176,11 +178,11 @@ public class GridManager : NetworkBehaviour
                         posToCheck = new Vector2(ships[i].unitPos.Value.x - 1, ships[i].unitPos.Value.y);
                         if (dictionnary.Contains(posToCheck))
                         {
-                            t = GetTileAtPosition(posToCheck);
+                            TileScript t = GetTileAtPosition(posToCheck);
                             if(t.Walkable && !t.shipOnTile.Value && !t.blockedTile.Value)
                             {
                                 ships[i].unitPos.Value = new Vector3(posToCheck.x, posToCheck.y, -1);
-                                ships[i].currentTile = GetTileAtPosition(posToCheck);
+                                ships[i].SetNewTileClientRpc(posToCheck);
                                 SetShipOnTileServerRpc(ships[i].unitPos.Value, true);
                                 hasPush = true;
                             }
@@ -193,11 +195,11 @@ public class GridManager : NetworkBehaviour
                         posToCheck = new Vector2(ships[i].unitPos.Value.x + 1, ships[i].unitPos.Value.y);
                         if (dictionnary.Contains(posToCheck))
                         {
-                            t = GetTileAtPosition(posToCheck);
+                            TileScript t = GetTileAtPosition(posToCheck);
                             if (t.Walkable && !t.shipOnTile.Value && !t.blockedTile.Value)
                             {
                                 ships[i].unitPos.Value = new Vector3(posToCheck.x, posToCheck.y, -1);
-                                ships[i].currentTile = GetTileAtPosition(posToCheck);
+                                ships[i].SetNewTileClientRpc(posToCheck);
                                 SetShipOnTileServerRpc(ships[i].unitPos.Value, true);
                                 hasPush = true;
                             }
@@ -213,11 +215,11 @@ public class GridManager : NetworkBehaviour
                         posToCheck = new Vector2(ships[i].unitPos.Value.x, ships[i].unitPos.Value.y - 1);
                         if (dictionnary.Contains(posToCheck))
                         {
-                            t = GetTileAtPosition(posToCheck);
+                            TileScript t = GetTileAtPosition(posToCheck);
                             if (t.Walkable && !t.shipOnTile.Value && !t.blockedTile.Value)
                             {
                                 ships[i].unitPos.Value = new Vector3(posToCheck.x, posToCheck.y, -1);
-                                ships[i].currentTile = GetTileAtPosition(posToCheck);
+                                ships[i].SetNewTileClientRpc(posToCheck);
                                 SetShipOnTileServerRpc(ships[i].unitPos.Value, true);
                                 hasPush = true;
                             }
@@ -230,11 +232,11 @@ public class GridManager : NetworkBehaviour
                         posToCheck = new Vector2(ships[i].unitPos.Value.x, ships[i].unitPos.Value.y + 1);
                         if (dictionnary.Contains(posToCheck))
                         {
-                            t = GetTileAtPosition(posToCheck);
+                            TileScript t = GetTileAtPosition(posToCheck);
                             if (t.Walkable && !t.shipOnTile.Value && !t.blockedTile.Value)
                             {
                                 ships[i].unitPos.Value = new Vector3(posToCheck.x, posToCheck.y, -1);
-                                ships[i].currentTile = GetTileAtPosition(posToCheck);
+                                ships[i].SetNewTileClientRpc(posToCheck);
                                 SetShipOnTileServerRpc(ships[i].unitPos.Value, true);
                                 hasPush = true;
                             }
@@ -249,7 +251,7 @@ public class GridManager : NetworkBehaviour
 
         if (hasPush)
         {
-            if (t.mineInTile.Value)
+            if (GetTileAtPosition(posToCheck).mineInTile.Value)
             {
                 SetMineOnTileServerRpc(posToCheck, 0, false);
                 DamageUnitByMineServerRpc(mineDamage, posToCheck, false, 0);
@@ -375,7 +377,7 @@ public class GridManager : NetworkBehaviour
         float xPos = bounds.center.x;
         float yPos = bounds.center.y;
 
-        xPos = Mathf.RoundToInt(xPos);
+        xPos = Mathf.FloorToInt(xPos - 1);
         yPos = Mathf.FloorToInt(yPos);
 
         midTile = GetTileAtPosition(new Vector2(xPos, yPos));
