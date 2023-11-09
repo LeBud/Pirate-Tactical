@@ -18,7 +18,7 @@ public class Cursor : NetworkBehaviour
     public bool shipSelected = false;
 
     public NetworkVariable<bool> canPlay = new NetworkVariable<bool>(false);
-    public NetworkVariable<int> totalPlayerHealth = new NetworkVariable<int>(0, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
+    public NetworkVariable<int> totalPlayerHealth = new NetworkVariable<int>(0, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);
 
     public List<TileScript> inRangeTiles = new List<TileScript>();
 
@@ -113,9 +113,15 @@ public class Cursor : NetworkBehaviour
             newHealth += s.unitLife.Value;
         }
 
-        totalPlayerHealth.Value = newHealth;
+        SetHealthServerRpc(newHealth);
         if(GameManager.Instance.currentRound.Value > 0)
             HUD.Instance.UpdateHealthBarClientRpc();
+    }
+
+    [ServerRpc(RequireOwnership = false)]
+    void SetHealthServerRpc(int health)
+    {
+        totalPlayerHealth.Value = health;
     }
 
     [ClientRpc]
