@@ -543,7 +543,7 @@ public class Cursor : NetworkBehaviour
 
         goalTile = tile;
         path.Clear();
-        path = PathfindScript.PathTest(unitManager.ships[currentShipIndex].currentTile, goalTile);
+        path = PathfindScript.Pathfind(unitManager.ships[currentShipIndex].currentTile, goalTile);
     }
     #endregion
 
