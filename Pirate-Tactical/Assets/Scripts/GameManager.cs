@@ -197,6 +197,7 @@ public class GameManager : NetworkBehaviour
             {
                 player.RechargeSpecialClientRpc();
                 player.CalculateHealthClientRpc();
+                player.GoldGainClientRpc();
             }
 
             ShipUnit[] ships = FindObjectsOfType<ShipUnit>();

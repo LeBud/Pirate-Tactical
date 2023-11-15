@@ -9,6 +9,10 @@ using static UnityEngine.Rendering.DebugUI;
 
 public class Cursor : NetworkBehaviour
 {
+    [Header("Gold")]
+    public int playerGold;
+    public int playerGoldGainPerRound;
+
     [Header("Special Ability")]
     public int maxSpecialCharge;
     public int specialGainPerRound;
@@ -78,6 +82,26 @@ public class Cursor : NetworkBehaviour
             currentSpecialCharge = maxSpecialCharge;
     }
 
+    [ClientRpc]
+    public void CalculateHealthClientRpc()
+    {
+        int newHealth = 0;
+        foreach (ShipUnit s in unitManager.ships)
+        {
+            newHealth += s.unitLife.Value;
+        }
+
+        SetHealthServerRpc(newHealth);
+        if (GameManager.Instance.currentRound.Value > 0)
+            HUD.Instance.UpdateHealthBarClientRpc();
+    }
+
+    [ClientRpc]
+    public void GoldGainClientRpc()
+    {
+        playerGold += playerGoldGainPerRound;
+    }
+
     public void TotalActionPoint()
     {
         if (!IsOwner) return;
@@ -104,19 +128,6 @@ public class Cursor : NetworkBehaviour
         }
     }
 
-    [ClientRpc]
-    public void CalculateHealthClientRpc()
-    {
-        int newHealth = 0;
-        foreach (ShipUnit s in unitManager.ships)
-        {
-            newHealth += s.unitLife.Value;
-        }
-
-        SetHealthServerRpc(newHealth);
-        if(GameManager.Instance.currentRound.Value > 0)
-            HUD.Instance.UpdateHealthBarClientRpc();
-    }
 
     [ServerRpc(RequireOwnership = false)]
     void SetHealthServerRpc(int health)

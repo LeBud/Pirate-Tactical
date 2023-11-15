@@ -129,6 +129,8 @@ public class GridManager : NetworkBehaviour
         return null;
     }
 
+    #region DamageUnit
+
     [ServerRpc(RequireOwnership = false)]
     public void DamageUnitServerRpc(int damage, Vector2 pos, ulong id, bool passiveAttack, int effectDuration, bool special)
     {
@@ -156,10 +158,28 @@ public class GridManager : NetworkBehaviour
             p.HasDidAnActionClientRpc();
             if (special) p.UseManaClientRpc();
         }
-
-
-
     }
+
+    [ServerRpc(RequireOwnership = false)]
+    public void DamageUnitTShotServerRpc(int damage, Vector2 pos, ulong id, bool passiveAttack, int effectDuration)
+    {
+        ShipUnit[] ships = FindObjectsOfType<ShipUnit>();
+
+        for (int i = 0; i < ships.Length; i++)
+        {
+            if (ships[i].unitPos.Value == pos)
+            {
+                if (ships[i].GetComponent<NetworkObject>().OwnerClientId != id)
+                {
+                    ships[i].TakeDamageServerRpc(damage, pos, passiveAttack, effectDuration);
+                    break;
+                }
+
+            }
+        }
+    }
+
+    #endregion
 
     [ServerRpc(RequireOwnership = false)]
     public void PushUnitServerRpc(Vector2 pushShip, Vector2 currentShip, ulong id)
@@ -266,24 +286,7 @@ public class GridManager : NetworkBehaviour
         }
     }
 
-    [ServerRpc(RequireOwnership = false)]
-    public void DamageUnitTShotServerRpc(int damage, Vector2 pos, ulong id, bool passiveAttack, int effectDuration)
-    {
-        ShipUnit[] ships = FindObjectsOfType<ShipUnit>();
-
-        for (int i = 0; i < ships.Length; i++)
-        {
-            if (ships[i].unitPos.Value == pos)
-            {
-                if (ships[i].GetComponent<NetworkObject>().OwnerClientId != id)
-                {
-                    ships[i].TakeDamageServerRpc(damage, pos, passiveAttack, effectDuration);
-                    break;
-                }
-
-            }
-        }
-    }
+    #region ModifyTile
 
     [ServerRpc(RequireOwnership = false)]
     public void DamageUnitByMineServerRpc(int damage, Vector2 pos, bool passiveAttack, int effectDuration)
@@ -362,6 +365,8 @@ public class GridManager : NetworkBehaviour
                 }
         }
     }
+
+    #endregion
 
     [ServerRpc(RequireOwnership = false)]
     public void UpdateTilesServerRpc()

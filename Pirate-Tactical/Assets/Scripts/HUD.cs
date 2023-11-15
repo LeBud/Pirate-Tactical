@@ -19,6 +19,7 @@ public class HUD : NetworkBehaviour
     public TextMeshProUGUI playerHealthTxt;
     public TextMeshProUGUI enemyHealthTxt;
     public TextMeshProUGUI specialTxt;
+    public TextMeshProUGUI goldTxt;
 
     [Header("Sliders")]
     [SerializeField] Slider specialSlider;
@@ -68,6 +69,7 @@ public class HUD : NetworkBehaviour
 
         specialSlider.value = player.currentSpecialCharge;
         specialTxt.text = player.currentSpecialCharge.ToString() + " / " + player.maxSpecialCharge.ToString();
+        goldTxt.text = "Gold : " + player.playerGold;
 
         if (player.shipSelected)
         {
