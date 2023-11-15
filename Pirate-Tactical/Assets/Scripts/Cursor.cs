@@ -240,9 +240,9 @@ public class Cursor : NetworkBehaviour
         if(Input.GetKeyDown(KeyCode.Alpha2))
             currentModeIndex = 2;
         if(Input.GetKeyDown(KeyCode.Alpha3))
-            currentModeIndex = 3;
-        if(Input.GetKeyDown(KeyCode.Alpha4))
             currentModeIndex = 4;
+        if(Input.GetKeyDown(KeyCode.Alpha4))
+            currentModeIndex = 3;
     }
 
     void SelectShip(TileScript t)
@@ -278,11 +278,6 @@ public class Cursor : NetworkBehaviour
             canShoot = false;
             HideTiles();
         }
-        /*else
-        {
-            currentModeIndex = 2;
-            currentModeInputIndex = currentModeIndex;
-        }*/
     }
 
     void HandleCurrentMode()
@@ -362,48 +357,40 @@ public class Cursor : NetworkBehaviour
     void HandleSpecialUnitAttackOnTile(TileScript t)
     {
         if (!t.Walkable && t.shipOnTile.Value) return;
-        //If statement to check what is the special of the current unit
-        if (unitManager.ships[currentShipIndex].unitSpecialTile == ShipUnit.UnitSpecialTile.BlockTile)
+
+        switch (unitManager.ships[currentShipIndex].unitSpecialTile)
         {
-            GridManager.Instance.BlockedTileServerRpc(t.pos.Value, NetworkManager.LocalClientId);
-        }
-        else if(unitManager.ships[currentShipIndex].unitSpecialTile == ShipUnit.UnitSpecialTile.Mine)
-        {
-            GridManager.Instance.SetMineOnTileServerRpc(t.pos.Value, NetworkManager.LocalClientId, true);
-        }
-        else if(unitManager.ships[currentShipIndex].unitSpecialTile == ShipUnit.UnitSpecialTile.Teleport)
-        {
-            TeleportShip(t);
-        }
-        else if(unitManager.ships[currentShipIndex].unitSpecialTile == ShipUnit.UnitSpecialTile.None)
-        {
-            //Do nothing, can't select if there is no special to the unit
-            return;
+            case ShipUnit.UnitSpecialTile.BlockTile:
+                GridManager.Instance.BlockedTileServerRpc(t.pos.Value, NetworkManager.LocalClientId);
+                break;
+            case ShipUnit.UnitSpecialTile.Mine:
+                GridManager.Instance.SetMineOnTileServerRpc(t.pos.Value, NetworkManager.LocalClientId, true);
+                break;
+            case ShipUnit.UnitSpecialTile.Teleport:
+                TeleportShip(t);
+                break;
+            case ShipUnit.UnitSpecialTile.None:
+                break;
         }
     }
 
     void HandleSpecialUnitAttackOnUnit(TileScript t)
     {
-        //If statement to check what is the special of the current unit
-        if (unitManager.ships[currentShipIndex].unitSpecialShot == ShipUnit.UnitSpecialShot.PushUnit)
+        switch (unitManager.ships[currentShipIndex].unitSpecialShot)
         {
-            //A décider comment cette mécanique fonctionne concretement
-            GridManager.Instance.PushUnitServerRpc(t.pos.Value, unitManager.ships[currentShipIndex].unitPos.Value, NetworkManager.LocalClientId);
-        }
-        else if (unitManager.ships[currentShipIndex].unitSpecialShot == ShipUnit.UnitSpecialShot.TShot)
-        {
-            TShotFunction(t);
-        }
-        else if (unitManager.ships[currentShipIndex].unitSpecialShot == ShipUnit.UnitSpecialShot.FireShot)
-        {
-            GridManager.Instance.DamageUnitServerRpc(unitManager.ships[currentShipIndex].specialAbilityDamage, t.pos.Value, NetworkManager.LocalClientId, true, unitManager.ships[currentShipIndex].specialAbilityPassiveDuration, true);
-        }
-        else if (unitManager.ships[currentShipIndex].unitSpecialShot == ShipUnit.UnitSpecialShot.None)
-        {
-            //Do nothing, can't select if there is no special to the unit
-            return;
-        }
+            case ShipUnit.UnitSpecialShot.PushUnit:
+                GridManager.Instance.PushUnitServerRpc(t.pos.Value, unitManager.ships[currentShipIndex].unitPos.Value, NetworkManager.LocalClientId);
+                break;
+            case ShipUnit.UnitSpecialShot.TShot:
+                TShotFunction(t);
+                break;
+            case ShipUnit.UnitSpecialShot.FireShot:
+                GridManager.Instance.DamageUnitServerRpc(unitManager.ships[currentShipIndex].specialAbilityDamage, t.pos.Value, NetworkManager.LocalClientId, true, unitManager.ships[currentShipIndex].specialAbilityPassiveDuration, true);
+                break;
+            case ShipUnit.UnitSpecialShot.None:
+                break;
 
+        }
     }
 
     [ClientRpc]
