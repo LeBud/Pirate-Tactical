@@ -453,6 +453,7 @@ MonoBehaviour:
   openColor: {r: 0.5789483, g: 1, b: 0.3443396, a: 1}
   closeColor: {r: 1, g: 0.6777429, b: 0, a: 1}
   Walkable: 1
+  Mountain: 0
   pos:
     m_InternalValue: {x: 0, y: 0}
   shipOnTile:

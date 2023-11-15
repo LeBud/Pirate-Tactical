@@ -351,7 +351,7 @@ GameObject:
   - component: {fileID: 7869941012853276704}
   - component: {fileID: 4909638312810512065}
   m_Layer: 0
-  m_Name: LandTile
+  m_Name: MountainTile
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -447,13 +447,13 @@ MonoBehaviour:
   _highlightBlocked: {fileID: 6295221680769482328}
   _highlightOutOfCombatZone: {fileID: 2312173131319156675}
   _highlightMine: {fileID: 838752197553743546}
-  normalColor: {r: 0.3254902, g: 0.7529412, b: 0.3393237, a: 1}
-  offsetNormalColor: {r: 0.12019401, g: 0.6886792, b: 0.14105581, a: 1}
+  normalColor: {r: 0.7529412, g: 0.5737184, b: 0.3254902, a: 1}
+  offsetNormalColor: {r: 0.5471698, g: 0.3892322, b: 0.17292629, a: 1}
   pathColor: {r: 1, g: 0.2971698, b: 0.2971698, a: 1}
   openColor: {r: 0.5789483, g: 1, b: 0.3443396, a: 1}
   closeColor: {r: 1, g: 0.6777429, b: 0, a: 1}
   Walkable: 0
-  Mountain: 0
+  Mountain: 1
   pos:
     m_InternalValue: {x: 0, y: 0}
   shipOnTile:

@@ -14,6 +14,7 @@ public class GridManager : NetworkBehaviour
     [Header("Tiles")]
     [SerializeField] TileScript seaTile;
     [SerializeField] TileScript landTile;
+    [SerializeField] TileScript moutainTile;
 
     public NetworkList<Vector2> dictionnary;
     public NetworkVariable<int> combatZoneSize = new NetworkVariable<int>();
@@ -29,6 +30,7 @@ public class GridManager : NetworkBehaviour
     public Tilemap map;
     [SerializeField] Sprite waterSprite;
     [SerializeField] Sprite landSprite;
+    [SerializeField] Sprite mountainSprite;
 
     TileScript midTile;
 
@@ -92,8 +94,10 @@ public class GridManager : NetworkBehaviour
                     TileScript toSpawn = seaTile;
                     if (map.GetSprite(new Vector3Int(x, y)) == waterSprite)
                         toSpawn = seaTile;
-                    else
+                    else if(map.GetSprite(new Vector3Int(x, y)) == landSprite)
                         toSpawn = landTile;
+                    else
+                        toSpawn = moutainTile;
 
                     var spawnedTile = Instantiate(toSpawn, new Vector3Int(x, y), Quaternion.identity);
                     spawnedTile.name = $"Tile {x} {y}";

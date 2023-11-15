@@ -23,6 +23,7 @@ public class TileScript : NetworkBehaviour
     public Color closeColor;
 
     public bool Walkable = true;
+    public bool Mountain = true;
 
     public NetworkVariable<Vector2> pos = new NetworkVariable<Vector2>(Vector2.zero, NetworkVariableReadPermission.Everyone);
     public NetworkVariable<bool> shipOnTile = new NetworkVariable<bool>(false, NetworkVariableReadPermission.Everyone);
