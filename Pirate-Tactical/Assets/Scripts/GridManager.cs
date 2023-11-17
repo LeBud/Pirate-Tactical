@@ -145,15 +145,11 @@ public class GridManager : NetworkBehaviour
 
         for(int i = 0; i < ships.Length; i++)
         {
-            if (ships[i].unitPos.Value == pos)
+            if (ships[i].unitPos.Value == pos && ships[i].GetComponent<NetworkObject>().OwnerClientId != id)
             {
-                if (ships[i].GetComponent<NetworkObject>().OwnerClientId != id)
-                {
-                    isEnemy = true;
-                    ships[i].TakeDamageServerRpc(damage, pos, passiveAttack, effectDuration);
-                    break;
-                }
-
+                isEnemy = true;
+                ships[i].TakeDamageServerRpc(damage, pos, passiveAttack, effectDuration);
+                break;
             }
         }
 
@@ -164,8 +160,7 @@ public class GridManager : NetworkBehaviour
             if (special)
                 p.UseManaClientRpc();
         }
-
-        if (special && !isEnemy)
+        else if (special && !isEnemy)
         {
             Cursor p = NetworkManager.ConnectedClients[id].PlayerObject.GetComponent<Cursor>();
             p.HasDidAnActionClientRpc();
@@ -180,14 +175,10 @@ public class GridManager : NetworkBehaviour
 
         for (int i = 0; i < ships.Length; i++)
         {
-            if (ships[i].unitPos.Value == pos)
+            if (ships[i].unitPos.Value == pos && ships[i].GetComponent<NetworkObject>().OwnerClientId != id)
             {
-                if (ships[i].GetComponent<NetworkObject>().OwnerClientId != id)
-                {
-                    ships[i].TakeDamageServerRpc(damage, pos, passiveAttack, effectDuration);
-                    break;
-                }
-
+                ships[i].TakeDamageServerRpc(damage, pos, passiveAttack, effectDuration);
+                break;
             }
         }
     }
@@ -205,24 +196,18 @@ public class GridManager : NetworkBehaviour
 
         for (int i = 0; i < ships.Length; i++)
         {
-            if (!allyUnitSet)
+            if (!allyUnitSet && ships[i].unitPos.Value == allyPos)
             {
-                if (ships[i].unitPos.Value == allyPos)
-                {
-                    ally = ships[i];
-                    allyUnitSet = true;
-                    continue;
-                }
+                ally = ships[i];
+                allyUnitSet = true;
+                continue;
             }
 
-            if (!enemyUnitSet)
+            if (!enemyUnitSet && ships[i].unitPos.Value == enemyPos)
             {
-                if (ships[i].unitPos.Value == enemyPos)
-                {
-                    enemy = ships[i];
-                    enemyUnitSet = true;
-                    continue;
-                }
+                enemy = ships[i];
+                enemyUnitSet = true;
+                continue;
             }
         }
 

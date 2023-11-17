@@ -104,13 +104,6 @@ public class PathfindScript : MonoBehaviour
         TileScript[] neighbors = FindObjectsOfType<TileScript>();
 
         var inRangeTile = new List<TileScript>();
-
-        inRangeTile.Add(startTile);
-
-        var tileForPreviousStep = new List<TileScript>();
-        tileForPreviousStep.Add(startTile);
-
-        
         var surroundingTiles = new List<TileScript>();
             
         for(int x = 1; x <= range; x++)
@@ -194,11 +187,8 @@ public class PathfindScript : MonoBehaviour
             if (breakForLoop) break;
         }
         surroundingTiles.Add(startTile);
-
         inRangeTile.AddRange(surroundingTiles);
-        tileForPreviousStep = surroundingTiles.Distinct().ToList();
         
-
         return inRangeTile.Distinct().ToList();
     }
 
