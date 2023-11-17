@@ -86,8 +86,15 @@ public class GameManager : NetworkBehaviour
 
         poolingStarted = true;
         ShipUnit[] ships = FindObjectsOfType<ShipUnit>();
+        Cursor[] players = FindObjectsOfType<Cursor>();
+
         while (true)
         {
+            foreach (Cursor player in players)
+            {
+                player.CalculateHealthClientRpc();
+            }
+
             HUD.Instance.UpdateHealthBarClientRpc();
             foreach(ShipUnit s in ships)
             {

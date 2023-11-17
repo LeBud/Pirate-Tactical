@@ -4,8 +4,6 @@ using System.Collections.Generic;
 using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.Tilemaps;
-using static UnityEditor.PlayerSettings;
-using static UnityEngine.Rendering.DebugUI;
 
 public class GridManager : NetworkBehaviour
 {
@@ -190,8 +188,8 @@ public class GridManager : NetworkBehaviour
         bool allyUnitSet = false;
         bool enemyUnitSet = false;
 
-        ShipUnit ally = new ShipUnit();
-        ShipUnit enemy = new ShipUnit();
+        ShipUnit ally = FindAnyObjectByType<ShipUnit>();
+        ShipUnit enemy = FindAnyObjectByType<ShipUnit>();
 
         for (int i = 0; i < ships.Length; i++)
         {
