@@ -161,7 +161,15 @@ public class GridManager : NetworkBehaviour
         {
             Cursor p = NetworkManager.ConnectedClients[id].PlayerObject.GetComponent<Cursor>();
             p.HasDidAnActionClientRpc();
-            if (special) p.UseManaClientRpc();
+            if (special)
+                p.UseManaClientRpc();
+        }
+
+        if (special && !isEnemy)
+        {
+            Cursor p = NetworkManager.ConnectedClients[id].PlayerObject.GetComponent<Cursor>();
+            p.HasDidAnActionClientRpc();
+            p.UseManaClientRpc();
         }
     }
 

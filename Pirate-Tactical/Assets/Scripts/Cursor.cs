@@ -22,8 +22,7 @@ public class Cursor : NetworkBehaviour
     public NetworkVariable<bool> canPlay = new NetworkVariable<bool>(false);
     public NetworkVariable<int> totalPlayerHealth = new NetworkVariable<int>(0, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);
 
-    public List<TileScript> inRangeTiles = new List<TileScript>();
-
+    [Header("Current Mode")]
     public int currentModeIndex;
 
     [Header("unitManager")]
@@ -32,26 +31,26 @@ public class Cursor : NetworkBehaviour
     public float totalShootPoint;
     float totalActionPoint;
 
-    int currentModeInputIndex;
     [HideInInspector]
     public int currentSpecialCharge;
+
+    int currentModeInputIndex;
 
     bool unitMoving = false;
     bool canShoot;
     bool canMove;
 
+    TileScript cTile = null;
     TileScript goalTile;
     List<TileScript> path = new List<TileScript>();
     List<TileScript> allTiles = new List<TileScript>();
-
-    TileScript cTile = null;
+    List<TileScript> inRangeTiles = new List<TileScript>();
 
     private void Start()
     {
         if (!IsClient) return;
         TileScript.OnHoverTile += OnTileHover;
         GameManager.Instance.JoinServerServerRpc();
-
         GridManager.Instance.map.gameObject.SetActive(false);
 
         TileScript[] tiles = FindObjectsOfType<TileScript>();
@@ -73,7 +72,7 @@ public class Cursor : NetworkBehaviour
         HandleCurrentMode();
     }
 
-    #region SetClientRpcValues
+    #region ClientRpcMethods
 
     [ClientRpc]
     public void RechargeSpecialClientRpc()
@@ -104,6 +103,89 @@ public class Cursor : NetworkBehaviour
         playerGold += playerGoldGainPerRound;
     }
 
+    [ClientRpc]
+    public void ResetShipsActionClientRpc()
+    {
+        if (!IsOwner) return;
+
+        for (int i = 0; i < unitManager.ships.Length; i++)
+        {
+            if (unitManager.ships[i] == null) continue;
+
+            unitManager.ships[i].canBeSelected.Value = true;
+            unitManager.ships[i].canShoot.Value = true;
+            unitManager.ships[i].canMove.Value = true;
+            totalShootPoint++;
+            totalMovePoint++;
+        }
+
+        TotalActionPoint();
+    }
+
+    [ClientRpc]
+    public void UseManaClientRpc()
+    {
+        if (!IsOwner) return;
+        currentSpecialCharge -= unitManager.ships[currentShipIndex].specialAbilityCost;
+    }
+
+    [ClientRpc]
+    void LinkUnitToClientRpc(ulong unitID, int index)
+    {
+        foreach (NetworkObject obj in FindObjectsOfType<NetworkObject>())
+        {
+            if (obj.NetworkObjectId == unitID)
+            {
+                unitManager.ships[index] = obj.GetComponent<ShipUnit>();
+                break;
+            }
+        }
+    }
+
+    [ClientRpc]
+    public void HasDidAnActionClientRpc()
+    {
+        if (!IsOwner) return;
+
+        totalShootPoint--;
+        unitManager.ships[currentShipIndex].canShoot.Value = false;
+        if (unitManager.ships[currentShipIndex].canMove.Value)
+        {
+            totalMovePoint--;
+            unitManager.ships[currentShipIndex].canMove.Value = false;
+        }
+        TotalActionPoint();
+    }
+
+    #endregion
+
+    #region ServerRpcMethods
+
+    [ServerRpc(RequireOwnership = false)]
+    void SetHealthServerRpc(int health)
+    {
+        totalPlayerHealth.Value = health;
+    }
+
+    [ServerRpc(RequireOwnership = false)]
+    void UnitNewPosServerRpc(Vector2 pos, int index)
+    {
+        unitManager.ships[index].unitPos.Value = pos;
+    }
+
+    [ServerRpc]
+    void SpawnUnitServerRpc(Vector2 pos, ulong id, int index)
+    {
+        ShipUnit ship = Instantiate(NetworkManager.ConnectedClients[id].PlayerObject.GetComponent<Cursor>().unitManager.ships[index]);
+        ship.GetComponent<NetworkObject>().SpawnWithOwnership(id);
+
+        LinkUnitToClientRpc(ship.GetComponent<NetworkObject>().NetworkObjectId, index);
+
+        //unitManager.ships[index] = ship;
+        unitManager.ships[index].unitPos.Value = new Vector3(pos.x, pos.y, -1);
+        unitManager.ships[index].SetShipColorClientRpc(id);
+    }
+
     #endregion
 
     public void TotalActionPoint()
@@ -130,32 +212,6 @@ public class Cursor : NetworkBehaviour
             }
             GameManager.Instance.UpdateGameStateServerRpc();
         }
-    }
-
-
-    [ServerRpc(RequireOwnership = false)]
-    void SetHealthServerRpc(int health)
-    {
-        totalPlayerHealth.Value = health;
-    }
-
-    [ClientRpc]
-    public void ResetShipsActionClientRpc()
-    {
-        if (!IsOwner) return;
-
-        for (int i = 0; i < unitManager.ships.Length; i++)
-        {
-            if (unitManager.ships[i] == null) continue;
-
-            unitManager.ships[i].canBeSelected.Value = true;
-            unitManager.ships[i].canShoot.Value = true;
-            unitManager.ships[i].canMove.Value = true;
-            totalShootPoint++;
-            totalMovePoint++;
-        }
-
-        TotalActionPoint();
     }
 
     void MyInputs()
@@ -381,6 +437,8 @@ public class Cursor : NetworkBehaviour
 
     }
 
+    #region SpecialCapacities
+
     void HandleSpecialUnitAttackOnTile(TileScript t)
     {
         if (!t.Walkable && t.shipOnTile.Value) return;
@@ -420,17 +478,8 @@ public class Cursor : NetworkBehaviour
         }
     }
 
-    [ClientRpc]
-    public void UseManaClientRpc()
-    {
-        if(!IsOwner) return;
-        currentSpecialCharge -= unitManager.ships[currentShipIndex].specialAbilityCost;
-    }
-
     void TeleportShip(TileScript t)
     {
-        //Ajouter tout des chekcs
-
         if (t.shipOnTile.Value || !t.Walkable || t.blockedTile.Value) return;
         GridManager.Instance.SetShipOnTileServerRpc(unitManager.ships[currentShipIndex].currentTile.pos.Value, false);
         UnitNewPosServerRpc(t.pos.Value, currentShipIndex);
@@ -448,8 +497,12 @@ public class Cursor : NetworkBehaviour
         if (stepOnMine)
             GridManager.Instance.DamageUnitByMineServerRpc(GridManager.Instance.mineDamage, t.pos.Value, false, 0);
 
-        UseManaClientRpc();
-        HasDidAnActionClientRpc();
+        currentSpecialCharge -= unitManager.ships[currentShipIndex].specialAbilityCost;
+        totalMovePoint--;
+        totalShootPoint--;
+        unitManager.ships[currentShipIndex].canMove.Value = false;
+        unitManager.ships[currentShipIndex].canShoot.Value = false;
+        TotalActionPoint();
     }
 
     void TShotFunction(TileScript t)
@@ -508,7 +561,7 @@ public class Cursor : NetworkBehaviour
                 {
                     Debug.Log("Ship");
 
-                    GridManager.Instance.DamageUnitTShotServerRpc(unitManager.ships[currentShipIndex].specialAbilityDamage / 2 , posToCheck, NetworkManager.LocalClientId, false, 0);
+                    GridManager.Instance.DamageUnitTShotServerRpc(unitManager.ships[currentShipIndex].specialAbilityDamage / 2, posToCheck, NetworkManager.LocalClientId, false, 0);
                     break;
                 }
             }
@@ -516,6 +569,8 @@ public class Cursor : NetworkBehaviour
             GridManager.Instance.DamageUnitServerRpc(unitManager.ships[currentShipIndex].specialAbilityDamage, t.pos.Value, NetworkManager.LocalClientId, false, 0, true);
         }
     }
+
+    #endregion
 
     #region Tiles Function
     void GetInRangeTiles(int shipRange)
@@ -638,63 +693,14 @@ public class Cursor : NetworkBehaviour
         }
     }
 
-    #region ServerRpcMethods
-
-    [ServerRpc(RequireOwnership = false)]
-    void UnitNewPosServerRpc(Vector2 pos, int index)
-    {
-        unitManager.ships[index].unitPos.Value = pos;
-    }
-
-    [ServerRpc]
-    void SpawnUnitServerRpc(Vector2 pos, ulong id, int index)
-    {
-        ShipUnit ship = Instantiate(NetworkManager.ConnectedClients[id].PlayerObject.GetComponent<Cursor>().unitManager.ships[index]);
-        ship.GetComponent<NetworkObject>().SpawnWithOwnership(id);
-
-        LinkUnitToClientRpc(ship.GetComponent<NetworkObject>().NetworkObjectId, index);
-
-        //unitManager.ships[index] = ship;
-        unitManager.ships[index].unitPos.Value = new Vector3(pos.x, pos.y, -1);
-        unitManager.ships[index].SetShipColorClientRpc(id);
-    }
-
-    [ClientRpc]
-    void LinkUnitToClientRpc(ulong unitID, int index)
-    {
-        foreach(NetworkObject obj in FindObjectsOfType<NetworkObject>())
-        {
-            if (obj.NetworkObjectId == unitID)
-            {
-                unitManager.ships[index] = obj.GetComponent<ShipUnit>();
-                break;
-            }
-        }
-    }
-
-    [ClientRpc]
-    public void HasDidAnActionClientRpc()
-    {
-        if (!IsOwner) return;
-
-        totalShootPoint--;
-        unitManager.ships[currentShipIndex].canShoot.Value = false;
-        if (unitManager.ships[currentShipIndex].canMove.Value)
-        {
-            totalMovePoint--;
-            unitManager.ships[currentShipIndex].canMove.Value = false;
-        }
-        TotalActionPoint();
-    }
-
-    #endregion
-
     RaycastHit2D? GetCurrentTile(Vector2 pos)
     {
         RaycastHit2D[] hits = Physics2D.RaycastAll(pos, Vector2.zero);
         if (hits.Length > 0) return hits.OrderByDescending(i => i.collider.transform.position.z).First();
         return null;
     }
+
+    #region Boolean
 
     bool CanMoveUnit(TileScript t)
     {
@@ -706,4 +712,5 @@ public class Cursor : NetworkBehaviour
         return unitManager.ships[currentShipIndex].currentTile == null || unitMoving || !inRangeTiles.Contains(tile) || !canPlay.Value || !shipSelected || !unitManager.ships[currentShipIndex].canMove.Value || !canMove || tile.blockedTile.Value;
     }
 
+    #endregion
 }
