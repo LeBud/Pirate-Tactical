@@ -215,9 +215,9 @@ public class GridManager : NetworkBehaviour
         }
 
         //Calculate Dmg
-        int allyDmg = ally.attackPoint + accostAttackBoost;
+        int allyDmg = ally.damage + accostAttackBoost;
         enemy.TakeDamageServerRpc(allyDmg, enemyPos, false, 0);
-        int enemyDmg = enemy.attackPoint;
+        int enemyDmg = enemy.damage;
         ally.TakeDamageServerRpc(enemyDmg, allyPos, false, 0);
 
         //Dépenser les points

@@ -210,23 +210,26 @@ public class Cursor : NetworkBehaviour
             }
             else if(currentModeIndex == 0 && inRangeTiles.Contains(t))
             {
-                if (unitManager.ships[currentModeIndex].canShoot.Value && t.shipOnTile.Value)
+                if (t.shipOnTile.Value)
                 {
+                    if (!unitManager.ships[currentShipIndex].canShoot.Value) return;
+                    
                     bool alliesUnit = false;
-                    foreach (var u in unitManager.ships)
+                    foreach (var ship in unitManager.ships)
                     {
-                        if (t.pos.Value == u.unitPos.Value)
+                        if (ship.unitPos.Value == t.pos.Value && ship.clientIdOwner == NetworkManager.LocalClientId && ship.canBeSelected.Value)
                         {
                             alliesUnit = true;
                             break;
                         }
                     }
 
-                    if(!alliesUnit)
+                    if (!alliesUnit)
                         GridManager.Instance.DamageAccostServerRpc(unitManager.ships[currentShipIndex].unitPos.Value, t.pos.Value, NetworkManager.LocalClientId);
+                    
                 }
             }
-            else if (!CanMoveUnit(t) && !unitMoving)
+            else if (!inRangeTiles.Contains(t))
             {
                 //Highlight tiles next to ship
                 if (t.shipOnTile.Value && currentModeIndex == 0 && unitManager.ships[currentModeIndex].canBeSelected.Value)
