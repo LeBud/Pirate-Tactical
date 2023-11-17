@@ -39,6 +39,10 @@ public class HUD : NetworkBehaviour
     public Transform shipsDisplay;
     public Transform shipHighlight;
 
+    [Header("Upgrade")]
+    public GameObject upgradeWindow;
+    public bool isInUpgradeWindow;
+
     Cursor player;
     Cursor enemyPlayer;
 
@@ -61,27 +65,21 @@ public class HUD : NetworkBehaviour
         {
             currentShipInfo.text = "ship selected : " + player.unitManager.ships[player.currentShipIndex].unitName + "\nCan move : " + player.unitManager.ships[player.currentShipIndex].canMove.Value
             + "\nCan shoot : " + player.unitManager.ships[player.currentShipIndex].canShoot.Value;
-        }
-        else
-        {
-            currentShipInfo.text = "ship selected : none ";
-        }
 
-        specialSlider.value = player.currentSpecialCharge;
-        specialTxt.text = player.currentSpecialCharge.ToString() + " / " + player.maxSpecialCharge.ToString();
-        goldTxt.text = "Gold : " + player.playerGold;
-
-        if (player.shipSelected)
-        {
             shipHighlight.gameObject.SetActive(true);
             shipHighlight.transform.position = shipsDisplay.GetChild(player.currentShipIndex).transform.position;
             currentMode.text = GetCurrentMode(player.currentModeIndex);
         }
         else
         {
+            currentShipInfo.text = "ship selected : none ";
             currentMode.text = "none";
             shipHighlight.gameObject.SetActive(false);
         }
+
+        specialSlider.value = player.currentSpecialCharge;
+        specialTxt.text = player.currentSpecialCharge.ToString() + " / " + player.maxSpecialCharge.ToString();
+        goldTxt.text = "Gold : " + player.playerGold;
 
     }
 
@@ -97,30 +95,40 @@ public class HUD : NetworkBehaviour
 
     string GetCurrentMode(int i)
     {
-        if (i == 0)
-            return "Interact";
-        else if (i == 1)
-            return "Move unit";
-        else if (i == 2)
-            return "attack enemy";
-        else if (i == 3)
-            return "special unit tile";
-        else if (i == 4)
-            return "special unit attack";
-
-        return null;
+        switch (i)
+        {
+            case 0:
+                return "Interact";
+            case 1:
+                return "Move unit";
+            case 2:
+                return "attack enemy";
+            case 3:
+                return "special unit tile";
+            case 4:
+                return "special unit attack";
+            default:
+                return null;
+        }
     }
+    public void UpdateGameMode()
+    {
+        if(player != null && player.canPlay.Value)
+            GameManager.Instance.UpdateGameStateServerRpc();
+    }
+
+    public void UpgradeWindow(bool active)
+    {
+        upgradeWindow.SetActive(active);
+        isInUpgradeWindow = active;
+    }
+
+    #region ClientRpcMethods
 
     [ClientRpc]
     public void SetGameStateClientRpc(string gameState, int round)
     {
         gameStateTxt.text = gameState + "\nround " + round;
-    }
-
-    public void UpdateGameMode()
-    {
-        if(player != null && player.canPlay.Value)
-            GameManager.Instance.UpdateGameStateServerRpc();
     }
 
     [ClientRpc]
@@ -185,4 +193,5 @@ public class HUD : NetworkBehaviour
         
     }
 
+#endregion
 }

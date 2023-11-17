@@ -232,6 +232,13 @@ public class Cursor : NetworkBehaviour
             return;
         }
 
+        if (HUD.Instance.isInUpgradeWindow)
+        {
+            if (Input.GetButtonDown("Cancel"))
+                HUD.Instance.UpgradeWindow(false);
+            return;
+        }
+
         HandleKeyboardInputs();
 
         if (Input.GetMouseButtonDown(0) && shipSelected)
@@ -268,6 +275,7 @@ public class Cursor : NetworkBehaviour
                         {
                             //Code to buy upgrade
                             Debug.Log("Acheter amélioration");
+                            HUD.Instance.UpgradeWindow(true);
                         }
                     }
                     break;
@@ -374,65 +382,89 @@ public class Cursor : NetworkBehaviour
             return;
         }
 
-        if(currentModeIndex == 0)
+        switch (currentModeIndex)
         {
-            //InteractMode
-            if (!unitManager.ships[currentShipIndex].canBeSelected.Value) return;
-            canMove = false;
-            canShoot = false;
 
-            if (currentModeInputIndex != currentModeIndex)
-            {
-                currentModeInputIndex = currentModeIndex;
-                GetInRangeInteractTile();
-            }
+            case 0: //InteractMode
+                if (currentModeInputIndex != currentModeIndex)
+                {
+                    currentModeInputIndex = currentModeIndex;
+                    GetInRangeInteractTile();
+                }
+                break;
+            case 1: //Move Mode
+                if (currentModeInputIndex != currentModeIndex)
+                {
+                    if (!unitManager.ships[currentShipIndex].canMove.Value)
+                    {
+                        currentModeIndex++;
+                        return;
+                    }
+                    currentModeInputIndex = currentModeIndex;
+                    GetInRangeTiles(unitManager.ships[currentShipIndex].unitMoveRange);
+                }
+                break;
+            case 2: //shoot mode
+                
+                if (currentModeInputIndex != currentModeIndex)
+                {
+                    if (!unitManager.ships[currentShipIndex].canShoot.Value)
+                    {
+                        currentModeIndex++;
+                        return;
+                    }
+                    currentModeInputIndex = currentModeIndex;
+                    GetInRangeShootTiles(unitManager.ships[currentShipIndex].unitShootRange);
+                }
+                break;
+            case 3: //Special tile
+                if (currentModeInputIndex != currentModeIndex)
+                {
+                    if (!unitManager.ships[currentShipIndex].canShoot.Value)
+                    {
+                        currentModeIndex++;
+                        return;
+                    }
+                    currentModeInputIndex = currentModeIndex;
+                    GetInRangeTiles(unitManager.ships[currentShipIndex].specialTileRange);
+                }
+                break;
+            case 4: //Special Shot
+                if (currentModeInputIndex != currentModeIndex)
+                {
+                    if (!unitManager.ships[currentShipIndex].canShoot.Value)
+                    {
+                        currentModeIndex++;
+                        return;
+                    }
+                    currentModeInputIndex = currentModeIndex;
+                    GetInRangeShootTiles(unitManager.ships[currentShipIndex].specialShootRange);
+                }
+                break;
+        }
 
-        }
-        else if (currentModeIndex == 1) 
+        switch (currentModeIndex)
         {
-            //Move Mode
-            if (!unitManager.ships[currentShipIndex].canMove.Value) return;
-            canMove = true;
-            canShoot = false;
-            if(currentModeInputIndex != currentModeIndex)
-            {
-                currentModeInputIndex = currentModeIndex;
-                GetInRangeTiles(unitManager.ships[currentShipIndex].unitMoveRange);
-            }
-        }
-        else if(currentModeIndex == 2)
-        {
-            //shoot mode
-            canMove = false;
-            canShoot = true;
-            if (!unitManager.ships[currentShipIndex].canShoot.Value) return;
-            if (currentModeInputIndex != currentModeIndex)
-            {
-                currentModeInputIndex = currentModeIndex;
-                GetInRangeShootTiles(unitManager.ships[currentShipIndex].unitShootRange);
-            }
-        }
-        else if (currentModeIndex == 3)
-        {
-            //Special tile
-            canMove = false;
-            canShoot = false;
-            if (currentModeInputIndex != currentModeIndex)
-            {
-                currentModeInputIndex = currentModeIndex;
-                GetInRangeTiles(unitManager.ships[currentShipIndex].specialTileRange);
-            }
-        }
-        else if (currentModeIndex == 4)
-        {
-            //Special Shot
-            canMove = false;
-            canShoot = false;
-            if (currentModeInputIndex != currentModeIndex)
-            {
-                currentModeInputIndex = currentModeIndex;
-                GetInRangeShootTiles(unitManager.ships[currentShipIndex].specialShootRange);
-            }
+            case 0:
+                canMove = false;
+                canShoot = false;
+                break;
+            case 1:
+                canMove = true;
+                canShoot = false;
+                break;
+            case 2:
+                canMove = false;
+                canShoot = true;
+                break;
+            case 3:
+                canMove = false;
+                canShoot = false;
+                break;
+            case 4:
+                canMove = false;
+                canShoot = false;
+                break;
         }
 
     }
