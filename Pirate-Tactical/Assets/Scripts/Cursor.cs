@@ -44,6 +44,8 @@ public class Cursor : NetworkBehaviour
     List<TileScript> path = new List<TileScript>();
     List<TileScript> allTiles = new List<TileScript>();
 
+    TileScript cTile = null;
+
     private void Start()
     {
         if (!IsClient) return;
@@ -158,7 +160,6 @@ public class Cursor : NetworkBehaviour
 
     void MyInputs()
     {
-
         Vector3 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
         Vector2 pos = new Vector2(mousePos.x, mousePos.y);
         transform.position = new Vector3(pos.x, pos.y, -5);
@@ -166,7 +167,7 @@ public class Cursor : NetworkBehaviour
         RaycastHit2D? tile = GetCurrentTile(pos);
 
         if (!tile.HasValue) return;
-        TileScript t = tile.Value.transform.GetComponent<TileScript>();
+        cTile = tile.Value.transform.GetComponent<TileScript>();
 
         if (!canPlay.Value)
         {
@@ -182,71 +183,75 @@ public class Cursor : NetworkBehaviour
             switch (currentModeIndex)
             {
                 case 0: //Interact Mode
-                    if (!inRangeTiles.Contains(t))
+                    if (!inRangeTiles.Contains(cTile))
                     {
-                        if (t.shipOnTile.Value && currentModeIndex == 0 && unitManager.ships[currentModeIndex].canBeSelected.Value)
+                        if (cTile.shipOnTile.Value && currentModeIndex == 0 && unitManager.ships[currentModeIndex].canBeSelected.Value)
                         {
                             shipSelected = false;
                             HideTiles();
-                            SelectShip(t);
+                            SelectShip(cTile);
                         }
                     }
-                    else if (inRangeTiles.Contains(t))
+                    else if (inRangeTiles.Contains(cTile))
                     {
-                        if (t.shipOnTile.Value && unitManager.ships[currentShipIndex].canShoot.Value) //Accost an other unit
+                        if (cTile.shipOnTile.Value && unitManager.ships[currentShipIndex].canShoot.Value) //Aborder une autre unité
                         {
                             bool alliesUnit = false;
                             foreach (var ship in unitManager.ships)
                             {
-                                if (ship.unitPos.Value == t.pos.Value && ship.clientIdOwner == NetworkManager.LocalClientId && ship.canBeSelected.Value)
+                                if (ship.unitPos.Value == cTile.pos.Value && ship.clientIdOwner == NetworkManager.LocalClientId && ship.canBeSelected.Value)
                                 {
                                     alliesUnit = true;
                                     break;
                                 }
                             }
                             if (!alliesUnit)
-                                GridManager.Instance.DamageAccostServerRpc(unitManager.ships[currentShipIndex].unitPos.Value, t.pos.Value, NetworkManager.LocalClientId);
+                                GridManager.Instance.DamageAccostServerRpc(unitManager.ships[currentShipIndex].unitPos.Value, cTile.pos.Value, NetworkManager.LocalClientId);
+                        }
+                        else if(cTile.ShopTile && unitManager.ships[currentShipIndex].canShoot.Value && unitManager.ships[currentShipIndex].canBeUpgrade) //Acheter amélioration
+                        {
+                            //Code to buy upgrade
+                            Debug.Log("Acheter amélioration");
                         }
                     }
                     break;
                 case 1: //Move Mode
-                    if (!inRangeTiles.Contains(t)) return;
+                    if (!inRangeTiles.Contains(cTile)) return;
 
-                    if (CanMoveUnit(t) && unitManager.ships[currentShipIndex].canMove.Value)
+                    if (CanMoveUnit(cTile) && unitManager.ships[currentShipIndex].canMove.Value)
                             StartCoroutine(UpdateShipPlacementOnGrid());
                     break;
                 case 2: //Attack Mode
-                    if (!inRangeTiles.Contains(t)) return;
+                    if (!inRangeTiles.Contains(cTile)) return;
 
-                    if(t.shipOnTile.Value && canShoot && unitManager.ships[currentShipIndex].canShoot.Value)
-                        GridManager.Instance.DamageUnitServerRpc(unitManager.ships[currentShipIndex].damage, t.pos.Value, NetworkManager.LocalClientId, false, 0, false);
+                    if(cTile.shipOnTile.Value && canShoot && unitManager.ships[currentShipIndex].canShoot.Value)
+                        GridManager.Instance.DamageUnitServerRpc(unitManager.ships[currentShipIndex].damage, cTile.pos.Value, NetworkManager.LocalClientId, false, 0, false);
                     break;
                 case 3: //Special Shoot Mode
-                    if (!inRangeTiles.Contains(t)) return;
+                    if (!inRangeTiles.Contains(cTile)) return;
 
                     if (unitManager.ships[currentShipIndex].canShoot.Value && unitManager.ships[currentShipIndex].specialAbilityCost <= currentSpecialCharge)
-                        HandleSpecialUnitAttackOnTile(t);
+                        HandleSpecialUnitAttackOnTile(cTile);
                     break;
                 case 4: //Special Tile Mode
-                    if (!inRangeTiles.Contains(t)) return;
+                    if (!inRangeTiles.Contains(cTile)) return;
 
                     if (unitManager.ships[currentShipIndex].canShoot.Value && unitManager.ships[currentShipIndex].specialAbilityCost <= currentSpecialCharge)
-                        HandleSpecialUnitAttackOnUnit(t);
+                        HandleSpecialUnitAttackOnUnit(cTile);
                     break;
             }
         }
         else if (Input.GetMouseButtonDown(0) && !shipSelected)
         {
-            if (t.shipOnTile.Value && unitManager.allShipSpawned.Value)
-                SelectShip(t);
+            if (cTile.shipOnTile.Value && unitManager.allShipSpawned.Value)
+                SelectShip(cTile);
             else if (!unitManager.allShipSpawned.Value)
             {
-                if (t.Walkable && !t.shipOnTile.Value)
-                    SpawnShip(t.pos.Value, t);
+                if (cTile.Walkable && !cTile.shipOnTile.Value)
+                    SpawnShip(cTile.pos.Value, cTile);
                 if (currentShipIndex >= unitManager.ships.Length) currentShipIndex = 0;
             }
         }
-
 
         if (Input.GetButtonDown("Cancel") || (shipSelected && !unitManager.ships[currentShipIndex].canBeSelected.Value))
         {

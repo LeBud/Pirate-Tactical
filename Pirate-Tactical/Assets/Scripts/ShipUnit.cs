@@ -38,6 +38,9 @@ public class ShipUnit : NetworkBehaviour
     public int specialTileRange;
     public int specialShootRange;
 
+    [Header("Upgrade")]
+    public bool canBeUpgrade = true;
+
     [Header("Colors")]
     public Color player1Color;
     public Color player2Color;
