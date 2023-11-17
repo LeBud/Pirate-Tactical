@@ -73,6 +73,8 @@ public class Cursor : NetworkBehaviour
         HandleCurrentMode();
     }
 
+    #region SetClientRpcValues
+
     [ClientRpc]
     public void RechargeSpecialClientRpc()
     {
@@ -102,6 +104,7 @@ public class Cursor : NetworkBehaviour
         playerGold += playerGoldGainPerRound;
     }
 
+    #endregion
     public void TotalActionPoint()
     {
         if (!IsOwner) return;
@@ -173,11 +176,6 @@ public class Cursor : NetworkBehaviour
             return;
         }
 
-        /*if (Input.GetAxis("Mouse ScrollWheel") > 0)
-            currentModeIndex--;
-        else if(Input.GetAxis("Mouse ScrollWheel") < 0)
-            currentModeIndex++;*/
-
         HandleKeyboardInputs();
 
         if (Input.GetMouseButtonDown(0) && shipSelected)
@@ -213,11 +211,28 @@ public class Cursor : NetworkBehaviour
             }
             else if (!CanMoveUnit(t) && !unitMoving)
             {
-                shipSelected = false;
-                HideTiles();
+                //Highlight tiles next to ship
+                if (t.shipOnTile.Value && currentModeIndex == 0 && unitManager.ships[currentModeIndex].canBeSelected.Value)
+                {
+                    bool allyUnit = false;
+                    foreach(var u in unitManager.ships)
+                    {
+                        if (t.pos.Value == u.unitPos.Value)
+                        {
+                            allyUnit = true;
+                            break;
+                        }
+                    }
 
-                if (t.shipOnTile.Value && currentModeIndex == 0)
-                    SelectShip(t);
+                    if (allyUnit)
+                    {
+                        SelectShip(t);
+                        shipSelected = false;
+                        HideTiles();
+                    }
+                    else if (!allyUnit && unitManager.ships[currentModeIndex].canShoot.Value)
+                        AccostShip(t);
+                }
             }
         }
         else if (Input.GetMouseButtonDown(0) && !shipSelected)
@@ -270,6 +285,44 @@ public class Cursor : NetworkBehaviour
         }
     }
 
+    void AccostShip(TileScript t)
+    {
+        Vector2 posTocheck = unitManager.ships[currentShipIndex].unitPos.Value;
+
+        bool canAccostShip = false;
+
+        for (int i = 0; i < 4; i++)
+        {
+            switch (i)
+            {
+                case 0:
+                    posTocheck = new Vector2(posTocheck.x + 1, posTocheck.y);
+                    if (t.pos.Value == posTocheck) canAccostShip = true;
+                    break;
+                case 1:
+                    posTocheck = new Vector2(posTocheck.x - 1, posTocheck.y);
+                    if (t.pos.Value == posTocheck) canAccostShip = true;
+                    break;
+                case 2:
+                    posTocheck = new Vector2(posTocheck.x, posTocheck.y + 1);
+                    if (t.pos.Value == posTocheck) canAccostShip = true;
+                    break;
+                case 3:
+                    posTocheck = new Vector2(posTocheck.x, posTocheck.y - 1);
+                    if (t.pos.Value == posTocheck) canAccostShip = true;
+                    break;
+            }
+
+            if (canAccostShip) break;
+        }
+
+        if (!canAccostShip) return;
+
+        Debug.Log("Ship can be accost");
+
+        GridManager.Instance.DamageAccostServerRpc(unitManager.ships[currentShipIndex].unitPos.Value, t.pos.Value, NetworkManager.LocalClientId);
+    }
+
     void DisplayOnSelectedUnit()
     {
         if (unitManager.ships[currentShipIndex].canMove.Value)
@@ -279,7 +332,7 @@ public class Cursor : NetworkBehaviour
             canMove = true;
             canShoot = false;
             HideTiles();
-            GetInRangeTiles();
+            GetInRangeTiles(unitManager.ships[currentShipIndex].unitMoveRange);
         }
         else if (unitManager.ships[currentShipIndex].canBeSelected.Value)
         {
@@ -308,7 +361,7 @@ public class Cursor : NetworkBehaviour
             if (currentModeInputIndex != currentModeIndex)
             {
                 currentModeInputIndex = currentModeIndex;
-                HideTiles();
+                GetInRangeTiles(1);
             }
 
         }
@@ -321,8 +374,7 @@ public class Cursor : NetworkBehaviour
             if(currentModeInputIndex != currentModeIndex)
             {
                 currentModeInputIndex = currentModeIndex;
-                HideTiles();
-                GetInRangeTiles();
+                GetInRangeTiles(unitManager.ships[currentShipIndex].unitMoveRange);
             }
         }
         else if(currentModeIndex == 2)
@@ -334,8 +386,7 @@ public class Cursor : NetworkBehaviour
             if (currentModeInputIndex != currentModeIndex)
             {
                 currentModeInputIndex = currentModeIndex;
-                HideTiles();
-                GetInRangeShootTiles();
+                GetInRangeShootTiles(unitManager.ships[currentShipIndex].unitShootRange);
             }
         }
         else if (currentModeIndex == 3)
@@ -346,8 +397,7 @@ public class Cursor : NetworkBehaviour
             if (currentModeInputIndex != currentModeIndex)
             {
                 currentModeInputIndex = currentModeIndex;
-                HideTiles();
-                GetInRangeSpecialTiles();
+                GetInRangeTiles(unitManager.ships[currentShipIndex].specialTileRange);
             }
         }
         else if (currentModeIndex == 4)
@@ -358,8 +408,7 @@ public class Cursor : NetworkBehaviour
             if (currentModeInputIndex != currentModeIndex)
             {
                 currentModeInputIndex = currentModeIndex;
-                HideTiles();
-                GetInRangeSpecialShootTiles();
+                GetInRangeShootTiles(unitManager.ships[currentShipIndex].specialShootRange);
             }
         }
 
@@ -502,7 +551,7 @@ public class Cursor : NetworkBehaviour
     }
 
     #region Tiles Function
-    void GetInRangeTiles()
+    void GetInRangeTiles(int shipRange)
     {
         foreach (var t in inRangeTiles) t.HighLightRange(false);
 
@@ -512,32 +561,12 @@ public class Cursor : NetworkBehaviour
         foreach (var t in inRangeTiles) t.HighLightRange(true);
     }
 
-    void GetInRangeShootTiles()
+    void GetInRangeShootTiles(int shootRange)
     {
         foreach (var t in inRangeTiles) t.HighLightRange(false);
 
         inRangeTiles.Clear();
         inRangeTiles = PathfindScript.GetInRangeTilesCross(unitManager.ships[currentShipIndex].currentTile, unitManager.ships[currentShipIndex].unitShootRange);
-
-        foreach (var t in inRangeTiles) t.HighLightRange(true);
-    }
-
-    void GetInRangeSpecialTiles()
-    {
-        foreach (var t in inRangeTiles) t.HighLightRange(false);
-
-        inRangeTiles.Clear();
-        inRangeTiles = PathfindScript.GetInRangeTiles(unitManager.ships[currentShipIndex].currentTile, unitManager.ships[currentShipIndex].specialTileRange);
-
-        foreach (var t in inRangeTiles) t.HighLightRange(true);
-    }
-
-    void GetInRangeSpecialShootTiles()
-    {
-        foreach (var t in inRangeTiles) t.HighLightRange(false);
-
-        inRangeTiles.Clear();
-        inRangeTiles = PathfindScript.GetInRangeTilesCross(unitManager.ships[currentShipIndex].currentTile, unitManager.ships[currentShipIndex].specialShootRange);
 
         foreach (var t in inRangeTiles) t.HighLightRange(true);
     }

@@ -132,7 +132,23 @@ public class GameManager : NetworkBehaviour
         NetworkManager.ConnectedClients[0].PlayerObject.GetComponent<Cursor>().canPlay.Value = false;
         NetworkManager.ConnectedClients[1].PlayerObject.GetComponent<Cursor>().canPlay.Value = false;
 
-        if(gameState == GameState.GameFinish)
+        switch (gameState)
+        {
+            case GameState.GameFinish:
+                Debug.Log("Game Finished");
+                break;
+            case GameState.GameStarting:
+                gameState = GameState.Player1Turn;
+                break;
+            case GameState.Player1Turn:
+                gameState = GameState.Player2Turn;
+                break;
+            case GameState.Player2Turn:
+                gameState = GameState.Player1Turn;
+                break;
+        }
+
+        /*if (gameState == GameState.GameFinish)
         {
             Debug.Log("Game Finish");
         }
@@ -141,7 +157,7 @@ public class GameManager : NetworkBehaviour
         else if(gameState == GameState.Player1Turn)
             gameState = GameState.Player2Turn;
         else if(gameState == GameState.Player2Turn)
-            gameState = GameState.Player1Turn;
+            gameState = GameState.Player1Turn;*/
 
         GivePlayerActionServerRpc();
         HUD.Instance.SetGameStateClientRpc(SetGameStateString(gameState), currentRound.Value);
@@ -152,16 +168,24 @@ public class GameManager : NetworkBehaviour
     {
         string returnState = "";
 
-        if (newState == GameState.GameTesting)
-            returnState = "Game Testing";
-        else if (newState == GameState.Player1Turn)
-            returnState = "Player 1 Turn";
-        else if (newState == GameState.Player2Turn)
-            returnState = "Player 2 Turn";
-        else if (newState == GameState.GameStarting)
-            returnState = "Game is Starting";
-        else if (newState == GameState.GameFinish)
-            returnState = "Game is Finish";
+        switch (newState)
+        {
+            case GameState.GameFinish:
+                returnState = "Game is Finish";
+                break;
+            case GameState.GameStarting:
+                returnState = "Game is Starting";
+                break;
+            case GameState.Player1Turn:
+                returnState = "Player 1 Turn";
+                break;
+            case GameState.Player2Turn:
+                returnState = "Player 2 Turn";
+                break;
+            case GameState.GameTesting:
+                returnState = "Game Testing";
+                break;
+        }
 
         return returnState;
     }

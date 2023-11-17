@@ -4,11 +4,14 @@ using System.Collections.Generic;
 using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.Tilemaps;
+using static UnityEditor.PlayerSettings;
 using static UnityEngine.Rendering.DebugUI;
 
 public class GridManager : NetworkBehaviour
 {
     public static GridManager Instance { get; private set; }
+
+    public int accostAttackBoost = 3;
 
     public int _width, _height;
     [Header("Tiles")]
@@ -178,6 +181,52 @@ public class GridManager : NetworkBehaviour
             }
         }
     }
+
+    [ServerRpc(RequireOwnership = false)]
+    public void DamageAccostServerRpc(Vector2 allyPos, Vector2 enemyPos, ulong id)
+    {
+        ShipUnit[] ships = FindObjectsOfType<ShipUnit>();
+
+        bool allyUnitSet = false;
+        bool enemyUnitSet = false;
+
+        ShipUnit ally = new ShipUnit();
+        ShipUnit enemy = new ShipUnit();
+
+        for (int i = 0; i < ships.Length; i++)
+        {
+            if (!allyUnitSet)
+            {
+                if (ships[i].unitPos.Value == allyPos)
+                {
+                    ally = ships[i];
+                    allyUnitSet = true;
+                    continue;
+                }
+            }
+
+            if (!enemyUnitSet)
+            {
+                if (ships[i].unitPos.Value == enemyPos)
+                {
+                    enemy = ships[i];
+                    enemyUnitSet = true;
+                    continue;
+                }
+            }
+        }
+
+        //Calculate Dmg
+        int allyDmg = ally.attackPoint + accostAttackBoost;
+        enemy.TakeDamageServerRpc(allyDmg, enemyPos, false, 0);
+        int enemyDmg = enemy.attackPoint;
+        ally.TakeDamageServerRpc(enemyDmg, allyPos, false, 0);
+
+        //Dépenser les points
+        Cursor p = NetworkManager.ConnectedClients[id].PlayerObject.GetComponent<Cursor>();
+        p.HasDidAnActionClientRpc();
+    }
+
 
     #endregion
 
