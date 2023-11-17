@@ -447,13 +447,14 @@ MonoBehaviour:
   _highlightBlocked: {fileID: 6295221680769482328}
   _highlightOutOfCombatZone: {fileID: 2312173131319156675}
   _highlightMine: {fileID: 838752197553743546}
-  normalColor: {r: 0.15481488, g: 0.36791685, b: 0.6698113, a: 1}
-  offsetNormalColor: {r: 0.20754719, g: 0.20754719, b: 0.20754719, a: 1}
+  normalColor: {r: 0.13510147, g: 0.4390565, b: 0.8679245, a: 1}
+  offsetNormalColor: {r: 0.13883947, g: 0.3957296, b: 0.754717, a: 1}
   pathColor: {r: 1, g: 0.2971698, b: 0.2971698, a: 1}
   openColor: {r: 0.5789483, g: 1, b: 0.3443396, a: 1}
   closeColor: {r: 1, g: 0.6777429, b: 0, a: 1}
   Walkable: 1
   Mountain: 0
+  ShopTile: 0
   pos:
     m_InternalValue: {x: 0, y: 0}
   shipOnTile:
