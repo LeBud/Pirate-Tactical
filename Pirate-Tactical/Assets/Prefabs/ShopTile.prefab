@@ -447,8 +447,8 @@ MonoBehaviour:
   _highlightBlocked: {fileID: 6295221680769482328}
   _highlightOutOfCombatZone: {fileID: 2312173131319156675}
   _highlightMine: {fileID: 838752197553743546}
-  normalColor: {r: 0, g: 1, b: 0.6795902, a: 1}
-  offsetNormalColor: {r: 0, g: 0.8679245, b: 0.5888273, a: 1}
+  normalColor: {r: 1, g: 0.90713394, b: 0, a: 1}
+  offsetNormalColor: {r: 0.8867924, g: 0.79453325, b: 0.17150229, a: 1}
   pathColor: {r: 1, g: 0.2971698, b: 0.2971698, a: 1}
   openColor: {r: 0.5789483, g: 1, b: 0.3443396, a: 1}
   closeColor: {r: 1, g: 0.6777429, b: 0, a: 1}

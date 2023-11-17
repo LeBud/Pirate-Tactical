@@ -871,8 +871,8 @@ Tilemap:
   - first: {x: -1, y: -2, z: 0}
     second:
       serializedVersion: 2
-      m_TileIndex: 0
-      m_TileSpriteIndex: 0
+      m_TileIndex: 3
+      m_TileSpriteIndex: 3
       m_TileMatrixIndex: 0
       m_TileColorIndex: 0
       m_TileObjectToInstantiateIndex: 65535
@@ -1471,8 +1471,8 @@ Tilemap:
   - first: {x: -1, y: 2, z: 0}
     second:
       serializedVersion: 2
-      m_TileIndex: 0
-      m_TileSpriteIndex: 0
+      m_TileIndex: 3
+      m_TileSpriteIndex: 3
       m_TileMatrixIndex: 0
       m_TileColorIndex: 0
       m_TileObjectToInstantiateIndex: 65535
@@ -2071,8 +2071,8 @@ Tilemap:
   - first: {x: -1, y: 6, z: 0}
     second:
       serializedVersion: 2
-      m_TileIndex: 0
-      m_TileSpriteIndex: 0
+      m_TileIndex: 3
+      m_TileSpriteIndex: 3
       m_TileMatrixIndex: 0
       m_TileColorIndex: 0
       m_TileObjectToInstantiateIndex: 65535
@@ -2600,19 +2600,23 @@ Tilemap:
       m_AllTileFlags: 1073741825
   m_AnimatedTiles: {}
   m_TileAssetArray:
-  - m_RefCount: 12
+  - m_RefCount: 9
     m_Data: {fileID: 11400000, guid: 4cee751bc97e5294ba9fa6f5a01e7311, type: 2}
   - m_RefCount: 208
     m_Data: {fileID: 11400000, guid: e2e59bf2311129244b32138c3ad2c406, type: 2}
   - m_RefCount: 5
     m_Data: {fileID: 11400000, guid: 19ea0cf0bfc84144586d581467be67b5, type: 2}
+  - m_RefCount: 3
+    m_Data: {fileID: 11400000, guid: acc93556fedd8014eacd4aad81e563ea, type: 2}
   m_TileSpriteArray:
-  - m_RefCount: 12
+  - m_RefCount: 9
     m_Data: {fileID: 21300000, guid: c04c22eacafbb864fb512ea81b2f2e00, type: 3}
   - m_RefCount: 208
     m_Data: {fileID: 21300000, guid: 4e7be7527c1b0c44199ff2184ada7002, type: 3}
   - m_RefCount: 5
     m_Data: {fileID: 21300000, guid: 6e383368aa111da41b345f63adb17563, type: 3}
+  - m_RefCount: 3
+    m_Data: {fileID: 21300000, guid: f6440f4548d34df40aebe92ace2ab8d1, type: 3}
   m_TileMatrixArray:
   - m_RefCount: 225
     m_Data:
@@ -11344,11 +11348,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 49b8845b432462e42a2af821a069bf65, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  accostAttackBoost: 3
   _width: 11
   _height: 11
   seaTile: {fileID: 9178135446572580332, guid: 0bec297b910024c4da26c598d9b4902d, type: 3}
   landTile: {fileID: 9178135446572580332, guid: 413e8ef0114bb8841a531f8a92777c4d, type: 3}
   moutainTile: {fileID: 9178135446572580332, guid: 5342175fe34172348b6ca75ee4f657be, type: 3}
+  shopTile: {fileID: 9178135446572580332, guid: c546ddda689251a4cb674f1a819e0454, type: 3}
   combatZoneSize:
     m_InternalValue: 0
   combatZoneDamage: 4
@@ -11357,6 +11363,7 @@ MonoBehaviour:
   waterSprite: {fileID: 21300000, guid: 4e7be7527c1b0c44199ff2184ada7002, type: 3}
   landSprite: {fileID: 21300000, guid: c04c22eacafbb864fb512ea81b2f2e00, type: 3}
   mountainSprite: {fileID: 21300000, guid: 6e383368aa111da41b345f63adb17563, type: 3}
+  shopSprite: {fileID: 21300000, guid: f6440f4548d34df40aebe92ace2ab8d1, type: 3}
 --- !u!114 &1518340151
 MonoBehaviour:
   m_ObjectHideFlags: 0

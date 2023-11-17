@@ -217,7 +217,7 @@ public class PathfindScript : MonoBehaviour
             var surroundingTiles = new List<TileScript>();
             foreach (var tile in tileForPreviousStep)
             {
-                if (!tile.Walkable || tile.blockedTile.Value) continue;
+                if ((!tile.Walkable && !tile.ShopTile) || tile.blockedTile.Value) continue;
 
                 surroundingTiles.AddRange(tile.Neighbors);
             }
@@ -229,7 +229,7 @@ public class PathfindScript : MonoBehaviour
 
         for (int i = inRangeTile.Count - 1; i >= 0; i--)
         {
-            if (!inRangeTile[i].Walkable || inRangeTile[i].blockedTile.Value)
+            if ((!inRangeTile[i].Walkable && !inRangeTile[i].ShopTile) || inRangeTile[i].blockedTile.Value)
                 inRangeTile.RemoveAt(i);
         }
 
