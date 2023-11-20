@@ -9,11 +9,11 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 233cd4ffd38b238429cde0a01c367dff, type: 3}
-  m_Name: MedShipTest
+  m_Script: {fileID: 11500000, guid: ae24bb6ea95332e4ab79f27d29d4ce27, type: 3}
+  m_Name: AccostDamage
   m_EditorClassIdentifier: 
-  shipName: Medium Ship
-  shipHealth: 15
-  shipSpeed: 3
-  shipDamage: 6
-  shipShootingRange: 4
+  upgradeType: 4
+  value: 3
+  goldCost: 120
+  newShootCapacity: 0
+  newTileCapacity: 0
