@@ -381,6 +381,9 @@ public class GridManager : NetworkBehaviour
                     t.blockedTile.Value = true;
                     blockedTiles.Add(t);
 
+                    if (t.mineInTile.Value)
+                        SetMineOnTileServerRpc(t.pos.Value, 0, false);
+
                     Cursor p = NetworkManager.ConnectedClients[id].PlayerObject.GetComponent<Cursor>();
                     p.UseManaClientRpc();
                     p.HasDidAnActionClientRpc();
