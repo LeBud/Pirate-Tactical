@@ -114,9 +114,13 @@ MonoBehaviour:
   currentTile: {fileID: 0}
   unitName: Sloop
   maxHealth: 24
+  unitDamage: 3
   unitMoveRange: 4
   unitShootRange: 2
-  damage: 3
+  damage:
+    m_InternalValue: 4
+  accostDmgBoost:
+    m_InternalValue: 0
   unitSpecialShot: 1
   unitSpecialTile: 1
   specialAbilityCost: 20
@@ -124,6 +128,7 @@ MonoBehaviour:
   specialAbilityDamage: 0
   specialTileRange: 1
   specialShootRange: 1
+  canBeUpgrade: 1
   player1Color: {r: 0.9622642, g: 0.55039275, b: 0.004538993, a: 1}
   player2Color: {r: 0.5994166, g: 0, b: 0.8113208, a: 1}
   unitSprite: {fileID: 4475007845721384360}

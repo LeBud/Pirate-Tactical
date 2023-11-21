@@ -25,6 +25,7 @@ public class ShipUnit : NetworkBehaviour
 
     [Header("Unit Base stats")]
     public int maxHealth;
+    public int unitDamage;
     public int unitMoveRange = 4;
     public int unitShootRange = 4;
     public NetworkVariable<int> damage = new NetworkVariable<int>(4, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
@@ -70,6 +71,7 @@ public class ShipUnit : NetworkBehaviour
         healthPercent = (float)unitLife.Value / maxHealth;
         healthDisplay.localScale = new Vector3(healthPercent, 1, 1);
         SetHealthBarClientRpc(healthPercent, unitLife.Value);
+        damage.Value = unitDamage;
     }
 
     private void Update()

@@ -45,7 +45,8 @@ public class HUD : NetworkBehaviour
     public Transform upgradesContainer;
     public bool isInUpgradeWindow;
 
-    Cursor player;
+    [HideInInspector]
+    public Cursor player;
     Cursor enemyPlayer;
 
     int playerMaxHealth;

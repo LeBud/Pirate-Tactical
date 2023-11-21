@@ -275,7 +275,8 @@ public class Cursor : NetworkBehaviour
                         {
                             //Code to buy upgrade
                             Debug.Log("Acheter amélioration");
-                            HUD.Instance.UpgradeWindow(true, cTile.shopIndex.Value);
+                            if (unitManager.ships[currentShipIndex].canBeUpgrade)
+                                HUD.Instance.UpgradeWindow(true, cTile.shopIndex.Value);
                         }
                     }
                     break;

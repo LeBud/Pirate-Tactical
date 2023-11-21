@@ -124,7 +124,7 @@ public class HandleUpgradeSystem : NetworkBehaviour
     {
         if (NetworkManager.LocalClientId != id) return;
 
-        Cursor p = NetworkManager.ConnectedClients[id].PlayerObject.GetComponent<Cursor>();
+        Cursor p = HUD.Instance.player;
 
         switch (upgrades[shopIndex, i].upgradeType)
         {
@@ -156,6 +156,9 @@ public class HandleUpgradeSystem : NetworkBehaviour
 
         p.unitManager.ships[p.currentShipIndex].canBeUpgrade = false;
         p.HasDidAnActionClientRpc();
+
+
+        HUD.Instance.UpgradeWindow(false, 0);
     }
 
 
