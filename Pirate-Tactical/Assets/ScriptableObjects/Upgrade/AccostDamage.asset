@@ -12,6 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ae24bb6ea95332e4ab79f27d29d4ce27, type: 3}
   m_Name: AccostDamage
   m_EditorClassIdentifier: 
+  upName: accost+
+  upDescription: description
   upgradeType: 4
   value: 3
   goldCost: 120

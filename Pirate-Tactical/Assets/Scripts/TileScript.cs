@@ -32,7 +32,8 @@ public class TileScript : NetworkBehaviour
     public NetworkVariable<bool> blockedTile = new NetworkVariable<bool>(false, NetworkVariableReadPermission.Everyone);
     public NetworkVariable<bool> tileOutOfCombatZone = new NetworkVariable<bool>(false, NetworkVariableReadPermission.Everyone);
     public NetworkVariable<bool> mineInTile = new NetworkVariable<bool>(false, NetworkVariableReadPermission.Everyone);
-
+    public NetworkVariable<int> shopIndex = new NetworkVariable<int>(0, NetworkVariableReadPermission.Everyone);
+    
     #region PathFinding
 
     public static event Action<TileScript> OnHoverTile;

@@ -78,6 +78,7 @@ public class GameManager : NetworkBehaviour
         yield return new WaitForSeconds(.5f);
 
         SetUpGameBaseInfoServerRpc();
+        HandleUpgradeSystem.Instance.GenerateUpgradeOnServerRpc();
     }
 
     IEnumerator PoolingInfosToUpdate()

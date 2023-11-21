@@ -12,6 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ae24bb6ea95332e4ab79f27d29d4ce27, type: 3}
   m_Name: ShootRange
   m_EditorClassIdentifier: 
+  upName: shoot +1
+  upDescription: description
   upgradeType: 3
   value: 1
   goldCost: 120

@@ -88,6 +88,8 @@ public class GridManager : NetworkBehaviour
         
         GameManager.Instance.cameraPos.Value = new Vector3((float)bounds.center.x - 1, (float)bounds.center.y - 0.5f, -10);
 
+        int shopIndex = 0;
+
         for (int  x = bounds.min.x; x < bounds.max.x; x++)
         {
             for(int  y = bounds.min.y; y < bounds.max.y; y++)
@@ -113,6 +115,12 @@ public class GridManager : NetworkBehaviour
 
                     spawnedTile.pos.Value = new Vector2(x, y);
                     spawnedTile.offsetTile.Value = Mathf.Abs(x + y) % 2 == 1;
+
+                    if(spawnedTile.ShopTile)
+                    {
+                        spawnedTile.shopIndex.Value = shopIndex;
+                        shopIndex++;
+                    }
 
                     dictionnary.Add(new Vector2(x, y));
                 }

@@ -7,6 +7,10 @@ public class UpgradeSystem : ScriptableObject
 {
     public enum UpgradeType { None, Damage, MoveRange, ShootRange, Accost, TotalMana, ManaGain, ShootCapacity, TileCapacity}
 
+    [Header("Infos")]
+    public string upName;
+    public string upDescription;
+
     [Header("Upgrade")]
     public UpgradeType upgradeType;
     public int value;

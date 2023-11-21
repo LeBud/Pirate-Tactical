@@ -41,6 +41,8 @@ public class HUD : NetworkBehaviour
 
     [Header("Upgrade")]
     public GameObject upgradeWindow;
+    public GameObject upgradePrefab;
+    public Transform upgradesContainer;
     public bool isInUpgradeWindow;
 
     Cursor player;
@@ -117,10 +119,24 @@ public class HUD : NetworkBehaviour
             GameManager.Instance.UpdateGameStateServerRpc();
     }
 
-    public void UpgradeWindow(bool active)
+    public void UpgradeWindow(bool active, int shopID)
     {
         upgradeWindow.SetActive(active);
         isInUpgradeWindow = active;
+
+        if (active)
+        {
+            for(int i = 0; i < 3; i++)
+            {
+                GameObject up = Instantiate(upgradePrefab, upgradesContainer);
+                up.GetComponent<UpgradeHolder>().SetUpgrade(shopID, i, (int)NetworkManager.LocalClientId);
+            }
+        }
+        else if (!active)
+        {
+            foreach(Transform c in upgradesContainer)
+                Destroy(c.gameObject);
+        }
     }
 
     #region ClientRpcMethods

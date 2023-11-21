@@ -235,7 +235,7 @@ public class Cursor : NetworkBehaviour
         if (HUD.Instance.isInUpgradeWindow)
         {
             if (Input.GetButtonDown("Cancel"))
-                HUD.Instance.UpgradeWindow(false);
+                HUD.Instance.UpgradeWindow(false,0);
             return;
         }
 
@@ -275,7 +275,7 @@ public class Cursor : NetworkBehaviour
                         {
                             //Code to buy upgrade
                             Debug.Log("Acheter amélioration");
-                            HUD.Instance.UpgradeWindow(true);
+                            HUD.Instance.UpgradeWindow(true, cTile.shopIndex.Value);
                         }
                     }
                     break;
