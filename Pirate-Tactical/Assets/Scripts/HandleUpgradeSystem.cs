@@ -116,12 +116,47 @@ public class HandleUpgradeSystem : NetworkBehaviour
     {
         if(!IsServer) return;
 
-        switch (upgrades[shopIndex,i].upgradeType)
+        PutUpgradeOnClientRpc(shopIndex, i, id);       
+    }
+
+    [ClientRpc]
+    public void PutUpgradeOnClientRpc(int shopIndex, int i, ulong id)
+    {
+        if (NetworkManager.LocalClientId != id) return;
+
+        Cursor p = NetworkManager.ConnectedClients[id].PlayerObject.GetComponent<Cursor>();
+
+        switch (upgrades[shopIndex, i].upgradeType)
         {
             case UpgradeSystem.UpgradeType.Accost:
-                //Code a repeter
+                p.unitManager.ships[p.currentShipIndex].accostDmgBoost.Value += upgrades[shopIndex, i].value;
+                break;
+            case UpgradeSystem.UpgradeType.Damage:
+                p.unitManager.ships[p.currentShipIndex].damage.Value += upgrades[shopIndex, i].value;
+                break;
+            case UpgradeSystem.UpgradeType.ManaGain:
+                p.specialGainPerRound += upgrades[shopIndex, i].value;
+                break;
+            case UpgradeSystem.UpgradeType.MoveRange:
+                p.unitManager.ships[p.currentShipIndex].unitMoveRange += upgrades[shopIndex, i].value;
+                break;
+            case UpgradeSystem.UpgradeType.TotalMana:
+                p.maxSpecialCharge += upgrades[shopIndex, i].value;
+                break;
+            case UpgradeSystem.UpgradeType.ShootRange:
+                p.unitManager.ships[p.currentShipIndex].unitShootRange += upgrades[shopIndex, i].value;
+                break;
+            case UpgradeSystem.UpgradeType.TileCapacity:
+                p.unitManager.ships[p.currentShipIndex].unitSpecialTile = upgrades[shopIndex, i].newTileCapacity;
+                break;
+            case UpgradeSystem.UpgradeType.ShootCapacity:
+                p.unitManager.ships[p.currentShipIndex].unitSpecialShot = upgrades[shopIndex, i].newShootCapacity;
                 break;
         }
+
+        p.unitManager.ships[p.currentShipIndex].canBeUpgrade = false;
+        p.HasDidAnActionClientRpc();
     }
+
 
 }

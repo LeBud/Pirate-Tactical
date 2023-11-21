@@ -27,7 +27,8 @@ public class ShipUnit : NetworkBehaviour
     public int maxHealth;
     public int unitMoveRange = 4;
     public int unitShootRange = 4;
-    public int damage = 4;
+    public NetworkVariable<int> damage = new NetworkVariable<int>(4, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
+    public NetworkVariable<int> accostDmgBoost = new NetworkVariable<int>(0, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
 
     [Header("Unit Special stats")]
     public UnitSpecialShot unitSpecialShot;

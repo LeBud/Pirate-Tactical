@@ -289,7 +289,7 @@ public class Cursor : NetworkBehaviour
                     if (!inRangeTiles.Contains(cTile)) return;
 
                     if(cTile.shipOnTile.Value && canShoot && unitManager.ships[currentShipIndex].canShoot.Value)
-                        GridManager.Instance.DamageUnitServerRpc(unitManager.ships[currentShipIndex].damage, cTile.pos.Value, NetworkManager.LocalClientId, false, 0, false);
+                        GridManager.Instance.DamageUnitServerRpc(unitManager.ships[currentShipIndex].damage.Value, cTile.pos.Value, NetworkManager.LocalClientId, false, 0, false);
                     break;
                 case 3: //Special Shoot Mode
                     if (!inRangeTiles.Contains(cTile)) return;
