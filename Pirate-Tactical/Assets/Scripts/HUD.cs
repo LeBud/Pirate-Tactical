@@ -4,6 +4,7 @@ using TMPro;
 using Unity.Collections;
 using Unity.Netcode;
 using UnityEngine;
+using UnityEngine.Rendering;
 using UnityEngine.UI;
 
 public class HUD : NetworkBehaviour
@@ -138,6 +139,11 @@ public class HUD : NetworkBehaviour
             foreach(Transform c in upgradesContainer)
                 Destroy(c.gameObject);
         }
+    }
+
+    public void CloseUpgradeWindowBtt()
+    {
+        UpgradeWindow(false, 0);
     }
 
     #region ClientRpcMethods
