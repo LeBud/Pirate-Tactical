@@ -15,8 +15,9 @@ public class UpgradeHolder : MonoBehaviour
     int shop;
     int num;
     int ID;
+    int gold;
 
-    public void SetUpgrade(int shopID, int i, int playerID)
+    public void SetUpgrade(int shopID, int i, int playerID, int playerGold)
     {
         currentUpgrade = HandleUpgradeSystem.Instance.upgrades[shopID,i];
         uPName.text = currentUpgrade.upName;
@@ -25,12 +26,13 @@ public class UpgradeHolder : MonoBehaviour
         shop = shopID;
         num = i;
         ID = playerID;
-        
+        gold = playerGold;
+
         upBuyBtt.onClick.AddListener(() => BuyUpgrade());
     }
 
     public void BuyUpgrade()
     {
-        HandleUpgradeSystem.Instance.UpgradeUnitServerRpc(shop, num, (ulong)ID);
+        HandleUpgradeSystem.Instance.UpgradeUnitServerRpc(shop, num, (ulong)ID, gold);
     }
 }

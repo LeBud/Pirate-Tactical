@@ -112,11 +112,12 @@ public class HandleUpgradeSystem : NetworkBehaviour
     }
 
     [ServerRpc(RequireOwnership = false)]
-    public void UpgradeUnitServerRpc(int shopIndex,int i, ulong id)
+    public void UpgradeUnitServerRpc(int shopIndex,int i, ulong id, int playerGold)
     {
         if(!IsServer) return;
 
-        PutUpgradeOnClientRpc(shopIndex, i, id);       
+        if (playerGold >= upgrades[shopIndex, i].goldCost)
+            PutUpgradeOnClientRpc(shopIndex, i, id);       
     }
 
     [ClientRpc]
@@ -154,9 +155,9 @@ public class HandleUpgradeSystem : NetworkBehaviour
                 break;
         }
 
+        p.playerGold -= upgrades[shopIndex, i].goldCost;
         p.unitManager.ships[p.currentShipIndex].canBeUpgrade = false;
         p.HasDidAnActionClientRpc();
-
 
         HUD.Instance.UpgradeWindow(false, 0);
     }

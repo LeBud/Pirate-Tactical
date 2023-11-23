@@ -130,7 +130,7 @@ public class HUD : NetworkBehaviour
             for(int i = 0; i < 3; i++)
             {
                 GameObject up = Instantiate(upgradePrefab, upgradesContainer);
-                up.GetComponent<UpgradeHolder>().SetUpgrade(shopID, i, (int)NetworkManager.LocalClientId);
+                up.GetComponent<UpgradeHolder>().SetUpgrade(shopID, i, (int)NetworkManager.LocalClientId, player.playerGold);
             }
         }
         else if (!active)
