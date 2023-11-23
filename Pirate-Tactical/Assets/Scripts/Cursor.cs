@@ -370,6 +370,16 @@ public class Cursor : NetworkBehaviour
         }
     }
 
+    public void SelectShipHUD(int i)
+    {
+        if (!unitManager.ships[i].canBeSelected.Value) return;
+
+        currentShipIndex = i;
+        shipSelected = true;
+        DisplayOnSelectedUnit();
+        SoundManager.Instance.PlaySoundLocally(SoundManager.Instance.selectShip);
+    }
+
     void DisplayOnSelectedUnit()
     {
         if (unitManager.ships[currentShipIndex].canMove.Value)

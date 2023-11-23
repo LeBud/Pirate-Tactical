@@ -160,6 +160,12 @@ public class HUD : NetworkBehaviour
             pausePanel.SetActive(false);
     }
 
+    public void SelectShipOnHUD(int i)
+    {
+        player.shipSelected = false;
+        player.SelectShipHUD(i);
+    }
+
     #region ClientRpcMethods
 
     [ClientRpc]
