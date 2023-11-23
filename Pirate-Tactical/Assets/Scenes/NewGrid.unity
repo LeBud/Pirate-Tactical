@@ -7091,8 +7091,8 @@ MonoBehaviour:
   offensiveCapacity: {fileID: 0}
   tileCapacity: {fileID: 0}
   takeDamage: {fileID: 0}
-  startMoving: {fileID: 0}
-  stopMoving: {fileID: 0}
+  startMoving: {fileID: 8300000, guid: 44f8e32ba38cbf44b8bfa8279dffc5ad, type: 3}
+  stopMoving: {fileID: 8300000, guid: 44f8e32ba38cbf44b8bfa8279dffc5ad, type: 3}
   buyUpgrade: {fileID: 0}
   mineExploding: {fileID: 0}
   spawnShip: {fileID: 0}
@@ -7100,7 +7100,7 @@ MonoBehaviour:
   deselectShip: {fileID: 0}
   shipDestroyed: {fileID: 0}
   shipSink: {fileID: 0}
-  changeShipMode: {fileID: 0}
+  changeShipMode: {fileID: 8300000, guid: 44f8e32ba38cbf44b8bfa8279dffc5ad, type: 3}
   accost: {fileID: 0}
   fireDamage: {fileID: 0}
   zoneShrinking: {fileID: 0}

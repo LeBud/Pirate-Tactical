@@ -42,6 +42,9 @@ public class SoundManager : NetworkBehaviour
 
     private void Awake()
     {
+        if(Instance == null)
+            Instance = this;
+
         _audioSource = GetComponent<AudioSource>();
     }
 
@@ -49,6 +52,12 @@ public class SoundManager : NetworkBehaviour
     {
         if (!playSounds) return;
         soundToPlayOnClient = sound;
+        PassSoundThroughtServerRpc();
+    }
+
+    [ServerRpc(RequireOwnership = false)]
+    void PassSoundThroughtServerRpc()
+    {
         PlaySoundsClientRpc();
     }
 
