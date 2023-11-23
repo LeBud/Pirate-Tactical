@@ -38,16 +38,24 @@ public class SoundManager : NetworkBehaviour
     public AudioClip oceanAmbient;
     public AudioClip boutonClick;
 
+    AudioClip soundToPlayOnClient;
+
     private void Awake()
     {
         _audioSource = GetComponent<AudioSource>();
     }
 
-    [ClientRpc]
-    public void PlaySoundOnClientRpc(AudioClip sound)
+    public void PlaySoundOnClients(AudioClip sound)
     {
         if (!playSounds) return;
-        _audioSource.PlayOneShot(sound);
+        soundToPlayOnClient = sound;
+        PlaySoundsClientRpc();
+    }
+
+    [ClientRpc]
+    void PlaySoundsClientRpc()
+    {
+        _audioSource.PlayOneShot(soundToPlayOnClient);
     }
 
     public void PlaySoundLocally(AudioClip sound)

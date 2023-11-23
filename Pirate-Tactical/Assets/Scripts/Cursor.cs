@@ -295,7 +295,7 @@ public class Cursor : NetworkBehaviour
                     if(cTile.shipOnTile.Value && canShoot && unitManager.ships[currentShipIndex].canShoot.Value)
                     {
                         GridManager.Instance.DamageUnitServerRpc(unitManager.ships[currentShipIndex].damage.Value, cTile.pos.Value, NetworkManager.LocalClientId, false, 0, false);
-                        SoundManager.Instance.PlaySoundOnClientRpc(SoundManager.Instance.attack);
+                        SoundManager.Instance.PlaySoundOnClients(SoundManager.Instance.attack);
                     }
                     break;
                 case 3: //Special Shoot Mode
@@ -501,7 +501,7 @@ public class Cursor : NetworkBehaviour
                 break;
         }
 
-        SoundManager.Instance.PlaySoundOnClientRpc(SoundManager.Instance.tileCapacity);
+        SoundManager.Instance.PlaySoundOnClients(SoundManager.Instance.tileCapacity);
     }
 
     void HandleSpecialUnitAttackOnUnit(TileScript t)
@@ -522,7 +522,7 @@ public class Cursor : NetworkBehaviour
 
         }
 
-        SoundManager.Instance.PlaySoundOnClientRpc(SoundManager.Instance.offensiveCapacity);
+        SoundManager.Instance.PlaySoundOnClients(SoundManager.Instance.offensiveCapacity);
     }
 
     void TeleportShip(TileScript t)
@@ -678,7 +678,7 @@ public class Cursor : NetworkBehaviour
         bool stepOnMine = false;
 
         GridManager.Instance.SetShipOnTileServerRpc(unitManager.ships[currentShipIndex].currentTile.pos.Value, false);
-        SoundManager.Instance.PlaySoundOnClientRpc(SoundManager.Instance.startMoving);
+        SoundManager.Instance.PlaySoundOnClients(SoundManager.Instance.startMoving);
         while (path.Count > 0)
         {
             UnitNewPosServerRpc(path[value].pos.Value, currentShipIndex);
@@ -715,7 +715,7 @@ public class Cursor : NetworkBehaviour
         unitManager.ships[currentShipIndex].canMove.Value = false;
         GridManager.Instance.SetShipOnTileServerRpc(unitManager.ships[currentShipIndex].currentTile.pos.Value, true);
 
-        SoundManager.Instance.PlaySoundOnClientRpc(SoundManager.Instance.stopMoving);
+        SoundManager.Instance.PlaySoundOnClients(SoundManager.Instance.stopMoving);
 
         if(stepOnMine)
             GridManager.Instance.DamageUnitByMineServerRpc(GridManager.Instance.mineDamage, unitManager.ships[currentShipIndex].currentTile.pos.Value, false, 0);
@@ -745,7 +745,7 @@ public class Cursor : NetworkBehaviour
             TotalActionPoint();
         }
 
-        SoundManager.Instance.PlaySoundOnClientRpc(SoundManager.Instance.spawnShip);
+        SoundManager.Instance.PlaySoundOnClients(SoundManager.Instance.spawnShip);
     }
 
     public void SetShopToInactive(int shopIndex)
