@@ -277,4 +277,9 @@ public class GameManager : NetworkBehaviour
             player2.Value = name.Value;
     }
 
+    public void QuitGame()
+    {
+        NetworkManager.Shutdown();
+    }
+
 }

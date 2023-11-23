@@ -46,6 +46,10 @@ public class HUD : NetworkBehaviour
     public Transform upgradesContainer;
     public bool isInUpgradeWindow;
 
+    [Header("Pause Menu")]
+    public GameObject pausePanel;
+    public bool inPauseMenu;
+
     [HideInInspector]
     public Cursor player;
     Cursor enemyPlayer;
@@ -144,6 +148,16 @@ public class HUD : NetworkBehaviour
     public void CloseUpgradeWindowBtt()
     {
         UpgradeWindow(false, 0);
+    }
+
+    public void PauseGame()
+    {
+        inPauseMenu = !inPauseMenu;
+
+        if (inPauseMenu)
+            pausePanel.SetActive(true);
+        else
+            pausePanel.SetActive(false);
     }
 
     #region ClientRpcMethods

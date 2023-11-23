@@ -4,7 +4,6 @@ using System.Linq;
 using Unity.Collections;
 using Unity.Netcode;
 using UnityEngine;
-using static Unity.Collections.AllocatorManager;
 
 public class Cursor : NetworkBehaviour
 {
@@ -222,14 +221,11 @@ public class Cursor : NetworkBehaviour
 
     void MyInputs()
     {
-        Vector3 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-        Vector2 pos = new Vector2(mousePos.x, mousePos.y);
-        transform.position = new Vector3(pos.x, pos.y, -5);
+        if (Input.GetButtonDown("Cancel") && !shipSelected && !HUD.Instance.isInUpgradeWindow)
+            HUD.Instance.PauseGame();
 
-        RaycastHit2D? tile = GetCurrentTile(pos);
-
-        if (!tile.HasValue) return;
-        cTile = tile.Value.transform.GetComponent<TileScript>();
+        if (HUD.Instance.inPauseMenu)
+            return;
 
         if (!canPlay.Value)
         {
@@ -241,11 +237,21 @@ public class Cursor : NetworkBehaviour
         if (HUD.Instance.isInUpgradeWindow)
         {
             if (Input.GetButtonDown("Cancel"))
-                HUD.Instance.UpgradeWindow(false,0);
+                HUD.Instance.UpgradeWindow(false, 0);
             return;
         }
 
         HandleKeyboardInputs();
+
+        Vector3 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+        Vector2 pos = new Vector2(mousePos.x, mousePos.y);
+        transform.position = new Vector3(pos.x, pos.y, -5);
+
+        RaycastHit2D? tile = GetCurrentTile(pos);
+
+        if (!tile.HasValue) return;
+        cTile = tile.Value.transform.GetComponent<TileScript>();
+
 
         if (Input.GetMouseButtonDown(0) && shipSelected)
         {
