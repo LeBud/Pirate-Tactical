@@ -157,17 +157,6 @@ public class GameManager : NetworkBehaviour
                 break;
         }
 
-        /*if (gameState == GameState.GameFinish)
-        {
-            Debug.Log("Game Finish");
-        }
-        else if (gameState == GameState.GameStarting)
-            gameState = GameState.Player1Turn;
-        else if(gameState == GameState.Player1Turn)
-            gameState = GameState.Player2Turn;
-        else if(gameState == GameState.Player2Turn)
-            gameState = GameState.Player1Turn;*/
-
         GivePlayerActionServerRpc();
         HUD.Instance.SetGameStateClientRpc(SetGameStateString(gameState), currentRound.Value);
         GridManager.Instance.UpdateTilesServerRpc();
@@ -204,11 +193,45 @@ public class GameManager : NetworkBehaviour
     {
         if(!IsServer) return;
 
+        if (gameState == GameState.Player1Turn)
+        {
+            currentRound.Value++;
+            Cursor[] players = FindObjectsOfType<Cursor>();
+            foreach (Cursor player in players)
+            {
+                player.RechargeSpecialClientRpc();
+                player.CalculateHealthClientRpc();
+                player.GoldGainClientRpc();
+            }
+
+            ShipUnit[] ships = FindObjectsOfType<ShipUnit>();
+            if (ships.Length > 0)
+            {
+                foreach (ShipUnit s in ships)
+                {
+                    s.UpdateUnitClientRpc();
+                }
+            }
+
+            if (currentRound.Value >= startRoundCombatZone && currentRound.Value % 2 != 1 && GridManager.Instance.combatZoneSize.Value > 4 && !combatZoneShrinkEveryRound)
+                GridManager.Instance.combatZoneSize.Value--;
+            else if (currentRound.Value >= startRoundCombatZone && GridManager.Instance.combatZoneSize.Value > 4 && combatZoneShrinkEveryRound)
+                GridManager.Instance.combatZoneSize.Value--;
+
+            if (currentRound.Value > 0 && !poolingStarted)
+                PoolingInfosToUpdate();
+        }
+
         //Setup pour que seulement le joueur puisse spawn ses unités puis l'autre joueur eznsuite
         if (gameState == GameState.Player1Turn)
         {
             Cursor currentP = NetworkManager.ConnectedClients[0].PlayerObject.GetComponent<Cursor>();
             currentP.canPlay.Value = true;
+
+            if (currentRound.Value == 0)
+            {
+                currentP.SetSpawnableTileClientRpc(0);
+            }
 
             if (!currentP.unitManager.allShipSpawned.Value) return;
             currentP.ResetShipsActionClientRpc();
@@ -218,37 +241,13 @@ public class GameManager : NetworkBehaviour
             Cursor currentP = NetworkManager.ConnectedClients[1].PlayerObject.GetComponent<Cursor>();
             currentP.canPlay.Value = true;
 
+            if (currentRound.Value == 0)
+            {
+                currentP.SetSpawnableTileClientRpc(1);
+            }
+
             if (!currentP.unitManager.allShipSpawned.Value) return;
             currentP.ResetShipsActionClientRpc();
-        }
-
-        if (gameState == GameState.Player1Turn)
-        {
-            currentRound.Value++;
-            Cursor[] players = FindObjectsOfType<Cursor>();
-            foreach(Cursor player in players)
-            {
-                player.RechargeSpecialClientRpc();
-                player.CalculateHealthClientRpc();
-                player.GoldGainClientRpc();
-            }
-
-            ShipUnit[] ships = FindObjectsOfType<ShipUnit>();
-            if(ships.Length > 0)
-            {
-                foreach (ShipUnit s in ships) 
-                { 
-                    s.UpdateUnitClientRpc();
-                }
-            }
-
-            if (currentRound.Value >= startRoundCombatZone && currentRound.Value % 2 != 1 && GridManager.Instance.combatZoneSize.Value > 4 && !combatZoneShrinkEveryRound)
-                GridManager.Instance.combatZoneSize.Value--;
-            else if(currentRound.Value >= startRoundCombatZone && GridManager.Instance.combatZoneSize.Value > 4 && combatZoneShrinkEveryRound)
-                GridManager.Instance.combatZoneSize.Value--;
-
-            if(currentRound.Value > 0 && !poolingStarted)
-                PoolingInfosToUpdate();
         }
     }
 

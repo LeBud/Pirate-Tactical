@@ -322,7 +322,7 @@ public class Cursor : NetworkBehaviour
                 SelectShip(cTile);
             else if (!unitManager.allShipSpawned.Value)
             {
-                if (cTile.Walkable && !cTile.shipOnTile.Value)
+                if (cTile.Walkable && !cTile.shipOnTile.Value && cTile.canSpawnShip)
                     SpawnShip(cTile.pos.Value, cTile);
                 if (currentShipIndex >= unitManager.ships.Length) currentShipIndex = 0;
             }
@@ -747,6 +747,11 @@ public class Cursor : NetworkBehaviour
         {
             unitManager.allShipSpawned.Value = true;
             TotalActionPoint();
+            foreach(var tiles in allTiles.Where(tile => tile.canSpawnShip))
+            {
+                tiles.canSpawnShip = false;
+                tiles._highlightSpawn.SetActive(false);
+            }
         }
 
         SoundManager.Instance.PlaySoundOnClients(SoundManager.Instance.spawnShip);
@@ -771,6 +776,41 @@ public class Cursor : NetworkBehaviour
         RaycastHit2D[] hits = Physics2D.RaycastAll(pos, Vector2.zero);
         if (hits.Length > 0) return hits.OrderByDescending(i => i.collider.transform.position.z).First();
         return null;
+    }
+
+    [ClientRpc]
+    public void SetSpawnableTileClientRpc(int player)
+    {
+        int xPos = 0;
+        switch (player)
+        {
+            case 0:
+                if (NetworkManager.LocalClientId != (ulong)player) return;
+                xPos = GridManager.Instance.map.cellBounds.min.x;
+                for (int i = GridManager.Instance.map.cellBounds.min.y + 1; i < GridManager.Instance.map.cellBounds.max.y - 1; i++)
+                {
+                    TileScript t = GridManager.Instance.GetTileAtPosition(new Vector2(xPos, i));
+                    if (t.Walkable)
+                    {
+                        t.canSpawnShip = true;
+                        t._highlightSpawn.SetActive(true);
+                    }
+                }
+                break;
+            case 1:
+                if (NetworkManager.LocalClientId != (ulong)player) return;
+                xPos = GridManager.Instance.map.cellBounds.max.x - 2;
+                for (int i = GridManager.Instance.map.cellBounds.min.y + 1; i < GridManager.Instance.map.cellBounds.max.y - 1; i++)
+                {
+                    TileScript t = GridManager.Instance.GetTileAtPosition(new Vector2(xPos, i));
+                    if (t.Walkable)
+                    {
+                        t.canSpawnShip = true;
+                        t._highlightSpawn.SetActive(true);
+                    }
+                }
+                break;
+        }
     }
 
     #region Boolean

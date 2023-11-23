@@ -12,6 +12,7 @@ public class TileScript : NetworkBehaviour
     public GameObject _highlightBlocked;
     public GameObject _highlightOutOfCombatZone;
     public GameObject _highlightMine;
+    public GameObject _highlightSpawn;
 
     [Header("Normals Colors")]
     public Color normalColor;
@@ -26,6 +27,7 @@ public class TileScript : NetworkBehaviour
     public bool Mountain = true;
     public bool ShopTile = true;
     public bool canAccessShop = true;
+    public bool canSpawnShip = false;
 
     public NetworkVariable<Vector2> pos = new NetworkVariable<Vector2>(Vector2.zero, NetworkVariableReadPermission.Everyone);
     public NetworkVariable<bool> shipOnTile = new NetworkVariable<bool>(false, NetworkVariableReadPermission.Everyone);

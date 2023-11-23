@@ -7109,6 +7109,8 @@ MonoBehaviour:
   timer: {fileID: 0}
   oceanAmbient: {fileID: 0}
   boutonClick: {fileID: 0}
+  goldGain: {fileID: 0}
+  manaGain: {fileID: 0}
 --- !u!4 &801700749
 Transform:
   m_ObjectHideFlags: 0
