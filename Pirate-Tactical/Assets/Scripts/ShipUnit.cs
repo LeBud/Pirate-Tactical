@@ -147,8 +147,11 @@ public class ShipUnit : NetworkBehaviour
         if (passiveAttack)
             GivePassiveEffectToUnitClientRpc(effectDuration);
 
+        SoundManager.Instance.PlaySoundOnClientRpc(SoundManager.Instance.takeDamage);
+
         if (unitLife.Value <= 0)
         {
+            SoundManager.Instance.PlaySoundOnClientRpc(SoundManager.Instance.shipDestroyed);
             GridManager.Instance.SetShipOnTileServerRpc(pos, false);
             GetComponent<NetworkObject>().Despawn();
         }
@@ -159,6 +162,7 @@ public class ShipUnit : NetworkBehaviour
     public void GivePassiveEffectToUnitClientRpc(int roundDuration)
     {
         roundToStopEffect = roundDuration + GameManager.Instance.currentRound.Value;
+        SoundManager.Instance.PlaySoundLocally(SoundManager.Instance.fireDamage);
     }
 
     [ClientRpc]

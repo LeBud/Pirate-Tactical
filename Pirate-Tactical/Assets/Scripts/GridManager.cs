@@ -228,6 +228,8 @@ public class GridManager : NetworkBehaviour
         //Dépenser les points
         Cursor p = NetworkManager.ConnectedClients[id].PlayerObject.GetComponent<Cursor>();
         p.HasDidAnActionClientRpc();
+
+        SoundManager.Instance.PlaySoundOnClientRpc(SoundManager.Instance.accost);
     }
 
 
@@ -403,6 +405,7 @@ public class GridManager : NetworkBehaviour
                     t.mineInTile.Value = false;
                     foreach(ulong _id in NetworkManager.ConnectedClientsIds)
                         t.SetMineTileToClientRpc(_id, false);
+                    SoundManager.Instance.PlaySoundOnClientRpc(SoundManager.Instance.mineExploding);
                     break;
                 }
         }
@@ -467,5 +470,6 @@ public class GridManager : NetworkBehaviour
             }
         }
 
+        SoundManager.Instance.PlaySoundOnClientRpc(SoundManager.Instance.zoneShrinking);
     }
 }
