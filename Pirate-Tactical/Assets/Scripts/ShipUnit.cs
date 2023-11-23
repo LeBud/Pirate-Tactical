@@ -151,6 +151,11 @@ public class ShipUnit : NetworkBehaviour
 
         if (unitLife.Value <= 0)
         {
+            if (GetComponent<NetworkObject>().OwnerClientId == 0)
+                GameManager.Instance.player1unitLeft--;
+            else if(GetComponent<NetworkObject>().OwnerClientId == 1)
+                GameManager.Instance.player2unitLeft--;
+
             SoundManager.Instance.PlaySoundOnClients(SoundManager.Instance.shipDestroyed);
             GridManager.Instance.SetShipOnTileServerRpc(pos, false);
             GetComponent<NetworkObject>().Despawn();
