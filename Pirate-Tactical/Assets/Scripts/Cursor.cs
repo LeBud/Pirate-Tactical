@@ -178,6 +178,7 @@ public class Cursor : NetworkBehaviour
     void SpawnUnitServerRpc(Vector2 pos, ulong id, int index)
     {
         ShipUnit ship = Instantiate(NetworkManager.ConnectedClients[id].PlayerObject.GetComponent<Cursor>().unitManager.ships[index]);
+        ship.damage.Value = ship.unitDamage;
         ship.GetComponent<NetworkObject>().SpawnWithOwnership(id);
 
         LinkUnitToClientRpc(ship.GetComponent<NetworkObject>().NetworkObjectId, index);
@@ -297,7 +298,7 @@ public class Cursor : NetworkBehaviour
                     if (!inRangeTiles.Contains(cTile)) return;
 
                     if (unitManager.ships[currentShipIndex].canShoot.Value && unitManager.ships[currentShipIndex].specialAbilityCost <= currentSpecialCharge)
-                        HandleSpecialUnitAttackOnTile(cTile);
+                        HandleSpecialModifyTile(cTile);
                     break;
                 case 4: //Special Tile Mode
                     if (!inRangeTiles.Contains(cTile)) return;
@@ -473,7 +474,7 @@ public class Cursor : NetworkBehaviour
 
     #region SpecialCapacities
 
-    void HandleSpecialUnitAttackOnTile(TileScript t)
+    void HandleSpecialModifyTile(TileScript t)
     {
         if (!t.Walkable && t.shipOnTile.Value) return;
 
@@ -501,7 +502,7 @@ public class Cursor : NetworkBehaviour
                 GridManager.Instance.PushUnitServerRpc(t.pos.Value, unitManager.ships[currentShipIndex].unitPos.Value, NetworkManager.LocalClientId);
                 break;
             case ShipUnit.UnitSpecialShot.TShot:
-                TShotFunction(t);
+                StartCoroutine(TShotFunction(t));
                 break;
             case ShipUnit.UnitSpecialShot.FireShot:
                 GridManager.Instance.DamageUnitServerRpc(unitManager.ships[currentShipIndex].specialAbilityDamage, t.pos.Value, NetworkManager.LocalClientId, true, unitManager.ships[currentShipIndex].specialAbilityPassiveDuration, true);
@@ -539,11 +540,15 @@ public class Cursor : NetworkBehaviour
         TotalActionPoint();
     }
 
-    void TShotFunction(TileScript t)
+    IEnumerator TShotFunction(TileScript t)
     {
         if (t.pos.Value.x == unitManager.ships[currentShipIndex].currentTile.pos.Value.x)
         {
+            GridManager.Instance.DamageUnitServerRpc(unitManager.ships[currentShipIndex].specialAbilityDamage, t.pos.Value, NetworkManager.LocalClientId, false, 0, true);
+
             Debug.Log("Same X");
+
+            yield return new WaitForSeconds(.5f);
 
             //GetShips on Y axis with for loop
             Vector2 posToCheck;
@@ -569,12 +574,14 @@ public class Cursor : NetworkBehaviour
                     break;
                 }
             }
-            GridManager.Instance.DamageUnitServerRpc(unitManager.ships[currentShipIndex].specialAbilityDamage, t.pos.Value, NetworkManager.LocalClientId, false, 0, true);
-
         }
         else if (t.pos.Value.y == unitManager.ships[currentShipIndex].currentTile.pos.Value.y)
         {
+            GridManager.Instance.DamageUnitServerRpc(unitManager.ships[currentShipIndex].specialAbilityDamage, t.pos.Value, NetworkManager.LocalClientId, false, 0, true);
+
             Debug.Log("Same Y");
+
+            yield return new WaitForSeconds(.5f);
 
             //GetShips on X axis with for loop
             Vector2 posToCheck;
@@ -599,8 +606,6 @@ public class Cursor : NetworkBehaviour
                     break;
                 }
             }
-
-            GridManager.Instance.DamageUnitServerRpc(unitManager.ships[currentShipIndex].specialAbilityDamage, t.pos.Value, NetworkManager.LocalClientId, false, 0, true);
         }
     }
 

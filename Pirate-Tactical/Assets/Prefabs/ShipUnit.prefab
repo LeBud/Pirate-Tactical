@@ -112,9 +112,10 @@ MonoBehaviour:
   canBeSelected:
     m_InternalValue: 0
   currentTile: {fileID: 0}
-  unitName: Galion
+  unitName: 0
   maxHealth: 48
   unitDamage: 10
+  unitAccostDamage: 7
   unitMoveRange: 1
   unitShootRange: 4
   damage:

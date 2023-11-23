@@ -112,9 +112,10 @@ MonoBehaviour:
   canBeSelected:
     m_InternalValue: 0
   currentTile: {fileID: 0}
-  unitName: Brigantin
+  unitName: 1
   maxHealth: 32
   unitDamage: 6
+  unitAccostDamage: 5
   unitMoveRange: 3
   unitShootRange: 3
   damage:

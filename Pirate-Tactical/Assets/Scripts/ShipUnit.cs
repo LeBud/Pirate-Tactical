@@ -10,6 +10,7 @@ public class ShipUnit : NetworkBehaviour
 
     public enum UnitSpecialShot { None, PushUnit, TShot, FireShot}
     public enum UnitSpecialTile { None, Mine, BlockTile, Teleport}
+    public enum UnitType { Galion, Brigantin, Sloop}
 
     [Header("NetworkVariables")]
     public NetworkVariable<int> unitLife = new NetworkVariable<int>(10);
@@ -21,11 +22,12 @@ public class ShipUnit : NetworkBehaviour
     [HideInInspector]
     public TileScript currentTile;
 
-    public string unitName;
+    public UnitType unitName;
 
     [Header("Unit Base stats")]
     public int maxHealth;
     public int unitDamage;
+    public int unitAccostDamage;
     public int unitMoveRange = 4;
     public int unitShootRange = 4;
     public NetworkVariable<int> damage = new NetworkVariable<int>(4, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
@@ -71,7 +73,6 @@ public class ShipUnit : NetworkBehaviour
         healthPercent = (float)unitLife.Value / maxHealth;
         healthDisplay.localScale = new Vector3(healthPercent, 1, 1);
         SetHealthBarClientRpc(healthPercent, unitLife.Value);
-        damage.Value = unitDamage;
     }
 
     private void Update()

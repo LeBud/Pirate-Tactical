@@ -112,9 +112,10 @@ MonoBehaviour:
   canBeSelected:
     m_InternalValue: 0
   currentTile: {fileID: 0}
-  unitName: Sloop
+  unitName: 2
   maxHealth: 24
   unitDamage: 3
+  unitAccostDamage: 3
   unitMoveRange: 4
   unitShootRange: 2
   damage:

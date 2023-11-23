@@ -220,11 +220,11 @@ public class GridManager : NetworkBehaviour
         }
 
         //Calculate Dmg
-        int allyDmg = ally.damage.Value + accostAttackBoost + ally.accostDmgBoost.Value;
+        int allyDmg = ally.unitAccostDamage+ accostAttackBoost + ally.accostDmgBoost.Value;
         enemy.TakeDamageServerRpc(allyDmg, enemyPos, false, 0);
-        int enemyDmg = enemy.damage.Value + enemy.accostDmgBoost.Value;
+        int enemyDmg = enemy.unitAccostDamage + enemy.accostDmgBoost.Value;
         ally.TakeDamageServerRpc(enemyDmg, allyPos, false, 0);
-
+        
         //Dépenser les points
         Cursor p = NetworkManager.ConnectedClients[id].PlayerObject.GetComponent<Cursor>();
         p.HasDidAnActionClientRpc();
