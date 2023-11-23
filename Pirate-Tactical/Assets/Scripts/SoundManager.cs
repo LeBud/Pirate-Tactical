@@ -37,6 +37,8 @@ public class SoundManager : NetworkBehaviour
     public AudioClip timer;
     public AudioClip oceanAmbient;
     public AudioClip boutonClick;
+    public AudioClip goldGain;
+    public AudioClip manaGain;
 
     AudioClip soundToPlayOnClient;
 

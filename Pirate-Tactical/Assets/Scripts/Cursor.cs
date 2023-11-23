@@ -82,6 +82,8 @@ public class Cursor : NetworkBehaviour
         
         if(currentSpecialCharge > maxSpecialCharge) 
             currentSpecialCharge = maxSpecialCharge;
+
+        SoundManager.Instance.PlaySoundLocally(SoundManager.Instance.manaGain);
     }
 
     [ClientRpc]
@@ -102,6 +104,8 @@ public class Cursor : NetworkBehaviour
     public void GoldGainClientRpc()
     {
         playerGold += playerGoldGainPerRound;
+
+        SoundManager.Instance.PlaySoundLocally(SoundManager.Instance.goldGain);
     }
 
     [ClientRpc]
