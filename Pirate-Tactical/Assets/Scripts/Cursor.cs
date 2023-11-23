@@ -4,6 +4,7 @@ using System.Linq;
 using Unity.Collections;
 using Unity.Netcode;
 using UnityEngine;
+using static Unity.Collections.AllocatorManager;
 
 public class Cursor : NetworkBehaviour
 {
@@ -271,7 +272,7 @@ public class Cursor : NetworkBehaviour
                             if (!alliesUnit)
                                 GridManager.Instance.DamageAccostServerRpc(unitManager.ships[currentShipIndex].unitPos.Value, cTile.pos.Value, NetworkManager.LocalClientId);
                         }
-                        else if(cTile.ShopTile && unitManager.ships[currentShipIndex].canShoot.Value && unitManager.ships[currentShipIndex].canBeUpgrade) //Acheter amélioration
+                        else if(cTile.ShopTile && cTile.canAccessShop && unitManager.ships[currentShipIndex].canShoot.Value && unitManager.ships[currentShipIndex].canBeUpgrade) //Acheter amélioration
                         {
                             //Code to buy upgrade
                             Debug.Log("Acheter amélioration");
@@ -723,6 +724,20 @@ public class Cursor : NetworkBehaviour
         {
             unitManager.allShipSpawned.Value = true;
             TotalActionPoint();
+        }
+    }
+
+    public void SetShopToInactive(int shopIndex)
+    {
+        foreach(var tile in allTiles.Where(t => t.ShopTile))
+        {
+            if (tile.shopIndex.Value == shopIndex)
+            {
+                tile.canAccessShop = false;
+                //indication visuelle temporaire amener a changer
+                tile._highlightBlocked.SetActive(true);
+                break;
+            }
         }
     }
 

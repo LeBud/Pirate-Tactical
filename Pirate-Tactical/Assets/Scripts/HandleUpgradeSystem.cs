@@ -155,6 +155,8 @@ public class HandleUpgradeSystem : NetworkBehaviour
                 break;
         }
 
+        p.SetShopToInactive(shopIndex);
+
         p.playerGold -= upgrades[shopIndex, i].goldCost;
         p.unitManager.ships[p.currentShipIndex].canBeUpgrade = false;
         p.HasDidAnActionClientRpc();
