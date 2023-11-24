@@ -102,11 +102,11 @@ public class ShipUnit : NetworkBehaviour
         if (!IsOwner) return;
         if(GameManager.Instance.currentRound.Value >= GameManager.Instance.startRoundCombatZone)
             if (currentTile.tileOutOfCombatZone.Value)
-                TakeDamageServerRpc(GridManager.Instance.combatZoneDamage, unitPos.Value, false, 0);
+                TakeDamageServerRpc(GridManager.Instance.combatZoneDamage, unitPos.Value, false, 0, false);
 
         if(roundToStopEffect > GameManager.Instance.currentRound.Value)
         {
-            TakeDamageServerRpc(7, unitPos.Value, false, 0);
+            TakeDamageServerRpc(7, unitPos.Value, false, 0, false);
         }
     }
 
@@ -126,13 +126,15 @@ public class ShipUnit : NetworkBehaviour
     }
 
     [ServerRpc(RequireOwnership = false)]
-    public void TakeDamageServerRpc(int dmg, Vector2 pos, bool passiveAttack, int effectDuration)
+    public void TakeDamageServerRpc(int dmg, Vector2 pos, bool passiveAttack, int effectDuration, bool hasGoneThroughWater)
     {
         int randomDmg = Random.Range(dmg - 1, dmg + 2);
         //Crit chance
         int CritChance = Random.Range(0, 101);
         if (CritChance <= 10)
             randomDmg++;
+
+        if (hasGoneThroughWater) randomDmg /= 2;
 
         unitLife.Value -= randomDmg;
 
@@ -144,7 +146,7 @@ public class ShipUnit : NetworkBehaviour
             c.CalculateHealthClientRpc();
 
         //Only set to true when an enemy unit attack this one with his special and has a passive effect
-        if (passiveAttack)
+        if (passiveAttack && !hasGoneThroughWater)
             GivePassiveEffectToUnitClientRpc(effectDuration);
 
         SoundManager.Instance.PlaySoundOnClients(SoundManager.Instance.takeDamage);

@@ -24,6 +24,8 @@ public class GameManager : NetworkBehaviour
     public bool combatZoneShrinkEveryRound = false;
     bool poolingStarted = false;
 
+    public bool spawnShipAnyWhere = false;
+
     public enum GameState
     {
         GameStarting,

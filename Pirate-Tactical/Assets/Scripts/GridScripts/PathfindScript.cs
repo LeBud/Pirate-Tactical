@@ -112,7 +112,7 @@ public class PathfindScript : MonoBehaviour
             Vector2 posToAdd = new Vector2(startTile.pos.Value.x + x, startTile.pos.Value.y);
             if (GridManager.Instance.dictionnary.Contains(posToAdd))
                 foreach (var n in neighbors)
-                    if (n.pos.Value == posToAdd && !n.blockedTile.Value && !n.Mountain)
+                    if (n.pos.Value == posToAdd && !n.Mountain)
                         if (n.shipOnTile.Value)
                         {
                             surroundingTiles.Add(n);
@@ -122,7 +122,7 @@ public class PathfindScript : MonoBehaviour
                         {
                             surroundingTiles.Add(n);
                         }
-                    else if (n.pos.Value == posToAdd && (n.blockedTile.Value || n.Mountain))
+                    else if (n.pos.Value == posToAdd && n.Mountain)
                         breakForLoop = true;
             if (breakForLoop) break;
         }
@@ -132,7 +132,7 @@ public class PathfindScript : MonoBehaviour
             Vector2 posToAdd = new Vector2(startTile.pos.Value.x - x, startTile.pos.Value.y);
             if (GridManager.Instance.dictionnary.Contains(posToAdd))
                 foreach (var n in neighbors)
-                    if (n.pos.Value == posToAdd && !n.blockedTile.Value && !n.Mountain)
+                    if (n.pos.Value == posToAdd && !n.Mountain)
                         if (n.shipOnTile.Value)
                         {
                             surroundingTiles.Add(n);
@@ -142,7 +142,7 @@ public class PathfindScript : MonoBehaviour
                         {
                             surroundingTiles.Add(n);
                         }
-                    else if (n.pos.Value == posToAdd && (n.blockedTile.Value || n.Mountain))
+                    else if (n.pos.Value == posToAdd && n.Mountain)
                         breakForLoop = true;
             if (breakForLoop) break;
         }
@@ -152,7 +152,7 @@ public class PathfindScript : MonoBehaviour
             Vector2 posToAdd = new Vector2(startTile.pos.Value.x, startTile.pos.Value.y + y);
             if (GridManager.Instance.dictionnary.Contains(posToAdd))
                 foreach (var n in neighbors)
-                    if (n.pos.Value == posToAdd && !n.blockedTile.Value && !n.Mountain)
+                    if (n.pos.Value == posToAdd && !n.Mountain)
                         if (n.shipOnTile.Value)
                         {
                             surroundingTiles.Add(n);
@@ -162,7 +162,7 @@ public class PathfindScript : MonoBehaviour
                         {
                             surroundingTiles.Add(n);
                         }
-                    else if (n.pos.Value == posToAdd && (n.blockedTile.Value || n.Mountain))
+                    else if (n.pos.Value == posToAdd && n.Mountain)
                         breakForLoop = true;
             if (breakForLoop) break;
         }
@@ -172,7 +172,7 @@ public class PathfindScript : MonoBehaviour
             Vector2 posToAdd = new Vector2(startTile.pos.Value.x, startTile.pos.Value.y - y);
             if (GridManager.Instance.dictionnary.Contains(posToAdd))
                 foreach (var n in neighbors)
-                    if (n.pos.Value == posToAdd && !n.blockedTile.Value && !n.Mountain)
+                    if (n.pos.Value == posToAdd && !n.Mountain)
                         if (n.shipOnTile.Value)
                         {
                             surroundingTiles.Add(n);
@@ -182,7 +182,7 @@ public class PathfindScript : MonoBehaviour
                         {
                             surroundingTiles.Add(n);
                         }
-                    else if (n.pos.Value == posToAdd && (n.blockedTile.Value || n.Mountain))
+                    else if (n.pos.Value == posToAdd && n.Mountain)
                         breakForLoop = true;
             if (breakForLoop) break;
         }

@@ -53,32 +53,6 @@ public class GridManager : NetworkBehaviour
             combatZoneSize.Value = map.cellBounds.size.y / 2;
     }
 
-    //Génère la grille de jeu et la setup
-    [ServerRpc]
-    public void GenerateGridServerRpc()
-    {
-        if(!IsServer) return;
-
-        for (int x = 0; x < _width; x++)
-        {
-            for (int y = 0; y < _height; y++)
-            {
-                var spawnedTile = Instantiate(seaTile, new Vector3(x, y), Quaternion.identity);
-                spawnedTile.name = $"Tile {x} {y}";
-                tilesGrid.Add(spawnedTile);
-
-                spawnedTile.GetComponent<NetworkObject>().Spawn();
-                spawnedTile.transform.parent = transform;
-
-                spawnedTile.pos.Value = new Vector2(x, y);
-                spawnedTile.offsetTile.Value = (x + y) % 2 == 1;
-
-                dictionnary.Add(new Vector2(x, y));
-            }
-        }
-
-    }
-
     [ServerRpc]
     public void GenerateGridOnTileMapServerRpc()
     {
@@ -145,7 +119,7 @@ public class GridManager : NetworkBehaviour
     #region DamageUnit
 
     [ServerRpc(RequireOwnership = false)]
-    public void DamageUnitServerRpc(int damage, Vector2 pos, ulong id, bool passiveAttack, int effectDuration, bool special)
+    public void DamageUnitServerRpc(int damage, Vector2 pos, ulong id, bool passiveAttack, int effectDuration, bool special, bool hasGoThroughWater)
     {
         ShipUnit[] ships = FindObjectsOfType<ShipUnit>();
 
@@ -156,7 +130,7 @@ public class GridManager : NetworkBehaviour
             if (ships[i].unitPos.Value == pos && ships[i].GetComponent<NetworkObject>().OwnerClientId != id)
             {
                 isEnemy = true;
-                ships[i].TakeDamageServerRpc(damage, pos, passiveAttack, effectDuration);
+                ships[i].TakeDamageServerRpc(damage, pos, passiveAttack, effectDuration, hasGoThroughWater);
                 break;
             }
         }
@@ -177,15 +151,17 @@ public class GridManager : NetworkBehaviour
     }
 
     [ServerRpc(RequireOwnership = false)]
-    public void DamageUnitTShotServerRpc(int damage, Vector2 pos, ulong id, bool passiveAttack, int effectDuration)
+    public void DamageUnitTShotServerRpc(int damage, Vector2 pos, ulong id, bool passiveAttack, int effectDuration, bool hasGoThroughWater)
     {
+        if (hasGoThroughWater) return;
+
         ShipUnit[] ships = FindObjectsOfType<ShipUnit>();
 
         for (int i = 0; i < ships.Length; i++)
         {
             if (ships[i].unitPos.Value == pos && ships[i].GetComponent<NetworkObject>().OwnerClientId != id)
             {
-                ships[i].TakeDamageServerRpc(damage, pos, passiveAttack, effectDuration);
+                ships[i].TakeDamageServerRpc(damage, pos, passiveAttack, effectDuration, hasGoThroughWater);
                 break;
             }
         }
@@ -221,9 +197,9 @@ public class GridManager : NetworkBehaviour
 
         //Calculate Dmg
         int allyDmg = ally.unitAccostDamage+ accostAttackBoost + ally.accostDmgBoost.Value;
-        enemy.TakeDamageServerRpc(allyDmg, enemyPos, false, 0);
+        enemy.TakeDamageServerRpc(allyDmg, enemyPos, false, 0, false);
         int enemyDmg = enemy.unitAccostDamage + enemy.accostDmgBoost.Value;
-        ally.TakeDamageServerRpc(enemyDmg, allyPos, false, 0);
+        ally.TakeDamageServerRpc(enemyDmg, allyPos, false, 0, false);
         
         //Dépenser les points
         Cursor p = NetworkManager.ConnectedClients[id].PlayerObject.GetComponent<Cursor>();
@@ -351,7 +327,7 @@ public class GridManager : NetworkBehaviour
         {
             if (ships[i].unitPos.Value == pos)
             {
-                ships[i].TakeDamageServerRpc(damage, pos, passiveAttack, effectDuration);
+                ships[i].TakeDamageServerRpc(damage, pos, passiveAttack, effectDuration, false);
                 break;
 
             }

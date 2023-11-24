@@ -113,15 +113,11 @@ public class TileScript : NetworkBehaviour
 
     void OnMouseEnter()
     {
-        HighlightClientRpc();
-        HighlightServerRpc();
         _highlight.SetActive(true);
     }
 
     void OnMouseExit()
     {
-        DeHighlightClientRpc();
-        DeHighlightServerRpc();
         _highlight.SetActive(false);
     }
 
@@ -191,31 +187,18 @@ public class TileScript : NetworkBehaviour
         _highlightOutOfCombatZone.SetActive(true);
     }
 
-
     #region HighlightTiles
 
     [ClientRpc]
-    void HighlightClientRpc()
+    void HighlightClientRpc(bool active)
     {
-        _highlight.SetActive(true);
-    }
-
-    [ClientRpc]
-    void DeHighlightClientRpc()
-    {
-        _highlight.SetActive(false);
+        _highlight.SetActive(active);
     }
 
     [ServerRpc(RequireOwnership = false)]
-    void HighlightServerRpc()
+    void HighlightServerRpc(bool active)
     {
-        _highlight.SetActive(true);
-    }
-
-    [ServerRpc(RequireOwnership = false)]
-    void DeHighlightServerRpc()
-    {
-        _highlight.SetActive(false);
+        _highlight.SetActive(active);
     }
 
     #endregion
