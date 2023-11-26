@@ -100,14 +100,19 @@ public class ShipUnit : NetworkBehaviour
     public void UpdateUnitClientRpc()
     {
         if (!IsOwner) return;
-        if(GameManager.Instance.currentRound.Value >= GameManager.Instance.startRoundCombatZone)
-            if (currentTile.tileOutOfCombatZone.Value)
-                TakeDamageServerRpc(GridManager.Instance.combatZoneDamage, unitPos.Value, false, 0, false);
 
         if(roundToStopEffect > GameManager.Instance.currentRound.Value)
         {
             TakeDamageServerRpc(7, unitPos.Value, false, 0, false);
         }
+    }
+
+    [ClientRpc]
+    public void ZoneDamageClientRpc()
+    {
+        if (!IsOwner) return;
+        if (currentTile.tileOutOfCombatZone.Value)
+            TakeDamageServerRpc(GridManager.Instance.combatZoneDamage, unitPos.Value, false, 0, false);
     }
 
     [ClientRpc]

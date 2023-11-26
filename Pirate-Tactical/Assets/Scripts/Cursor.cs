@@ -305,13 +305,7 @@ public class Cursor : NetworkBehaviour
                 case 0: //Interact Mode
                     if (!inRangeTiles.Contains(cTile))
                     {
-                        if (cTile.shipOnTile.Value && currentModeIndex == 0 && unitManager.ships[currentModeIndex].canBeSelected.Value)
-                        {
-                            SoundManager.Instance.PlaySoundLocally(SoundManager.Instance.deselectShip);
-                            shipSelected = false;
-                            HideTiles();
-                            SelectShip(cTile);
-                        }
+                        SelectShip(cTile);
                     }
                     else if (inRangeTiles.Contains(cTile))
                     {
@@ -323,6 +317,7 @@ public class Cursor : NetworkBehaviour
                                 if (ship.unitPos.Value == cTile.pos.Value && ship.clientIdOwner == NetworkManager.LocalClientId && ship.canBeSelected.Value)
                                 {
                                     alliesUnit = true;
+                                    SelectShip(cTile);
                                     break;
                                 }
                             }
@@ -339,28 +334,44 @@ public class Cursor : NetworkBehaviour
                     }
                     break;
                 case 1: //Move Mode
-                    if (!inRangeTiles.Contains(cTile)) return;
+                    if (!inRangeTiles.Contains(cTile)) 
+                    { 
+                        SelectShip(cTile);
+                        return;
+                    } 
 
                     if (CanMoveUnit(cTile) && unitManager.ships[currentShipIndex].canMove.Value)
                             StartCoroutine(UpdateShipPlacementOnGrid());
                     break;
                 case 2: //Attack Mode
-                    if (!inRangeTiles.Contains(cTile)) return;
+                    if (!inRangeTiles.Contains(cTile))
+                    {
+                        SelectShip(cTile);
+                        return;
+                    }
 
-                    if(cTile.shipOnTile.Value && canShoot && unitManager.ships[currentShipIndex].canShoot.Value)
+                    if (cTile.shipOnTile.Value && canShoot && unitManager.ships[currentShipIndex].canShoot.Value)
                     {
                         GridManager.Instance.DamageUnitServerRpc(unitManager.ships[currentShipIndex].damage.Value, cTile.pos.Value, NetworkManager.LocalClientId, false, 0, false, HasGoThroughWaterCapacity(cTile));
                         SoundManager.Instance.PlaySoundOnClients(SoundManager.Instance.attack);
                     }
                     break;
                 case 3: //Special Shoot Mode
-                    if (!inRangeTiles.Contains(cTile)) return;
+                    if (!inRangeTiles.Contains(cTile))
+                    {
+                        SelectShip(cTile);
+                        return;
+                    }
 
                     if (unitManager.ships[currentShipIndex].canShoot.Value && unitManager.ships[currentShipIndex].specialAbilityCost <= currentSpecialCharge)
                         HandleSpecialModifyTile(cTile);
                     break;
                 case 4: //Special Tile Mode
-                    if (!inRangeTiles.Contains(cTile)) return;
+                    if (!inRangeTiles.Contains(cTile))
+                    {
+                        SelectShip(cTile);
+                        return;
+                    }
 
                     if (unitManager.ships[currentShipIndex].canShoot.Value && unitManager.ships[currentShipIndex].specialAbilityCost <= currentSpecialCharge)
                         HandleSpecialUnitAttackOnUnit(cTile);
@@ -381,16 +392,19 @@ public class Cursor : NetworkBehaviour
 
         if (Input.GetButtonDown("Cancel") || (shipSelected && !unitManager.ships[currentShipIndex].canBeSelected.Value))
         {
-            shipSelected = false;
-            SoundManager.Instance.PlaySoundLocally(SoundManager.Instance.deselectShip);
-            HideTiles();
+            SelectShip(cTile);
         }
 
     }
 
     void HandleKeyboardInputs()
     {
-        if(Input.GetKeyDown(KeyCode.Alpha1))
+        if (Input.GetAxisRaw("Mouse ScrollWhee") > 0)
+            currentModeIndex++;
+        else if (Input.GetAxisRaw("Mouse ScrollWhee") < 0)
+            currentModeIndex--;
+
+        if (Input.GetKeyDown(KeyCode.Alpha1))
             currentModeIndex = 1;
         if(Input.GetKeyDown(KeyCode.Alpha2))
             currentModeIndex = 2;
@@ -402,6 +416,15 @@ public class Cursor : NetworkBehaviour
 
     void SelectShip(TileScript t)
     {
+        if(shipSelected)
+        {
+            SoundManager.Instance.PlaySoundLocally(SoundManager.Instance.deselectShip);
+            shipSelected = false;
+            HideTiles();
+        }
+
+        if (!t.shipOnTile.Value) return;
+
         foreach (var ship in unitManager.ships)
         {
             if (ship.unitPos.Value == t.pos.Value && ship.clientIdOwner == NetworkManager.LocalClientId && ship.canBeSelected.Value)

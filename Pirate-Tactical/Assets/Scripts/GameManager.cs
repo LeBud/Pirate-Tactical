@@ -146,8 +146,8 @@ public class GameManager : NetworkBehaviour
         switch (gameState)
         {
             case GameState.GameFinish:
-                Debug.Log("Game Finished");
-                break;
+                FinishGameOnServerRpc();
+                return;
             case GameState.GameStarting:
                 gameState = GameState.Player1Turn;
                 break;
@@ -195,16 +195,21 @@ public class GameManager : NetworkBehaviour
     {
         if(!IsServer) return;
 
+        if (gameState == GameState.Player1Turn || gameState == GameState.Player2Turn)
+        {
+            ShipUnit[] ships = FindObjectsOfType<ShipUnit>();
+            if (ships.Length > 0)
+            {
+                foreach (ShipUnit s in ships)
+                {
+                    s.ZoneDamageClientRpc();
+                }
+            }
+        }
+
         if (gameState == GameState.Player1Turn)
         {
             currentRound.Value++;
-            Cursor[] players = FindObjectsOfType<Cursor>();
-            foreach (Cursor player in players)
-            {
-                player.RechargeSpecialClientRpc();
-                player.CalculateHealthClientRpc();
-                player.GoldGainClientRpc();
-            }
 
             ShipUnit[] ships = FindObjectsOfType<ShipUnit>();
             if (ships.Length > 0)
@@ -213,6 +218,14 @@ public class GameManager : NetworkBehaviour
                 {
                     s.UpdateUnitClientRpc();
                 }
+            }
+
+            Cursor[] players = FindObjectsOfType<Cursor>();
+            foreach (Cursor player in players)
+            {
+                player.RechargeSpecialClientRpc();
+                player.CalculateHealthClientRpc();
+                player.GoldGainClientRpc();
             }
 
             if (currentRound.Value >= startRoundCombatZone && currentRound.Value % 2 != 1 && GridManager.Instance.combatZoneSize.Value > 4 && !combatZoneShrinkEveryRound)
@@ -254,6 +267,40 @@ public class GameManager : NetworkBehaviour
     }
 
     #endregion
+
+    [ServerRpc]
+    public void FinishGameOnServerRpc()
+    {
+        ShipUnit[] ships = FindObjectsOfType<ShipUnit>();
+        if (ships.Length > 0)
+        {
+            foreach (ShipUnit s in ships)
+            {
+                s.ZoneDamageClientRpc();
+                s.UpdateUnitClientRpc();
+            }
+        }
+
+        Cursor[] players = FindObjectsOfType<Cursor>();
+        foreach (Cursor player in players)
+        {
+            player.RechargeSpecialClientRpc();
+            player.CalculateHealthClientRpc();
+            player.GoldGainClientRpc();
+        }
+
+        string winner = "";
+
+        if (player1unitLeft == 0 && player2unitLeft == 0)
+            winner = "Égalité";
+        else if (player1unitLeft == 0 && player2unitLeft > 0)
+            winner = "Player 2 won";
+        else if (player2unitLeft == 0 && player1unitLeft > 0)
+            winner = "Player 1 won";
+
+        HUD.Instance.SetGameStateClientRpc(winner, currentRound.Value);
+
+    }
 
     //Initialise Player
     [ServerRpc(RequireOwnership = false)]
