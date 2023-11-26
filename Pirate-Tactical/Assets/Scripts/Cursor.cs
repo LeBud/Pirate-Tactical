@@ -154,6 +154,8 @@ public class Cursor : NetworkBehaviour
     {
         if (!IsOwner) return;
 
+        DisplayOnSelectedUnit();
+
         totalShootPoint--;
         unitManager.ships[currentShipIndex].canShoot.Value = false;
         if (unitManager.ships[currentShipIndex].canMove.Value)
@@ -399,9 +401,9 @@ public class Cursor : NetworkBehaviour
 
     void HandleKeyboardInputs()
     {
-        if (Input.GetAxisRaw("Mouse ScrollWhee") > 0)
+        if (Input.GetAxisRaw("Mouse ScrollWheel") > 0)
             currentModeIndex++;
-        else if (Input.GetAxisRaw("Mouse ScrollWhee") < 0)
+        else if (Input.GetAxisRaw("Mouse ScrollWheel") < 0)
             currentModeIndex--;
 
         if (Input.GetKeyDown(KeyCode.Alpha1))
@@ -450,7 +452,13 @@ public class Cursor : NetworkBehaviour
 
     void DisplayOnSelectedUnit()
     {
-        if (unitManager.ships[currentShipIndex].canMove.Value)
+        if (!unitManager.ships[currentShipIndex].canBeSelected.Value)
+        {
+            SoundManager.Instance.PlaySoundLocally(SoundManager.Instance.deselectShip);
+            shipSelected = false;
+            HideTiles();
+        }
+        else if (unitManager.ships[currentShipIndex].canMove.Value)
         {
             currentModeIndex = 1;
             currentModeInputIndex = currentModeIndex;
@@ -743,7 +751,7 @@ public class Cursor : NetworkBehaviour
 
     }
 
-    void HideTiles()
+    public void HideTiles()
     {
         foreach (var t in inRangeTiles) t.HighLightRange(false);
         inRangeTiles.Clear();
@@ -808,7 +816,7 @@ public class Cursor : NetworkBehaviour
         if(stepOnMine)
             GridManager.Instance.DamageUnitByMineServerRpc(GridManager.Instance.mineDamage, unitManager.ships[currentShipIndex].currentTile.pos.Value, false, 0);
 
-        GetInRangeTiles(unitManager.ships[currentShipIndex].unitMoveRange);
+        DisplayOnSelectedUnit();
         TotalActionPoint();
         unitMoving = false;
     }

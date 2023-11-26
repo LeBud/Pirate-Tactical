@@ -139,6 +139,7 @@ MonoBehaviour:
   movePoint: 1
   attackPoint: 1
   healthDisplay: {fileID: 7677579010255428536}
+  moveSpeed: 0.25
 --- !u!114 &810226246150426423
 MonoBehaviour:
   m_ObjectHideFlags: 0

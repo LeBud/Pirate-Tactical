@@ -67,6 +67,9 @@ public class ShipUnit : NetworkBehaviour
     [SerializeField] Transform healthDisplay;
 
     float healthPercent;
+    bool isMoving = false;
+
+    public float moveSpeed = 3;
 
     private void Start()
     {
@@ -77,7 +80,7 @@ public class ShipUnit : NetworkBehaviour
 
     private void Update()
     {
-        if (transform.position != new Vector3(unitPos.Value.x, unitPos.Value.y, -1))
+        if (transform.position != new Vector3(unitPos.Value.x, unitPos.Value.y, -1) && !isMoving)
             StartCoroutine(MoveShip());
 
         if (GameManager.Instance.gametesting.Value)
@@ -126,8 +129,23 @@ public class ShipUnit : NetworkBehaviour
 
     IEnumerator MoveShip()
     {
-        transform.position = new Vector3(unitPos.Value.x, unitPos.Value.y, -1);
-        yield return null;
+        isMoving = true;
+
+        float t = 0;
+        Vector3 startPos = transform.position;
+        Vector3 endPos = new Vector3(unitPos.Value.x, unitPos.Value.y, -1);
+        while (t < moveSpeed)
+        {
+            transform.position = Vector3.Lerp(startPos, endPos, t / moveSpeed);
+            t += Time.deltaTime;
+            yield return null;
+        }
+
+        transform.position = endPos;
+
+        isMoving = false;
+        /*transform.position = new Vector3(unitPos.Value.x, unitPos.Value.y, -1);
+        yield return null;*/
     }
 
     [ServerRpc(RequireOwnership = false)]
