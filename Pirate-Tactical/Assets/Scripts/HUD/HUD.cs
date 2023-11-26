@@ -122,7 +122,11 @@ public class HUD : NetworkBehaviour
     public void UpdateGameMode()
     {
         if(player != null && player.canPlay.Value)
+        {
+            player.shipSelected = false;
+            player.HideTiles();
             GameManager.Instance.UpdateGameStateServerRpc();
+        }
     }
 
     public void UpgradeWindow(bool active, int shopID)
