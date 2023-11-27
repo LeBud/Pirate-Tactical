@@ -43,6 +43,7 @@ public class Cursor : NetworkBehaviour
     TileScript cTile = null;
     TileScript goalTile;
     List<TileScript> path = new List<TileScript>();
+    List<TileScript> pathHighlight = new List<TileScript>();
     List<TileScript> allTiles = new List<TileScript>();
     List<TileScript> inRangeTiles = new List<TileScript>();
 
@@ -74,6 +75,7 @@ public class Cursor : NetworkBehaviour
 
         MyInputs();
         HandleCurrentMode();
+        DisplayPath();
     }
 
     #region ClientRpcMethods
@@ -770,6 +772,21 @@ public class Cursor : NetworkBehaviour
         path.Clear();
         path = PathfindScript.Pathfind(unitManager.ships[currentShipIndex].currentTile, goalTile);
     }
+
+    void DisplayPath()
+    {
+        if (inRangeTiles.Contains(cTile) && currentModeIndex == 1 && shipSelected && !unitMoving)
+        {
+            foreach (var item in allTiles)
+                item.SetColor(3);
+
+            goalTile = cTile;
+            if (pathHighlight != null)
+                pathHighlight.Clear();
+            pathHighlight = PathfindScript.Pathfind(unitManager.ships[currentShipIndex].currentTile, goalTile);
+        }
+
+    }
     #endregion
     IEnumerator UpdateShipPlacementOnGrid()
     {
@@ -883,7 +900,7 @@ public class Cursor : NetworkBehaviour
 
     bool CantPathfind(TileScript tile)
     {
-        return unitManager.ships[currentShipIndex].currentTile == null || unitMoving || !inRangeTiles.Contains(tile) || !canPlay.Value || !shipSelected || !unitManager.ships[currentShipIndex].canMove.Value || !canMove || tile.blockedTile.Value;
+        return unitManager.ships[currentShipIndex].currentTile == null || unitMoving || !inRangeTiles.Contains(tile) || !canPlay.Value || !shipSelected || !unitManager.ships[currentShipIndex].canMove.Value || !canMove || tile.blockedTile.Value || tile.shipOnTile.Value || !tile.Walkable;
     }
 
     bool HasGoThroughWaterCapacity(TileScript targerTiles)

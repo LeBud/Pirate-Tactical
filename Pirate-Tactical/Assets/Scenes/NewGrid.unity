@@ -13270,7 +13270,7 @@ MonoBehaviour:
   upgradePrefab: {fileID: 2996847756112674917, guid: 4f4c93abe7d4d844d802bf7db11c8eaa, type: 3}
   upgradesContainer: {fileID: 1046724574}
   isInUpgradeWindow: 0
-  pausePanel: {fileID: 0}
+  pausePanel: {fileID: 1759145958}
   inPauseMenu: 0
   player: {fileID: 0}
 --- !u!114 &1381260910
