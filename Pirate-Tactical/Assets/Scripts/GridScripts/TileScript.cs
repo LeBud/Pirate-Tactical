@@ -40,10 +40,7 @@ public class TileScript : NetworkBehaviour
     #region PathFinding
 
     public static event Action<TileScript> OnHoverTile;
-    void OnEnable() => OnHoverTile += OnOnHoverTile;
-    void OnDisable() => OnHoverTile -= OnOnHoverTile;
     void OnOnHoverTile(TileScript _selected) => selected = _selected == this;
-
     public List<TileScript> Neighbors;
     public TileScript Connection { get; private set; }
     public float G { get; private set; }
@@ -59,9 +56,19 @@ public class TileScript : NetworkBehaviour
 
     #endregion
 
-
     int roundToUnblock;
     public int roundTillUnblock = 2;
+
+    void OnEnable()
+    {
+        OnHoverTile += OnOnHoverTile;
+    }
+
+
+    void OnDisable()
+    {
+        OnHoverTile -= OnOnHoverTile;
+    }
 
     private void Start()
     {

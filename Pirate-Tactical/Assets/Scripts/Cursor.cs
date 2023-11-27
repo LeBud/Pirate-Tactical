@@ -50,6 +50,7 @@ public class Cursor : NetworkBehaviour
     {
         if (!IsClient) return;
         TileScript.OnHoverTile += OnTileHover;
+
         GameManager.Instance.JoinServerServerRpc();
         GridManager.Instance.map.gameObject.SetActive(false);
 
@@ -756,9 +757,13 @@ public class Cursor : NetworkBehaviour
         foreach (var t in inRangeTiles) t.HighLightRange(false);
         inRangeTiles.Clear();
     }
+    #endregion
 
+    #region Pathfind
     void OnTileHover(TileScript tile)
     {
+        Debug.Log("Called once when clicked or everyframe ?");
+
         if (CantPathfind(tile)) return;
 
         goalTile = tile;
@@ -766,7 +771,6 @@ public class Cursor : NetworkBehaviour
         path = PathfindScript.Pathfind(unitManager.ships[currentShipIndex].currentTile, goalTile);
     }
     #endregion
-
     IEnumerator UpdateShipPlacementOnGrid()
     {
         unitMoving = true;
