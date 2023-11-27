@@ -8,8 +8,8 @@ using UnityEngine;
 public class ShipUnit : NetworkBehaviour
 {
 
-    public enum UnitSpecialShot { None, PushUnit, TShot, FireShot}
-    public enum UnitSpecialTile { None, Mine, BlockTile, Teleport}
+    public enum UnitSpecialShot { None, PushUnit, TShot, FireShot, TirBrochette, VentContraire, Grappin}
+    public enum UnitSpecialTile { None, Mine, BlockTile, Teleport, FouilleOr, CanonSurIle, Barque}
     public enum UnitType { Galion, Brigantin, Sloop}
 
     [Header("NetworkVariables")]
@@ -62,7 +62,10 @@ public class ShipUnit : NetworkBehaviour
     public int movePoint = 1;
     public int attackPoint = 1;
 
-    int roundToStopEffect;
+    int roundToStopFireEffect;
+    int roundToStopWindEffect;
+    int baseMoveRange;
+
 
     [SerializeField] Transform healthDisplay;
 
@@ -76,6 +79,7 @@ public class ShipUnit : NetworkBehaviour
         healthPercent = (float)unitLife.Value / maxHealth;
         healthDisplay.localScale = new Vector3(healthPercent, 1, 1);
         SetHealthBarClientRpc(healthPercent, unitLife.Value);
+        baseMoveRange = unitMoveRange;
     }
 
     private void Update()
@@ -104,9 +108,14 @@ public class ShipUnit : NetworkBehaviour
     {
         if (!IsOwner) return;
 
-        if(roundToStopEffect > GameManager.Instance.currentRound.Value)
+        if(roundToStopFireEffect > GameManager.Instance.currentRound.Value)
         {
             TakeDamageServerRpc(7, unitPos.Value, false, 0, false);
+        }
+
+        if (roundToStopWindEffect < GameManager.Instance.currentRound.Value)
+        {
+            unitMoveRange = baseMoveRange;
         }
     }
 
@@ -170,7 +179,7 @@ public class ShipUnit : NetworkBehaviour
 
         //Only set to true when an enemy unit attack this one with his special and has a passive effect
         if (passiveAttack && !hasGoneThroughWater)
-            GivePassiveEffectToUnitClientRpc(effectDuration);
+            GivePassiveFireToUnitClientRpc(effectDuration);
 
         SoundManager.Instance.PlaySoundOnClients(SoundManager.Instance.takeDamage);
 
@@ -189,10 +198,18 @@ public class ShipUnit : NetworkBehaviour
     }
 
     [ClientRpc]
-    public void GivePassiveEffectToUnitClientRpc(int roundDuration)
+    public void GivePassiveFireToUnitClientRpc(int roundDuration)
     {
-        roundToStopEffect = roundDuration + GameManager.Instance.currentRound.Value;
+        roundToStopFireEffect = roundDuration + GameManager.Instance.currentRound.Value;
         SoundManager.Instance.PlaySoundLocally(SoundManager.Instance.fireDamage);
+    }
+
+    [ClientRpc]
+    public void GiveWindEffectClientRpc(int roundDuration)
+    {
+        roundToStopWindEffect = roundDuration + GameManager.Instance.currentRound.Value;
+        unitMoveRange -= 2;
+        if(unitMoveRange < 0) unitMoveRange = 0;
     }
 
     [ClientRpc]
