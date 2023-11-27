@@ -122,8 +122,8 @@ MonoBehaviour:
     m_InternalValue: 4
   accostDmgBoost:
     m_InternalValue: 0
-  unitSpecialShot: 2
-  unitSpecialTile: 2
+  unitSpecialShot: 5
+  unitSpecialTile: 5
   specialAbilityCost: 30
   specialAbilityPassiveDuration: 0
   specialAbilityDamage: 4
