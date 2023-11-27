@@ -183,6 +183,7 @@ MonoBehaviour:
   - {fileID: 3253718228688877990, guid: 2579f04bf0728b2468056c4de7560ca0, type: 3}
   - {fileID: 3253718228688877990, guid: 91e69f55be3166446afbe10ad08d5149, type: 3}
   - {fileID: 3253718228688877990, guid: 91e69f55be3166446afbe10ad08d5149, type: 3}
+  barque: {fileID: 3253718228688877990, guid: a99723192de7eec4396b9a475bccdb55, type: 3}
   numShipSpawned: 0
   allShipSpawned:
     m_InternalValue: 0

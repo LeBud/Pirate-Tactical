@@ -137,10 +137,14 @@ public class GridManager : NetworkBehaviour
     }
 
     [ServerRpc(RequireOwnership = false)]
-    public void ApplyEffectOnShipServerRpc(Vector2 pos, int duration)
+    public void ApplyEffectOnShipServerRpc(Vector2 pos, int duration, ulong id)
     {
         ShipUnit unit = GetShipAtPos(pos);
         unit.GiveWindEffectClientRpc(duration);
+
+        Cursor p = NetworkManager.ConnectedClients[id].PlayerObject.GetComponent<Cursor>();
+        p.HasDidAnActionClientRpc();
+        p.UseManaClientRpc();
     }
 
     #region DamageUnit
