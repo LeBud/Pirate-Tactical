@@ -643,7 +643,7 @@ public class Cursor : NetworkBehaviour
                 StartCoroutine(BrochetteShot(t));
                 break;
             case ShipUnit.UnitSpecialShot.VentContraire:
-                GridManager.Instance.ApplyEffectOnShipServerRpc(t.pos.Value, unitManager.ships[currentShipIndex].specialAbilityPassiveDuration);
+                GridManager.Instance.ApplyEffectOnShipServerRpc(t.pos.Value, unitManager.ships[currentShipIndex].specialAbilityPassiveDuration, NetworkManager.LocalClientId);
                 break;
             case ShipUnit.UnitSpecialShot.Grappin:
                 GridManager.Instance.PullUnitServerRpc(t.pos.Value, unitManager.ships[currentShipIndex].unitPos.Value, NetworkManager.LocalClientId);

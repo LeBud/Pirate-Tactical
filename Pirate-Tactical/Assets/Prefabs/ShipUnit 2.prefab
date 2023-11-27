@@ -122,12 +122,12 @@ MonoBehaviour:
     m_InternalValue: 4
   accostDmgBoost:
     m_InternalValue: 0
-  unitSpecialShot: 2
-  unitSpecialTile: 2
+  unitSpecialShot: 5
+  unitSpecialTile: 5
   specialAbilityCost: 30
   specialAbilityPassiveDuration: 0
   specialAbilityDamage: 4
-  specialTileRange: 2
+  specialTileRange: 3
   specialShootRange: 3
   canBeUpgrade: 1
   player1Color: {r: 0.9622642, g: 0.55039275, b: 0.004538993, a: 1}
