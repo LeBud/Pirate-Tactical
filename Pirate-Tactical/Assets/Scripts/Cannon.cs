@@ -22,7 +22,8 @@ public class Cannon : NetworkBehaviour
 
         foreach (TileScript tile in tiles.Where(t => t.shipOnTile.Value))
         {
-            //GetShip
+            if(tile.shipOnTile.Value)
+                GridManager.Instance.DamageUnitNoActionServerRpc(damage, tile.pos.Value, ID, false, 0, false);
         }
     }
 }

@@ -178,7 +178,7 @@ public class GridManager : NetworkBehaviour
     }
 
     [ServerRpc(RequireOwnership = false)]
-    public void DamageUnitTShotServerRpc(int damage, Vector2 pos, ulong id, bool passiveAttack, int effectDuration, bool hasGoThroughWater)
+    public void DamageUnitNoActionServerRpc(int damage, Vector2 pos, ulong id, bool passiveAttack, int effectDuration, bool hasGoThroughWater)
     {
         if (hasGoThroughWater) return;
 
