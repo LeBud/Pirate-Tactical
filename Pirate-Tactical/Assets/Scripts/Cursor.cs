@@ -847,9 +847,9 @@ public class Cursor : NetworkBehaviour
                 //a gauche
                 for (int i = 1; i < 3; i++)
                 {
-                    if (GridManager.Instance.GetTileAtPosition(new Vector2(targetUnit.x - 1, targetUnit.y)).shipOnTile.Value)
+                    if (GridManager.Instance.GetTileAtPosition(new Vector2(targetUnit.x - i, targetUnit.y)).shipOnTile.Value)
                     {
-                        GridManager.Instance.DamageUnitTShotServerRpc(unitManager.ships[currentShipIndex].specialAbilityDamage - i, new Vector2(targetUnit.x - 1, targetUnit.y), NetworkManager.LocalClientId, false, 0, HasGoThroughWaterCapacity(cTile));
+                        GridManager.Instance.DamageUnitTShotServerRpc(unitManager.ships[currentShipIndex].specialAbilityDamage - i, new Vector2(targetUnit.x - i, targetUnit.y), NetworkManager.LocalClientId, false, 0, HasGoThroughWaterCapacity(cTile));
                     }
                     yield return new WaitForSeconds(.5f);
                 }
@@ -861,7 +861,7 @@ public class Cursor : NetworkBehaviour
                 {
                     if (GridManager.Instance.GetTileAtPosition(new Vector2(targetUnit.x + i, targetUnit.y)).shipOnTile.Value)
                     {
-                        GridManager.Instance.DamageUnitTShotServerRpc(unitManager.ships[currentShipIndex].specialAbilityDamage - i, new Vector2(targetUnit.x + 1, targetUnit.y), NetworkManager.LocalClientId, false, 0, HasGoThroughWaterCapacity(cTile));
+                        GridManager.Instance.DamageUnitTShotServerRpc(unitManager.ships[currentShipIndex].specialAbilityDamage - i, new Vector2(targetUnit.x + i, targetUnit.y), NetworkManager.LocalClientId, false, 0, HasGoThroughWaterCapacity(cTile));
                     }
                     yield return new WaitForSeconds(.5f);
                 }
