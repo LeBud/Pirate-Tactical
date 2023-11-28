@@ -276,6 +276,7 @@ public class Cursor : NetworkBehaviour
 
             for(int i = 0; i < unitManager.ships.Length; i++)
             {
+                if (unitManager.ships[i] == null) continue;
                 unitManager.ships[i].canBeSelected.Value = false;
                 unitManager.ships[i].canShoot.Value = false;
                 unitManager.ships[i].canMove.Value = false;
@@ -443,6 +444,7 @@ public class Cursor : NetworkBehaviour
 
         foreach (var ship in unitManager.ships)
         {
+            if(ship == null) continue;
             if (ship.unitPos.Value == t.pos.Value && ship.clientIdOwner == NetworkManager.LocalClientId && ship.canBeSelected.Value)
             {
                 currentShipIndex = ship.index;
@@ -1017,7 +1019,7 @@ public class Cursor : NetworkBehaviour
 
         GridManager.Instance.SetShipOnTileServerRpc(pos, true);
 
-        if (unitManager.numShipSpawned >= 4 && !unitManager.allShipSpawned.Value)
+        if (unitManager.numShipSpawned >= 5 && !unitManager.allShipSpawned.Value)
         {
             unitManager.allShipSpawned.Value = true;
             TotalActionPoint();
@@ -1061,6 +1063,7 @@ public class Cursor : NetworkBehaviour
 
     bool CantPathfind(TileScript tile)
     {
+        if (unitManager.ships[currentShipIndex] == null) return true;
         return unitManager.ships[currentShipIndex].currentTile == null || unitMoving || !inRangeTiles.Contains(tile) || !canPlay.Value || !shipSelected || !unitManager.ships[currentShipIndex].canMove.Value || !canMove || tile.blockedTile.Value || tile.shipOnTile.Value || !tile.Walkable;
     }
 
