@@ -37,11 +37,8 @@ public class ShipUnit : NetworkBehaviour
     public UnitSpecialTile unitSpecialTile;
     public CapacitiesSO shotCapacity;
     public CapacitiesSO tileCapacity;
-    /*public int specialAbilityCost;
-    public int specialAbilityPassiveDuration;
-    public int specialAbilityDamage;
-    public int specialTileRange;
-    public int specialShootRange;*/
+
+    [Header("Barque Parameters")]
     public bool barqueSpawn = false;
     public int barqueIndex;
 
