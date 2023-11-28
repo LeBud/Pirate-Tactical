@@ -2,11 +2,16 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using TMPro;
+using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class SelectShipCapacityHUD : MonoBehaviour
+public class SelectShipCapacityHUD : NetworkBehaviour
 {
+
+    public static SelectShipCapacityHUD Instance;
+
+    public GameObject selectShipHUD;
 
     [Header("Capacities")]
     public CapacitiesSO[] galionShotCapacities;
@@ -32,6 +37,12 @@ public class SelectShipCapacityHUD : MonoBehaviour
     bool isReady;
 
     public Cursor player;
+
+    private void Awake()
+    {
+        if(Instance == null)
+            Instance = this;
+    }
 
     private void Start()
     {
@@ -143,6 +154,25 @@ public class SelectShipCapacityHUD : MonoBehaviour
     public void GetReady()
     {
         isReady = !isReady;
+
+        player.isReady.Value = isReady;
+    }
+
+    [ClientRpc]
+    public void SetPlayerToClientRpc()
+    {
+        Cursor[] c = FindObjectsOfType<Cursor>();
+        foreach (Cursor cursor in c)
+            if (cursor.GetComponent<NetworkObject>().OwnerClientId == NetworkManager.LocalClientId)
+                player = cursor;
+
+        selectShipHUD.SetActive(true);
+    }
+
+    [ClientRpc]
+    public void CloseWindowClientRpc()
+    {
+        selectShipHUD.SetActive(false);
     }
 
 }

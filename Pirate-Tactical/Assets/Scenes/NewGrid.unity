@@ -16266,7 +16266,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &1107832327
 RectTransform:
   m_ObjectHideFlags: 0
@@ -16552,7 +16552,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &1120386599
 RectTransform:
   m_ObjectHideFlags: 0
@@ -19481,7 +19481,8 @@ MonoBehaviour:
         byte0125: 0
   combatZoneShrinkEveryRound: 1
   spawnShipAnyWhere: 1
-  gameState: 0
+  canStartGame: 0
+  gameState: 1
 --- !u!4 &1381260906
 Transform:
   m_ObjectHideFlags: 0
@@ -19597,6 +19598,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 72af4ba05be038643b1ec5b815fac585, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  selectShipHUD: {fileID: 1120386598}
   galionShotCapacities:
   - {fileID: 11400000, guid: b69ce819f744ed844bffd008ab317c1b, type: 2}
   - {fileID: 11400000, guid: bae430c0c23a01a43bde850586e0a372, type: 2}

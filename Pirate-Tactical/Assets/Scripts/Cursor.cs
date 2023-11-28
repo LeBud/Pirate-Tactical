@@ -49,6 +49,8 @@ public class Cursor : NetworkBehaviour
     List<TileScript> allTiles = new List<TileScript>();
     List<TileScript> inRangeTiles = new List<TileScript>();
 
+    public NetworkVariable<bool> isReady = new NetworkVariable<bool>(false, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
+
     private void Start()
     {
         if (!IsClient) return;
