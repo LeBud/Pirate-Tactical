@@ -725,6 +725,7 @@ public class Cursor : NetworkBehaviour
         unitManager.ships[index].currentTile = t;
         unitManager.ships[index].index = index;
         unitManager.ships[index].clientIdOwner = NetworkManager.LocalClientId;
+        unitManager.ships[index].shipIndexFrom.Value = currentShipIndex;
 
         GridManager.Instance.SetShipOnTileServerRpc(pos, true);
 
@@ -1013,7 +1014,7 @@ public class Cursor : NetworkBehaviour
         if(stepOnMine)
             GridManager.Instance.DamageUnitByMineServerRpc(GridManager.Instance.mineDamage, unitManager.ships[currentShipIndex].currentTile.pos.Value, false, 0);
 
-        GridManager.Instance.CheckForUnitInCannonRangesServerRpc();
+        GridManager.Instance.CheckForUnitInCannonRangesServerRpc(NetworkManager.LocalClientId, unitManager.ships[currentShipIndex].unitPos.Value);
 
         DisplayOnSelectedUnit();
         TotalActionPoint();
@@ -1065,6 +1066,11 @@ public class Cursor : NetworkBehaviour
                 break;
             }
         }
+    }
+
+    public void ResetShipBarque(int index)
+    {
+        unitManager.ships[index].barqueSpawn = false;
     }
 
     RaycastHit2D? GetCurrentTile(Vector2 pos)

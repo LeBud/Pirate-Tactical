@@ -21,17 +21,23 @@ public class Cannon : NetworkBehaviour
 
     SpriteRenderer renderer;
 
-
     [ServerRpc]
-    public void CannonDamageInRangeServerRpc()
+    public void CannonDamageInRangeServerRpc(Vector2 shipMovedPos)
     {
         if (!IsServer) return;
 
-        foreach (TileScript tile in tiles.Where(t => t.shipOnTile.Value))
-        {
-            if(tile.shipOnTile.Value)
-                GridManager.Instance.DamageUnitNoActionServerRpc(damage, tile.pos.Value, ID, false, 0, false);
-        }
+        bool foundShip = false;
+
+        foreach(var tile in tiles)
+            if(tile.pos.Value == shipMovedPos)
+            {
+                foundShip = true;
+                break;
+            }
+
+        if(foundShip)
+            GridManager.Instance.DamageUnitNoActionServerRpc(damage, shipMovedPos, ID, false, 0, false);
+
     }
 
     [ClientRpc]

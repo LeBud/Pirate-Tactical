@@ -566,10 +566,13 @@ public class GridManager : NetworkBehaviour
     }
 
     [ServerRpc(RequireOwnership = false)]
-    public void CheckForUnitInCannonRangesServerRpc()
+    public void CheckForUnitInCannonRangesServerRpc(ulong id)
     {
         foreach (Cannon c in cannonsOnMap)
+        {
+            if (c.ID == id) continue;
             c.CannonDamageInRangeServerRpc();
+        }
     }
 
     [ServerRpc(RequireOwnership = false)]
