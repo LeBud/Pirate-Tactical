@@ -21,10 +21,6 @@ public class Cannon : NetworkBehaviour
 
     SpriteRenderer renderer;
 
-    private void Start()
-    {
-        renderer = GetComponent<SpriteRenderer>();
-    }
 
     [ServerRpc]
     public void CannonDamageInRangeServerRpc()
@@ -41,6 +37,7 @@ public class Cannon : NetworkBehaviour
     [ClientRpc]
     public void SetColorClientRpc()
     {
+        renderer = GetComponent<SpriteRenderer>();
         if (ID == 0) renderer.color = player1;
         else renderer.color = player2;
     }

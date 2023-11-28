@@ -550,7 +550,7 @@ public class GridManager : NetworkBehaviour
 
         if (t.Walkable || t.Mountain || t.ShopTile) return;
 
-        Cannon c = Instantiate(cannonPrefab, pos, Quaternion.identity);
+        Cannon c = Instantiate(cannonPrefab, new Vector3(pos.x, pos.y, -1), Quaternion.identity);
         c.GetComponent<NetworkObject>().Spawn();
         c.ID = id;
         c.tiles = PathfindScript.GetCombatZoneSize(t, 3);

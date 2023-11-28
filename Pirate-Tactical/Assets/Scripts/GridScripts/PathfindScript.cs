@@ -127,7 +127,7 @@ public class PathfindScript : MonoBehaviour
 
         for (int i = inRangeTile.Count - 1; i >= 0; i--)
         {
-            if (inRangeTile[i].shipOnTile.Value || inRangeTile[i].blockedTile.Value)
+            if (inRangeTile[i].shipOnTile.Value || inRangeTile[i].blockedTile.Value || inRangeTile[i].ShopTile || inRangeTile[i].Mountain)
                 inRangeTile.RemoveAt(i);
         }
 
