@@ -124,11 +124,13 @@ MonoBehaviour:
     m_InternalValue: 0
   unitSpecialShot: 6
   unitSpecialTile: 6
-  specialAbilityCost: 20
-  specialAbilityPassiveDuration: 0
-  specialAbilityDamage: 0
-  specialTileRange: 2
-  specialShootRange: 4
+  shotCapacity: {fileID: 11400000, guid: e3d36e7b56bd38346a74cdfae74b0dbe, type: 2}
+  tileCapacity: {fileID: 11400000, guid: 476abe6bc9ed9344895c31f5aecbc04c, type: 2}
+  barqueSpawn: 0
+  barqueIndex: 0
+  isBark: 0
+  shipIndexFrom:
+    m_InternalValue: 0
   canBeUpgrade: 1
   player1Color: {r: 0.9622642, g: 0.55039275, b: 0.004538993, a: 1}
   player2Color: {r: 0.5994166, g: 0, b: 0.8113208, a: 1}

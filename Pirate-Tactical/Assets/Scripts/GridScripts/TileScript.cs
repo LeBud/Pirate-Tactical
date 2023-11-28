@@ -164,10 +164,10 @@ public class TileScript : NetworkBehaviour
     }
 
     [ClientRpc]
-    public void SetTileToBlockTileClientRpc(bool blocked)
+    public void SetTileToBlockTileClientRpc(bool blocked, int roundDuration)
     {
         if (blocked)
-            roundToUnblock = GameManager.Instance.currentRound.Value + roundTillUnblock;
+            roundToUnblock = GameManager.Instance.currentRound.Value + roundDuration;
         _highlightBlocked.SetActive(blocked);
     }
 
@@ -177,7 +177,7 @@ public class TileScript : NetworkBehaviour
         if(GameManager.Instance.currentRound.Value >= roundToUnblock)
         {
             blockedTile.Value = false;
-            SetTileToBlockTileClientRpc(false);
+            SetTileToBlockTileClientRpc(false,0);
         }
     }
 

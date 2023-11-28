@@ -442,14 +442,14 @@ public class GridManager : NetworkBehaviour
     }
 
     [ServerRpc(RequireOwnership = false)]
-    public void BlockedTileServerRpc(Vector2 tilePos, ulong id)
+    public void BlockedTileServerRpc(Vector2 tilePos, ulong id, int duration)
     {
         if (dictionnary.Contains(tilePos))
         {
             foreach(var t in tilesGrid)
                 if(t.pos.Value == tilePos && !t.shipOnTile.Value)
                 {
-                    t.SetTileToBlockTileClientRpc(true);
+                    t.SetTileToBlockTileClientRpc(true, duration);
                     t.blockedTile.Value = true;
                     blockedTiles.Add(t);
 

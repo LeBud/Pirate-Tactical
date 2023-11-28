@@ -98,7 +98,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 821b7e8d30553544c8a4a46a48771729, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  damage: 3
+  damage: 7
   ID: 0
   index: 0
   tiles: []
