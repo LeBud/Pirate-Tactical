@@ -552,11 +552,11 @@ public class GridManager : NetworkBehaviour
 
         Cannon c = Instantiate(cannonPrefab, pos, Quaternion.identity);
         c.GetComponent<NetworkObject>().Spawn();
-
-        t.cannonInTile.Value = true;
-
         c.ID = id;
         c.tiles = PathfindScript.GetCombatZoneSize(t, 3);
+        c.SetColorClientRpc();
+
+        t.cannonInTile.Value = true;
 
         cannonsOnMap.Add(c);
 
@@ -600,9 +600,13 @@ public class GridManager : NetworkBehaviour
                     cannonsOnMap.RemoveAt(i);
             }
 
+            TileScript t = GetTileAtPosition(cannonPos);
+            t.cannonInTile.Value = false;
+
             Destroy(cannon.gameObject);
         }
-                
+
+        SoundManager.Instance.PlaySoundOnClients(SoundManager.Instance.shipDestroyed);
     }
 
 }

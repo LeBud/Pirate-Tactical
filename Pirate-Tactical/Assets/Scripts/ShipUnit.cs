@@ -40,6 +40,8 @@ public class ShipUnit : NetworkBehaviour
     public int specialAbilityDamage;
     public int specialTileRange;
     public int specialShootRange;
+    public bool barqueSpawn = false;
+    public int barqueIndex;
 
     [Header("Upgrade")]
     public bool canBeUpgrade = true;

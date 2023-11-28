@@ -1,9 +1,11 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using Unity.Collections;
 using Unity.Netcode;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 public class Cursor : NetworkBehaviour
 {
@@ -240,8 +242,8 @@ public class Cursor : NetworkBehaviour
 
             LinkUnitToClientRpc(ship.GetComponent<NetworkObject>().NetworkObjectId, index);
 
-            unitManager.ships[5].unitPos.Value = new Vector3(pos.x, pos.y, -1);
-            unitManager.ships[5].SetShipColorClientRpc(id);
+            unitManager.ships[index].unitPos.Value = new Vector3(pos.x, pos.y, -1);
+            unitManager.ships[index].SetShipColorClientRpc(id);
         }
         else
         {
@@ -373,6 +375,11 @@ public class Cursor : NetworkBehaviour
                     if (cTile.shipOnTile.Value && canShoot && unitManager.ships[currentShipIndex].canShoot.Value)
                     {
                         GridManager.Instance.DamageUnitServerRpc(unitManager.ships[currentShipIndex].damage.Value, cTile.pos.Value, NetworkManager.LocalClientId, false, 0, false, HasGoThroughWaterCapacity(cTile));
+                        SoundManager.Instance.PlaySoundOnClients(SoundManager.Instance.attack);
+                    }
+                    else if (cTile.cannonInTile.Value && canShoot && unitManager.ships[currentShipIndex].canShoot.Value)
+                    {
+                        GridManager.Instance.DamageCannonOnServerRpc(cTile.pos.Value);
                         SoundManager.Instance.PlaySoundOnClients(SoundManager.Instance.attack);
                     }
                     break;
@@ -709,11 +716,15 @@ public class Cursor : NetworkBehaviour
     {
         if (!IsOwner) return;
 
-        SpawnUnitServerRpc(pos, NetworkManager.LocalClientId, 5, true);
+        if (unitManager.ships[currentShipIndex].barqueSpawn) return;
 
-        unitManager.ships[5].currentTile = t;
-        unitManager.ships[5].index = 5;
-        unitManager.ships[5].clientIdOwner = NetworkManager.LocalClientId;
+        int index = unitManager.ships[currentShipIndex].barqueIndex;
+
+        SpawnUnitServerRpc(pos, NetworkManager.LocalClientId, index, true);
+
+        unitManager.ships[index].currentTile = t;
+        unitManager.ships[index].index = index;
+        unitManager.ships[index].clientIdOwner = NetworkManager.LocalClientId;
 
         GridManager.Instance.SetShipOnTileServerRpc(pos, true);
 
@@ -1018,6 +1029,10 @@ public class Cursor : NetworkBehaviour
         unitManager.ships[currentShipIndex].currentTile = t;
         unitManager.ships[currentShipIndex].index = currentShipIndex;
         unitManager.ships[currentShipIndex].clientIdOwner = NetworkManager.LocalClientId;
+
+        if (currentShipIndex == 3) unitManager.ships[currentShipIndex].barqueIndex = 5;
+        else if (currentShipIndex == 4) unitManager.ships[currentShipIndex].barqueIndex = 6;
+
         unitManager.numShipSpawned++;
         currentShipIndex++;
 

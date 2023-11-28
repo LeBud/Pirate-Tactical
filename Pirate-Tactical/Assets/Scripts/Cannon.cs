@@ -6,7 +6,7 @@ using UnityEngine;
 
 public class Cannon : NetworkBehaviour
 {
-
+    [Header("Stats")]
     public int damage;
     public ulong ID;
 
@@ -14,6 +14,17 @@ public class Cannon : NetworkBehaviour
     public List<TileScript> tiles = new List<TileScript>();
 
     public Vector2 cannonPos;
+
+    [Header("Colors")]
+    public Color player1;
+    public Color player2;
+
+    SpriteRenderer renderer;
+
+    private void Start()
+    {
+        renderer = GetComponent<SpriteRenderer>();
+    }
 
     [ServerRpc]
     public void CannonDamageInRangeServerRpc()
@@ -25,5 +36,12 @@ public class Cannon : NetworkBehaviour
             if(tile.shipOnTile.Value)
                 GridManager.Instance.DamageUnitNoActionServerRpc(damage, tile.pos.Value, ID, false, 0, false);
         }
+    }
+
+    [ClientRpc]
+    public void SetColorClientRpc()
+    {
+        if (ID == 0) renderer.color = player1;
+        else renderer.color = player2;
     }
 }
