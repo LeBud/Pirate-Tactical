@@ -566,12 +566,12 @@ public class GridManager : NetworkBehaviour
     }
 
     [ServerRpc(RequireOwnership = false)]
-    public void CheckForUnitInCannonRangesServerRpc(ulong id)
+    public void CheckForUnitInCannonRangesServerRpc(ulong id, Vector2 newShipPos)
     {
         foreach (Cannon c in cannonsOnMap)
         {
             if (c.ID == id) continue;
-            c.CannonDamageInRangeServerRpc();
+            c.CannonDamageInRangeServerRpc(newShipPos);
         }
     }
 
