@@ -12,6 +12,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5a66b714d1cd1f14dbfdcbf8f714c834, type: 3}
   m_Name: TShot
   m_EditorClassIdentifier: 
+  capacityName: "Tir S\xE9par\xE9"
+  capacityDescription: "Tirer un boulet qui va se s\xE9parer en deux pour atteindre
+    votre adversaire"
   specialAbilityCost: 20
   shootCapacity: 2
   specialShootRange: 3

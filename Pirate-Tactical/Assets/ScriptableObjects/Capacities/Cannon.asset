@@ -12,6 +12,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5a66b714d1cd1f14dbfdcbf8f714c834, type: 3}
   m_Name: Cannon
   m_EditorClassIdentifier: 
+  capacityName: Canon
+  capacityDescription: "Poser un canon sur une ile qui infligera des d\xE9gats aux
+    ennemis qui rentre dans son p\xE9rim\xE8tre"
   specialAbilityCost: 20
   shootCapacity: 0
   specialShootRange: 0

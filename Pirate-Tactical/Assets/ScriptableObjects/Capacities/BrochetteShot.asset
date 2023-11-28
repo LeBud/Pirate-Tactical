@@ -12,6 +12,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5a66b714d1cd1f14dbfdcbf8f714c834, type: 3}
   m_Name: BrochetteShot
   m_EditorClassIdentifier: 
+  capacityName: Tir Brochette
+  capacityDescription: "Votre tir transpercera jusqu'a 3 b\xE2teaux ! Le tir parcoura
+    2 cases apr\xE8s avoir atteint une cible"
   specialAbilityCost: 40
   shootCapacity: 4
   specialShootRange: 4

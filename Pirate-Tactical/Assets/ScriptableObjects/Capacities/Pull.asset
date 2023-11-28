@@ -12,6 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5a66b714d1cd1f14dbfdcbf8f714c834, type: 3}
   m_Name: Pull
   m_EditorClassIdentifier: 
+  capacityName: Grappin
+  capacityDescription: "Tirer votre adversaire \xE0 vous !"
   specialAbilityCost: 10
   shootCapacity: 6
   specialShootRange: 4

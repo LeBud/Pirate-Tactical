@@ -5,6 +5,9 @@ using UnityEngine;
 [CreateAssetMenu]
 public class CapacitiesSO : ScriptableObject
 {
+    public string capacityName;
+    public string capacityDescription;
+
     [Header("Capacity Cost")]
     public int specialAbilityCost;
 

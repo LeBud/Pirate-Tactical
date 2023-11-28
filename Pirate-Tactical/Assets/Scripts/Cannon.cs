@@ -19,7 +19,7 @@ public class Cannon : NetworkBehaviour
     public Color player1;
     public Color player2;
 
-    SpriteRenderer renderer;
+    SpriteRenderer _renderer;
 
     [ServerRpc]
     public void CannonDamageInRangeServerRpc(Vector2 shipMovedPos)
@@ -43,8 +43,8 @@ public class Cannon : NetworkBehaviour
     [ClientRpc]
     public void SetColorClientRpc()
     {
-        renderer = GetComponent<SpriteRenderer>();
-        if (ID == 0) renderer.color = player1;
-        else renderer.color = player2;
+        _renderer = GetComponent<SpriteRenderer>();
+        if (ID == 0) _renderer.color = player1;
+        else _renderer.color = player2;
     }
 }

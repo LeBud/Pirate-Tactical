@@ -12,6 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5a66b714d1cd1f14dbfdcbf8f714c834, type: 3}
   m_Name: Wind
   m_EditorClassIdentifier: 
+  capacityName: Vent contraire
+  capacityDescription: "Ralentissez votre adversaire en limitant ses d\xE9placements"
   specialAbilityCost: 20
   shootCapacity: 5
   specialShootRange: 3

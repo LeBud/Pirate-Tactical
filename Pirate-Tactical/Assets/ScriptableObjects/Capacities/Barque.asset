@@ -12,6 +12,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5a66b714d1cd1f14dbfdcbf8f714c834, type: 3}
   m_Name: Barque
   m_EditorClassIdentifier: 
+  capacityName: Barque
+  capacityDescription: "Faites appara\xEEtre une barque ! Elle poss\xE8de les m\xEAmes
+    statistique que son cr\xE9ateur mais ne poss\xE8de pas ses capacit\xE9s sp\xE9ciales"
   specialAbilityCost: 10
   shootCapacity: 0
   specialShootRange: 0

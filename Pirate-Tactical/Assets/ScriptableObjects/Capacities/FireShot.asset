@@ -12,6 +12,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5a66b714d1cd1f14dbfdcbf8f714c834, type: 3}
   m_Name: FireShot
   m_EditorClassIdentifier: 
+  capacityName: "Tir enflamm\xE9"
+  capacityDescription: "Tir\xE9 un boulet enflamm\xE9 sur votre adversaire qui infligeront
+    des d\xE9gats passifs"
   specialAbilityCost: 40
   shootCapacity: 3
   specialShootRange: 4

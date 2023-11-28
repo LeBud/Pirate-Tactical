@@ -12,6 +12,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5a66b714d1cd1f14dbfdcbf8f714c834, type: 3}
   m_Name: WaterWall
   m_EditorClassIdentifier: 
+  capacityName: Mur d'eau
+  capacityDescription: "Placer un mur d'eau qui bloquera le d\xE9placement de votre
+    ennemi mais pas son tir"
   specialAbilityCost: 20
   shootCapacity: 0
   specialShootRange: 0

@@ -12,6 +12,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5a66b714d1cd1f14dbfdcbf8f714c834, type: 3}
   m_Name: Mine
   m_EditorClassIdentifier: 
+  capacityName: Mine
+  capacityDescription: "Poser une mine sur la carte. Elle est visible uniquement
+    par vous mais attention \xE0 ne pas voguer dessus"
   specialAbilityCost: 10
   shootCapacity: 0
   specialShootRange: 0
