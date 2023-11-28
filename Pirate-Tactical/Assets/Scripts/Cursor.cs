@@ -410,7 +410,7 @@ public class Cursor : NetworkBehaviour
             }
         }
 
-        if (Input.GetButtonDown("Cancel") || (shipSelected && !unitManager.ships[currentShipIndex].canBeSelected.Value))
+        if (Input.GetButtonDown("Cancel") && shipSelected || (shipSelected && !unitManager.ships[currentShipIndex].canBeSelected.Value))
             SelectShip(cTile);
     }
 
@@ -944,6 +944,11 @@ public class Cursor : NetworkBehaviour
             if (pathHighlight != null)
                 pathHighlight.Clear();
             pathHighlight = PathfindScript.Pathfind(unitManager.ships[currentShipIndex].currentTile, goalTile);
+        }
+        else
+        {
+            foreach (var item in allTiles)
+                item.SetColor(3);
         }
 
     }
