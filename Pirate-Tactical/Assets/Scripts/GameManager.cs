@@ -57,6 +57,7 @@ public class GameManager : NetworkBehaviour
 
         if (canStartGame)
         {
+            canStartGame = false;
             if (players[0].isReady.Value && players[1].isReady.Value)
                 StartGameWhenReady();
         }
@@ -64,6 +65,8 @@ public class GameManager : NetworkBehaviour
         if (gameState == GameState.selectingShips && NetworkManager.ConnectedClients.Count >= 2)
         {
             UpdateGameStateServerRpc();
+
+            canStartGame = true;
         }
 
         if (player1unitLeft == 0 || player2unitLeft == 0 && gameState != GameState.GameFinish)
@@ -80,7 +83,7 @@ public class GameManager : NetworkBehaviour
 
     public void StartGameWhenReady()
     {
-        canStartGame = false;
+        Debug.Log("C'est lui");
         SelectShipCapacityHUD.Instance.CloseWindowClientRpc();
         UpdateGameStateServerRpc();
         StartCoroutine(StartGame());
@@ -159,7 +162,7 @@ public class GameManager : NetworkBehaviour
 
         players[0] = NetworkManager.ConnectedClients[0].PlayerObject.GetComponent<Cursor>();
         players[1] = NetworkManager.ConnectedClients[1].PlayerObject.GetComponent<Cursor>();
-        canStartGame = true;
+
         NetworkManager.ConnectedClients[0].PlayerObject.GetComponent<Cursor>().canPlay.Value = false;
         NetworkManager.ConnectedClients[1].PlayerObject.GetComponent<Cursor>().canPlay.Value = false;
 
