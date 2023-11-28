@@ -6,7 +6,7 @@ using UnityEngine;
 
 public class Cannon : NetworkBehaviour
 {
-
+    [Header("Stats")]
     public int damage;
     public ulong ID;
 
@@ -15,14 +15,36 @@ public class Cannon : NetworkBehaviour
 
     public Vector2 cannonPos;
 
+    [Header("Colors")]
+    public Color player1;
+    public Color player2;
+
+    SpriteRenderer renderer;
+
     [ServerRpc]
-    public void CannonDamageInRangeServerRpc()
+    public void CannonDamageInRangeServerRpc(Vector2 shipMovedPos)
     {
         if (!IsServer) return;
 
-        foreach (TileScript tile in tiles.Where(t => t.shipOnTile.Value))
-        {
-            //GetShip
-        }
+        bool foundShip = false;
+
+        foreach(var tile in tiles)
+            if(tile.pos.Value == shipMovedPos)
+            {
+                foundShip = true;
+                break;
+            }
+
+        if(foundShip)
+            GridManager.Instance.DamageUnitNoActionServerRpc(damage, shipMovedPos, ID, false, 0, false);
+
+    }
+
+    [ClientRpc]
+    public void SetColorClientRpc()
+    {
+        renderer = GetComponent<SpriteRenderer>();
+        if (ID == 0) renderer.color = player1;
+        else renderer.color = player2;
     }
 }

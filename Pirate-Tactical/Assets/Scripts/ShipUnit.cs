@@ -2,7 +2,6 @@ using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using Unity.Netcode;
-using Unity.VisualScripting;
 using UnityEngine;
 
 public class ShipUnit : NetworkBehaviour
@@ -41,6 +40,12 @@ public class ShipUnit : NetworkBehaviour
     public int specialAbilityDamage;
     public int specialTileRange;
     public int specialShootRange;
+    public bool barqueSpawn = false;
+    public int barqueIndex;
+
+    [Header("Parameter for barque")]
+    public bool isBark;
+    public NetworkVariable<int> shipIndexFrom = new NetworkVariable<int>(0, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
 
     [Header("Upgrade")]
     public bool canBeUpgrade = true;
@@ -185,10 +190,16 @@ public class ShipUnit : NetworkBehaviour
 
         if (unitLife.Value <= 0)
         {
-            if (GetComponent<NetworkObject>().OwnerClientId == 0)
-                GameManager.Instance.player1unitLeft--;
-            else if(GetComponent<NetworkObject>().OwnerClientId == 1)
-                GameManager.Instance.player2unitLeft--;
+            if (isBark)
+                NetworkManager.ConnectedClients[GetComponent<NetworkObject>().OwnerClientId].PlayerObject.GetComponent<Cursor>().ResetShipBarque(shipIndexFrom.Value);
+
+            if (!isBark)
+            {
+                if (GetComponent<NetworkObject>().OwnerClientId == 0)
+                    GameManager.Instance.player1unitLeft--;
+                else if(GetComponent<NetworkObject>().OwnerClientId == 1)
+                    GameManager.Instance.player2unitLeft--;
+            }
 
             SoundManager.Instance.PlaySoundOnClients(SoundManager.Instance.shipDestroyed);
             GridManager.Instance.SetShipOnTileServerRpc(pos, false);

@@ -78,7 +78,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Sprite: {fileID: -2413806693520163455, guid: a86470a33a6bf42c4b3595704624658b, type: 3}
+  m_Sprite: {fileID: 7482667652216324306, guid: 75f5f34dc1b5347e0b8351032682f224, type: 3}
   m_Color: {r: 0.9622642, g: 0.11347453, b: 0.17983115, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -102,9 +102,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   unitLife:
-    m_InternalValue: 24
+    m_InternalValue: 12
   unitPos:
-    m_InternalValue: {x: 8.172023, y: 5.4177694}
+    m_InternalValue: {x: -7, y: 7}
   canMove:
     m_InternalValue: 0
   canShoot:
@@ -129,13 +129,13 @@ MonoBehaviour:
   specialAbilityDamage: 0
   specialTileRange: 2
   specialShootRange: 4
-  canBeUpgrade: 1
+  canBeUpgrade: 0
   player1Color: {r: 0.9622642, g: 0.55039275, b: 0.004538993, a: 1}
   player2Color: {r: 0.5994166, g: 0, b: 0.8113208, a: 1}
   unitSprite: {fileID: 4475007845721384360}
   health: {fileID: 5130245049498383686}
-  index: 1
-  clientIdOwner: 1
+  index: 5
+  clientIdOwner: 0
   movePoint: 1
   attackPoint: 1
   healthDisplay: {fileID: 7677579010255428536}

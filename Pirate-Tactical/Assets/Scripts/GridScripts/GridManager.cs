@@ -178,7 +178,7 @@ public class GridManager : NetworkBehaviour
     }
 
     [ServerRpc(RequireOwnership = false)]
-    public void DamageUnitTShotServerRpc(int damage, Vector2 pos, ulong id, bool passiveAttack, int effectDuration, bool hasGoThroughWater)
+    public void DamageUnitNoActionServerRpc(int damage, Vector2 pos, ulong id, bool passiveAttack, int effectDuration, bool hasGoThroughWater)
     {
         if (hasGoThroughWater) return;
 
@@ -550,13 +550,13 @@ public class GridManager : NetworkBehaviour
 
         if (t.Walkable || t.Mountain || t.ShopTile) return;
 
-        Cannon c = Instantiate(cannonPrefab, pos, Quaternion.identity);
+        Cannon c = Instantiate(cannonPrefab, new Vector3(pos.x, pos.y, -1), Quaternion.identity);
         c.GetComponent<NetworkObject>().Spawn();
-
-        t.cannonInTile.Value = true;
-
         c.ID = id;
         c.tiles = PathfindScript.GetCombatZoneSize(t, 3);
+        c.SetColorClientRpc();
+
+        t.cannonInTile.Value = true;
 
         cannonsOnMap.Add(c);
 
@@ -566,10 +566,13 @@ public class GridManager : NetworkBehaviour
     }
 
     [ServerRpc(RequireOwnership = false)]
-    public void CheckForUnitInCannonRangesServerRpc()
+    public void CheckForUnitInCannonRangesServerRpc(ulong id)
     {
         foreach (Cannon c in cannonsOnMap)
+        {
+            if (c.ID == id) continue;
             c.CannonDamageInRangeServerRpc();
+        }
     }
 
     [ServerRpc(RequireOwnership = false)]
@@ -600,9 +603,13 @@ public class GridManager : NetworkBehaviour
                     cannonsOnMap.RemoveAt(i);
             }
 
+            TileScript t = GetTileAtPosition(cannonPos);
+            t.cannonInTile.Value = false;
+
             Destroy(cannon.gameObject);
         }
-                
+
+        SoundManager.Instance.PlaySoundOnClients(SoundManager.Instance.shipDestroyed);
     }
 
 }
