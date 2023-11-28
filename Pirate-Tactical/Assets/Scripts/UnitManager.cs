@@ -5,8 +5,6 @@ using UnityEngine;
 
 public class UnitManager : NetworkBehaviour
 {
-    //public List<ShipUnit> spawnedShips = new List<ShipUnit>();
-
     public ShipUnit[] ships;
     public ShipUnit barque;
 

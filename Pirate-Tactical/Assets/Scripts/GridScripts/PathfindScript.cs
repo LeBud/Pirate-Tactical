@@ -99,6 +99,43 @@ public class PathfindScript : MonoBehaviour
         return inRangeTile.Distinct().ToList();
     }
 
+    public static List<TileScript> GetInRangeSpecialTiles(TileScript startTile, int range)
+    {
+        var inRangeTile = new List<TileScript>();
+        int stepCount = 0;
+
+        inRangeTile.Add(startTile);
+
+        var tileForPreviousStep = new List<TileScript>();
+        tileForPreviousStep.Add(startTile);
+
+        while (stepCount < range)
+        {
+            var surroundingTiles = new List<TileScript>();
+            foreach (var tile in tileForPreviousStep)
+            {
+                if (tile.blockedTile.Value) continue;
+                if (tile != startTile && tile.shipOnTile.Value) continue;
+
+                surroundingTiles.AddRange(tile.Neighbors);
+            }
+
+            inRangeTile.AddRange(surroundingTiles);
+            tileForPreviousStep = surroundingTiles.Distinct().ToList();
+            stepCount++;
+        }
+
+        for (int i = inRangeTile.Count - 1; i >= 0; i--)
+        {
+            if (inRangeTile[i].shipOnTile.Value || inRangeTile[i].blockedTile.Value)
+                inRangeTile.RemoveAt(i);
+        }
+
+
+        return inRangeTile.Distinct().ToList();
+    }
+
+
     public static List<TileScript> GetInRangeTilesCross(TileScript startTile, int range)
     {
         TileScript[] neighbors = FindObjectsOfType<TileScript>();

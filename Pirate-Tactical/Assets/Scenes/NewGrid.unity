@@ -14263,6 +14263,7 @@ MonoBehaviour:
   landSprite: {fileID: 21300000, guid: c04c22eacafbb864fb512ea81b2f2e00, type: 3}
   mountainSprite: {fileID: 21300000, guid: 6e383368aa111da41b345f63adb17563, type: 3}
   shopSprite: {fileID: 21300000, guid: f6440f4548d34df40aebe92ace2ab8d1, type: 3}
+  cannonPrefab: {fileID: 4856874696050351844, guid: c5901513e209c634189914bc183eea8c, type: 3}
 --- !u!114 &1518340151
 MonoBehaviour:
   m_ObjectHideFlags: 0
