@@ -74,21 +74,31 @@ public class SelectShipCapacityHUD : NetworkBehaviour
             switch (i)
             {
                 case 0:
+                    player.unitManager.ships[0].shotCapacity = galionShotCapacities[galionShot.value];
                     txts[i].text = galionShotCapacities[galionShot.value].capacityDescription;
                     break;
                 case 1:
+                    player.unitManager.ships[0].tileCapacity = galionTileCapacities[galionShot.value];
                     txts[i].text = galionTileCapacities[galionTile.value].capacityDescription;
                     break;
                 case 2:
+                    player.unitManager.ships[1].shotCapacity = brigantinShotCapacities[brigantinShot.value];
+                    player.unitManager.ships[2].shotCapacity = brigantinShotCapacities[brigantinShot.value];
                     txts[i].text = brigantinShotCapacities[brigantinShot.value].capacityDescription;
                     break;
                 case 3:
+                    player.unitManager.ships[1].tileCapacity = brigantinTileCapacities[brigantinTile.value];
+                    player.unitManager.ships[2].tileCapacity = brigantinTileCapacities[brigantinTile.value];
                     txts[i].text = brigantinTileCapacities[brigantinTile.value].capacityDescription;
                     break;
                 case 4:
+                    player.unitManager.ships[3].shotCapacity = sloopShotCapacities[sloopShot.value];
+                    player.unitManager.ships[4].shotCapacity = sloopShotCapacities[sloopShot.value];
                     txts[i].text = sloopShotCapacities[sloopShot.value].capacityDescription;
                     break;
                 case 5:
+                    player.unitManager.ships[3].tileCapacity = sloopTileCapacities[sloopTile.value];
+                    player.unitManager.ships[4].tileCapacity = sloopTileCapacities[sloopTile.value];
                     txts[i].text = sloopTileCapacities[sloopTile.value].capacityDescription;
                     break;
             }

@@ -19482,7 +19482,7 @@ MonoBehaviour:
   combatZoneShrinkEveryRound: 1
   spawnShipAnyWhere: 1
   canStartGame: 0
-  gameState: 1
+  gameState: 0
 --- !u!4 &1381260906
 Transform:
   m_ObjectHideFlags: 0
