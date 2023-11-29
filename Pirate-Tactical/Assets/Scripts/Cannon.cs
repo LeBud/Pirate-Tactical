@@ -8,7 +8,7 @@ public class Cannon : NetworkBehaviour
 {
     [Header("Stats")]
     public int damage;
-    public ulong ID;
+    public NetworkVariable<ulong> ID = new NetworkVariable<ulong>();
 
     public int index;
     public List<TileScript> tiles = new List<TileScript>();
@@ -36,7 +36,7 @@ public class Cannon : NetworkBehaviour
             }
 
         if(foundShip)
-            GridManager.Instance.DamageUnitNoActionServerRpc(damage, shipMovedPos, ID, false, 0, false);
+            GridManager.Instance.DamageUnitNoActionServerRpc(damage, shipMovedPos, ID.Value, false, 0, false);
 
     }
 
@@ -44,7 +44,7 @@ public class Cannon : NetworkBehaviour
     public void SetColorClientRpc()
     {
         _renderer = GetComponent<SpriteRenderer>();
-        if (ID == 0) _renderer.color = player1;
+        if (ID.Value == 0) _renderer.color = player1;
         else _renderer.color = player2;
     }
 }
