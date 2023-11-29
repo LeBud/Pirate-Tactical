@@ -98,7 +98,7 @@ public class HUD : NetworkBehaviour
         {
             if (i > 4) continue;
             shipsDisplay.GetChild(i).GetChild(3).GetComponent<TextMeshProUGUI>().text = player.unitManager.ships[i].damage.Value.ToString();
-            shipsDisplay.GetChild(i).GetChild(4).GetComponent<TextMeshProUGUI>().text = player.unitManager.ships[i].specialAbilityCost.ToString();
+            shipsDisplay.GetChild(i).GetChild(4).GetComponent<TextMeshProUGUI>().text = player.unitManager.ships[i].shotCapacity.specialAbilityCost.ToString();
         }
     }
 

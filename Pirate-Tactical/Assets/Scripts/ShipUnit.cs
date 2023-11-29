@@ -35,11 +35,10 @@ public class ShipUnit : NetworkBehaviour
     [Header("Unit Special stats")]
     public UnitSpecialShot unitSpecialShot;
     public UnitSpecialTile unitSpecialTile;
-    public int specialAbilityCost;
-    public int specialAbilityPassiveDuration;
-    public int specialAbilityDamage;
-    public int specialTileRange;
-    public int specialShootRange;
+    public CapacitiesSO shotCapacity;
+    public CapacitiesSO tileCapacity;
+
+    [Header("Barque Parameters")]
     public bool barqueSpawn = false;
     public int barqueIndex;
 
@@ -71,6 +70,7 @@ public class ShipUnit : NetworkBehaviour
     int roundToStopWindEffect;
     int baseMoveRange;
 
+    int passiveDmg;
 
     [SerializeField] Transform healthDisplay;
 
@@ -85,6 +85,10 @@ public class ShipUnit : NetworkBehaviour
         healthDisplay.localScale = new Vector3(healthPercent, 1, 1);
         SetHealthBarClientRpc(healthPercent, unitLife.Value);
         baseMoveRange = unitMoveRange;
+
+        if (isBark) return;
+        unitSpecialShot = shotCapacity.shootCapacity;
+        unitSpecialTile = tileCapacity.tileCapacity;
     }
 
     private void Update()
@@ -115,7 +119,7 @@ public class ShipUnit : NetworkBehaviour
 
         if(roundToStopFireEffect > GameManager.Instance.currentRound.Value)
         {
-            TakeDamageServerRpc(7, unitPos.Value, false, 0, false);
+            TakeDamageServerRpc(passiveDmg, unitPos.Value, false, 0, false);
         }
 
         if (roundToStopWindEffect < GameManager.Instance.currentRound.Value)
@@ -184,7 +188,7 @@ public class ShipUnit : NetworkBehaviour
 
         //Only set to true when an enemy unit attack this one with his special and has a passive effect
         if (passiveAttack && !hasGoneThroughWater)
-            GivePassiveFireToUnitClientRpc(effectDuration);
+            GivePassiveFireToUnitClientRpc(effectDuration, dmg);
 
         SoundManager.Instance.PlaySoundOnClients(SoundManager.Instance.takeDamage);
 
@@ -209,9 +213,10 @@ public class ShipUnit : NetworkBehaviour
     }
 
     [ClientRpc]
-    public void GivePassiveFireToUnitClientRpc(int roundDuration)
+    public void GivePassiveFireToUnitClientRpc(int roundDuration, int _passiveDmg)
     {
         roundToStopFireEffect = roundDuration + GameManager.Instance.currentRound.Value;
+        passiveDmg = _passiveDmg;
         SoundManager.Instance.PlaySoundLocally(SoundManager.Instance.fireDamage);
     }
 

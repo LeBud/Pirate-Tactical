@@ -25,10 +25,14 @@ public class GameManager : NetworkBehaviour
     bool poolingStarted = false;
 
     public bool spawnShipAnyWhere = false;
+    public bool canStartGame = false;
+
+    Cursor[] players = new Cursor[2];
 
     public enum GameState
     {
         GameStarting,
+        selectingShips,
         Player1Turn,
         Player2Turn,
         GameFinish,
@@ -43,7 +47,7 @@ public class GameManager : NetworkBehaviour
             Instance = this;
 
         if (gameState != GameState.GameTesting)
-            gameState = GameState.GameStarting;
+            gameState = GameState.selectingShips;
     }
 
 
@@ -51,10 +55,18 @@ public class GameManager : NetworkBehaviour
     {
         if (!IsServer) return;
 
-        if (gameState == GameState.GameStarting && NetworkManager.ConnectedClients.Count >= 2)
+        if (canStartGame)
+        {
+            canStartGame = false;
+            if (players[0].isReady.Value && players[1].isReady.Value)
+                StartGameWhenReady();
+        }
+
+        if (gameState == GameState.selectingShips && NetworkManager.ConnectedClients.Count >= 2)
         {
             UpdateGameStateServerRpc();
-            StartCoroutine(StartGame());
+
+            canStartGame = true;
         }
 
         if (player1unitLeft == 0 || player2unitLeft == 0 && gameState != GameState.GameFinish)
@@ -67,6 +79,14 @@ public class GameManager : NetworkBehaviour
         {
             UpdateGameStateServerRpc();
         }
+    }
+
+    public void StartGameWhenReady()
+    {
+        Debug.Log("C'est lui");
+        SelectShipCapacityHUD.Instance.CloseWindowClientRpc();
+        UpdateGameStateServerRpc();
+        StartCoroutine(StartGame());
     }
 
     IEnumerator StartGame()
@@ -140,6 +160,9 @@ public class GameManager : NetworkBehaviour
             return;
         }
 
+        players[0] = NetworkManager.ConnectedClients[0].PlayerObject.GetComponent<Cursor>();
+        players[1] = NetworkManager.ConnectedClients[1].PlayerObject.GetComponent<Cursor>();
+
         NetworkManager.ConnectedClients[0].PlayerObject.GetComponent<Cursor>().canPlay.Value = false;
         NetworkManager.ConnectedClients[1].PlayerObject.GetComponent<Cursor>().canPlay.Value = false;
 
@@ -156,6 +179,10 @@ public class GameManager : NetworkBehaviour
                 break;
             case GameState.Player2Turn:
                 gameState = GameState.Player1Turn;
+                break;
+            case GameState.selectingShips:
+                SelectShipCapacityHUD.Instance.SetPlayerToClientRpc();
+                gameState = GameState.GameStarting;
                 break;
         }
 
@@ -184,6 +211,9 @@ public class GameManager : NetworkBehaviour
                 break;
             case GameState.GameTesting:
                 returnState = "Game Testing";
+                break;
+            case GameState.selectingShips:
+                returnState = "Select Capacities";
                 break;
         }
 
