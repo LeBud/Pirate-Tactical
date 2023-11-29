@@ -47,7 +47,6 @@ public class SelectShipCapacityHUD : NetworkBehaviour
     private void Start()
     {
         readyBtt.onClick.AddListener(() => { GetReady(); });
-        RefreshOptionsDropDown();
     }
 
     void RefreshOptionsDropDown()
@@ -177,6 +176,7 @@ public class SelectShipCapacityHUD : NetworkBehaviour
                 player = cursor;
 
         selectShipHUD.SetActive(true);
+        RefreshOptionsDropDown();
     }
 
     [ClientRpc]
