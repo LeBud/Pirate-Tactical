@@ -552,7 +552,7 @@ public class GridManager : NetworkBehaviour
 
         Cannon c = Instantiate(cannonPrefab, new Vector3(pos.x, pos.y, -1), Quaternion.identity);
         c.GetComponent<NetworkObject>().Spawn();
-        c.ID = id;
+        c.ID.Value = id;
         c.tiles = PathfindScript.GetCombatZoneSize(t, 3);
         c.SetColorClientRpc();
 
@@ -570,7 +570,7 @@ public class GridManager : NetworkBehaviour
     {
         foreach (Cannon c in cannonsOnMap)
         {
-            if (c.ID == id) continue;
+            if (c.ID.Value == id) continue;
             c.CannonDamageInRangeServerRpc(newShipPos);
         }
     }
