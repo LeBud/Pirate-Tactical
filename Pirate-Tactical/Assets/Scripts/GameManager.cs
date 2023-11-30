@@ -131,15 +131,6 @@ public class GameManager : NetworkBehaviour
                 players[i].CalculateHealthClientRpc();
             }
 
-            /*HUD.Instance.UpdateHealthBarClientRpc();
-            foreach(ShipUnit s in ships)
-            {
-                if(s == null) continue;
-
-                float percent = (float)s.unitLife.Value / s.maxHealth;
-                s.SetHealthBarClientRpc(percent, s.unitLife.Value);
-            }*/
-
             yield return new WaitForSeconds(.25f);
             if(gameState == GameState.GameFinish)
                 yield break;
@@ -249,16 +240,6 @@ public class GameManager : NetworkBehaviour
         {
             currentRound.Value++;
 
-            /*ShipUnit[] ships = FindObjectsOfType<ShipUnit>();
-            if (ships.Length > 0)
-            {
-                foreach (ShipUnit s in ships)
-                {
-                    s.UpdateUnitClientRpc();
-                }
-            }*/
-
-
             for(int i = 0; i < 2; i++)
             {
                 players[i].RechargeSpecialClientRpc();
@@ -274,14 +255,6 @@ public class GameManager : NetworkBehaviour
                     }
                 }
             }
-
-            /*Cursor[] players = FindObjectsOfType<Cursor>();
-            foreach (Cursor player in players)
-            {
-                player.RechargeSpecialClientRpc();
-                player.CalculateHealthClientRpc();
-                player.GoldGainClientRpc();
-            }*/
 
             if (currentRound.Value >= startRoundCombatZone && currentRound.Value % 2 != 1 && GridManager.Instance.combatZoneSize.Value > 4 && !combatZoneShrinkEveryRound)
                 GridManager.Instance.combatZoneSize.Value--;
@@ -302,17 +275,6 @@ public class GameManager : NetworkBehaviour
         //Setup pour que seulement le joueur puisse spawn ses unités puis l'autre joueur eznsuite
         if (gameState == GameState.Player1Turn)
         {
-            /*Cursor currentP = NetworkManager.ConnectedClients[0].PlayerObject.GetComponent<Cursor>();
-            currentP.canPlay.Value = true;
-
-            if (currentRound.Value == 0)
-            {
-                currentP.SetSpawnableTileClientRpc(0);
-            }
-
-            if (!currentP.unitManager.allShipSpawned.Value) return;
-            currentP.ResetShipsActionClientRpc();*/
-            
             players[0].canPlay.Value = true;
 
             if (currentRound.Value == 0)
@@ -323,17 +285,6 @@ public class GameManager : NetworkBehaviour
         }
         else if (gameState == GameState.Player2Turn)
         {
-            /*Cursor currentP = NetworkManager.ConnectedClients[1].PlayerObject.GetComponent<Cursor>();
-            currentP.canPlay.Value = true;
-
-            if (currentRound.Value == 0)
-            {
-                currentP.SetSpawnableTileClientRpc(1);
-            }
-
-            if (!currentP.unitManager.allShipSpawned.Value) return;
-            currentP.ResetShipsActionClientRpc();*/
-
             players[1].canPlay.Value = true;
 
             if (currentRound.Value == 0)
@@ -349,23 +300,6 @@ public class GameManager : NetworkBehaviour
     [ServerRpc]
     public void FinishGameOnServerRpc()
     {
-        /*ShipUnit[] ships = FindObjectsOfType<ShipUnit>();
-        if (ships.Length > 0)
-        {
-            foreach (ShipUnit s in ships)
-            {
-                s.ZoneDamageClientRpc();
-                s.UpdateUnitClientRpc();
-            }
-        }
-
-        Cursor[] players = FindObjectsOfType<Cursor>();
-        foreach (Cursor player in players)
-        {
-            player.RechargeSpecialClientRpc();
-            player.CalculateHealthClientRpc();
-            player.GoldGainClientRpc();
-        }*/
 
         for (int i = 0; i < 2; i++)
         {
@@ -401,7 +335,6 @@ public class GameManager : NetworkBehaviour
         int width = GridManager.Instance._width;
         int height = GridManager.Instance._height;
 
-        //Camera.main.transform.position = new Vector3((float)width / 2 - 0.5f, (float)height / 2 - 0.5f, -10);
         Camera.main.transform.position = cameraPos.Value;
 
         HUD.Instance.SetGameStateClientRpc(SetGameStateString(gameState), currentRound.Value);
