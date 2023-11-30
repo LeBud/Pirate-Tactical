@@ -90,9 +90,17 @@ public class HUD : NetworkBehaviour
             if (player.unitManager.ships[player.currentShipIndex].canShoot.Value)
             {
                 attackBtt.interactable = true;
-                specialTileBtt.interactable = true;
-                specialAttackBtt.interactable = true;
                 interactBtt.interactable = true;
+
+                if (player.unitManager.ships[player.currentShipIndex].unitSpecialTile.Value != ShipUnit.UnitSpecialTile.None)
+                    specialTileBtt.interactable = true;
+                else
+                    specialTileBtt.interactable = false;
+
+                if(player.unitManager.ships[player.currentShipIndex].unitSpecialShot.Value != ShipUnit.UnitSpecialShot.None)
+                    specialAttackBtt.interactable = true;
+                else
+                    specialAttackBtt.interactable = false;
             }
             else if (!player.unitManager.ships[player.currentShipIndex].canShoot.Value)
             {
