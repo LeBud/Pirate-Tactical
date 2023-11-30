@@ -86,9 +86,11 @@ public class ShipUnit : NetworkBehaviour
         SetHealthBarClientRpc(healthPercent, unitLife.Value);
         baseMoveRange = unitMoveRange;
 
-        if (isBark) return;
-        unitSpecialShot = shotCapacity.shootCapacity;
-        unitSpecialTile = tileCapacity.tileCapacity;
+        if (!isBark)
+        {
+            unitSpecialShot = shotCapacity.shootCapacity;
+            unitSpecialTile = tileCapacity.tileCapacity;
+        }
     }
 
     private void Update()
@@ -115,7 +117,7 @@ public class ShipUnit : NetworkBehaviour
     [ClientRpc]
     public void UpdateUnitClientRpc()
     {
-        if (!IsOwner) return;
+        //if (!IsOwner) return;
 
         if(roundToStopFireEffect > GameManager.Instance.currentRound.Value)
         {

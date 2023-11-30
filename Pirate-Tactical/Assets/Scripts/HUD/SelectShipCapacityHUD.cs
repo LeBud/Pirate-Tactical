@@ -49,6 +49,7 @@ public class SelectShipCapacityHUD : NetworkBehaviour
     private void Start()
     {
         readyBtt.onClick.AddListener(() => { GetReady(); });
+        readyBtt.GetComponentInChildren<TextMeshProUGUI>().text = bttNotReadyTxt;
     }
 
     void RefreshOptionsDropDown()

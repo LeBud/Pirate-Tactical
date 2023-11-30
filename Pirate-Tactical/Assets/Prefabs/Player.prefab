@@ -165,6 +165,8 @@ MonoBehaviour:
   totalMovePoint: 0
   totalShootPoint: 0
   currentSpecialCharge: 0
+  isReady:
+    m_InternalValue: 0
 --- !u!114 &8773507901912881422
 MonoBehaviour:
   m_ObjectHideFlags: 0

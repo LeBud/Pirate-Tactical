@@ -156,10 +156,13 @@ public class GridManager : NetworkBehaviour
 
         bool isEnemy = false;
 
-        if (ships.unitPos.Value == pos && ships.GetComponent<NetworkObject>().OwnerClientId != id)
+        if(ships != null)
         {
-            isEnemy = true;
-            ships.TakeDamageServerRpc(damage, pos, passiveAttack, effectDuration, hasGoThroughWater);
+            if (ships.unitPos.Value == pos && ships.GetComponent<NetworkObject>().OwnerClientId != id)
+            {
+                isEnemy = true;
+                ships.TakeDamageServerRpc(damage, pos, passiveAttack, effectDuration, hasGoThroughWater);
+            }
         }
 
         if (isEnemy)

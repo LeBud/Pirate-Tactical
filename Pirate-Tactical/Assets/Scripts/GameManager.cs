@@ -265,10 +265,13 @@ public class GameManager : NetworkBehaviour
                 players[i].CalculateHealthClientRpc();
                 players[i].GoldGainClientRpc();
 
-                for(int x = 0; x < players[i].unitManager.ships.Length; x++)
+                if (players[i].unitManager.allShipSpawned.Value)
                 {
-                    if(players[i].unitManager.ships[x] != null)
-                        players[i].unitManager.ships[x].UpdateUnitClientRpc();
+                    for(int x = 0; x < players[i].unitManager.ships.Length; x++)
+                    {
+                        if(players[i].unitManager.ships[x] != null)
+                            players[i].unitManager.ships[x].UpdateUnitClientRpc();
+                    }
                 }
             }
 

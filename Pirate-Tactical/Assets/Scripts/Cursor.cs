@@ -234,7 +234,7 @@ public class Cursor : NetworkBehaviour
         unitManager.ships[index].unitPos.Value = pos;
     }
 
-    [ServerRpc]
+    [ServerRpc(RequireOwnership = false)]
     void SpawnUnitServerRpc(Vector2 pos, ulong id, int index, bool barque)
     {
         if (barque)
@@ -305,12 +305,6 @@ public class Cursor : NetworkBehaviour
             return;
         }
 
-        if (!canPlay.Value)
-        {
-            shipSelected = false;
-            HideTiles();
-            return;
-        }
 
         HandleKeyboardInputs();
 
@@ -323,6 +317,12 @@ public class Cursor : NetworkBehaviour
         if (!tile.HasValue) return;
         cTile = tile.Value.transform.GetComponent<TileScript>();
 
+        if (!canPlay.Value)
+        {
+            shipSelected = false;
+            HideTiles();
+            return;
+        }
 
         if (Input.GetMouseButtonDown(0) && shipSelected)
         {
@@ -726,15 +726,17 @@ public class Cursor : NetworkBehaviour
         TotalActionPoint();
     }
 
-    void SpawnBarque(Vector2 pos, TileScript t)
+    IEnumerator SpawnBarque(Vector2 pos, TileScript t)
     {
-        if (!IsOwner) return;
+        if (!IsOwner) yield break;
 
-        if (unitManager.ships[currentShipIndex].barqueSpawn) return;
+        if (unitManager.ships[currentShipIndex].barqueSpawn) yield break;
 
         int index = unitManager.ships[currentShipIndex].barqueIndex;
 
         SpawnUnitServerRpc(pos, NetworkManager.LocalClientId, index, true);
+
+        yield return new WaitForSeconds(.5f);
 
         unitManager.ships[index].currentTile = t;
         unitManager.ships[index].index = index;
