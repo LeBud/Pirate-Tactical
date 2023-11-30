@@ -626,6 +626,8 @@ public class GridManager : NetworkBehaviour
         shipwrek.GetComponent<NetworkObject>().Spawn();
         shipwrek.upgradeType.Value = upgrade;
         shipwrek.pos = pos;
+        shipwrek.roundToDisapear = GameManager.Instance.currentRound.Value + shipwrek.roundUntilDisapear;
+
 
         SetShipwreckOnMapServerRpc(pos, true);
     }

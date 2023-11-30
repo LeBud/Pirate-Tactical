@@ -96,6 +96,8 @@ public class ShipUnit : NetworkBehaviour
 
     private void Update()
     {
+        if (!IsServer) return;
+
         if (transform.position != new Vector3(unitPos.Value.x, unitPos.Value.y, -1) && !isMoving)
             StartCoroutine(MoveShip());
 

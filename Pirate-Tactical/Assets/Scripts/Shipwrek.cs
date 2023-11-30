@@ -10,18 +10,17 @@ public class Shipwrek : NetworkBehaviour
     public Vector2 pos;
     public int roundUntilDisapear;
 
-    int roundToDisapear;
+    [HideInInspector]
+    public int roundToDisapear;
 
-    private void Start()
-    {
-        roundToDisapear = GameManager.Instance.currentRound.Value + roundUntilDisapear;
-    }
 
     [ServerRpc]
     public void CheckForRoundToDisappearServerRpc()
     {
+        Debug.Log("Before if");
         if (roundToDisapear > GameManager.Instance.currentRound.Value)
         {
+            Debug.Log("In If statement");
             GridManager.Instance.SetShipwreckOnMapServerRpc(pos, false);
             GetComponent<NetworkObject>().Despawn();
         }

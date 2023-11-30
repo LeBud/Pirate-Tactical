@@ -360,6 +360,13 @@ public class Cursor : NetworkBehaviour
                             if (unitManager.ships[currentShipIndex].canBeUpgrade)
                                 HUD.Instance.UpgradeWindow(true, cTile.shopIndex.Value);
                         }
+                        else if (cTile.shipwrek.Value)
+                        {
+                            if (unitManager.ships[currentShipIndex].canBeUpgrade)
+                            {
+                                HandleUpgradeSystem.Instance.GetUpgradeFromShipwreckServerRpc(cTile.pos.Value, NetworkManager.LocalClientId);
+                            }
+                        }
                     }
                     break;
                 case 1: //Move Mode
@@ -628,7 +635,8 @@ public class Cursor : NetworkBehaviour
                 GridManager.Instance.BlockedTileServerRpc(t.pos.Value, NetworkManager.LocalClientId, unitManager.ships[currentShipIndex].tileCapacity.tilePassiveDuration);
                 break;
             case ShipUnit.UnitSpecialTile.Mine:
-                GridManager.Instance.SetMineOnTileServerRpc(t.pos.Value, NetworkManager.LocalClientId, true);
+                if(!t.Walkable)
+                    GridManager.Instance.SetMineOnTileServerRpc(t.pos.Value, NetworkManager.LocalClientId, true);
                 break;
             case ShipUnit.UnitSpecialTile.Teleport:
                 TeleportShip(t);

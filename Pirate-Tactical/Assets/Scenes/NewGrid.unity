@@ -19480,7 +19480,7 @@ MonoBehaviour:
         byte0124: 0
         byte0125: 0
   combatZoneShrinkEveryRound: 1
-  spawnShipAnyWhere: 0
+  spawnShipAnyWhere: 1
   canStartGame: 0
   gameState: 0
 --- !u!4 &1381260906

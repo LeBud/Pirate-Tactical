@@ -174,5 +174,83 @@ public class HandleUpgradeSystem : NetworkBehaviour
         HUD.Instance.UpgradeWindow(false, 0);
     }
 
+    [ServerRpc(RequireOwnership = false)]
+    public void GetUpgradeFromShipwreckServerRpc(Vector2 pos, ulong id)
+    {
+        Shipwrek[] shipwreks = FindObjectsOfType<Shipwrek>();
+        foreach(var s in shipwreks)
+        {
+            if(s.pos == pos)
+            {
+                if(s.upgradeType.Value == UpgradeSystem.UpgradeType.ShootCapacity || s.upgradeType.Value == UpgradeSystem.UpgradeType.TileCapacity)
+                {
+                    //Do something else
+                    break;
+                }
+                else
+                {
+                    foreach (var u in allUpgrades)
+                    {
+                        if(u.upgradeType == s.upgradeType.Value)
+                        {
+                            PutUpgradeFromShipwreckClientRpc(s.upgradeType.Value, u.value, id);
+                            GridManager.Instance.SetShipwreckOnMapServerRpc(pos, false);
+                            s.GetComponent<NetworkObject>().Despawn();
+                            break;
+                        }
+                    }
+                    break;
+                }
+            }
+        }
+    }
 
+    [ClientRpc]
+    public void PutUpgradeFromShipwreckClientRpc(UpgradeSystem.UpgradeType type, int value, ulong id)
+    {
+        if (NetworkManager.LocalClientId != id) return;
+
+        Cursor p = HUD.Instance.player;
+
+        switch (type)
+        {
+            case UpgradeSystem.UpgradeType.Accost:
+                p.unitManager.ships[p.currentShipIndex].accostDmgBoost.Value += value;
+                p.unitManager.ships[p.currentShipIndex].upgrade = type;
+                break;
+            case UpgradeSystem.UpgradeType.Damage:
+                p.unitManager.ships[p.currentShipIndex].damage.Value += value;
+                p.unitManager.ships[p.currentShipIndex].upgrade = type;
+                break;
+            case UpgradeSystem.UpgradeType.ManaGain:
+                p.specialGainPerRound += value;
+                p.unitManager.ships[p.currentShipIndex].upgrade = type;
+                break;
+            case UpgradeSystem.UpgradeType.MoveRange:
+                p.unitManager.ships[p.currentShipIndex].unitMoveRange += value;
+                p.unitManager.ships[p.currentShipIndex].upgrade = type;
+                break;
+            case UpgradeSystem.UpgradeType.TotalMana:
+                p.maxSpecialCharge += value;
+                p.unitManager.ships[p.currentShipIndex].upgrade = type;
+                break;
+            case UpgradeSystem.UpgradeType.ShootRange:
+                p.unitManager.ships[p.currentShipIndex].unitShootRange += value;
+                p.unitManager.ships[p.currentShipIndex].upgrade = type;
+                break;
+            case UpgradeSystem.UpgradeType.TileCapacity:
+                //p.unitManager.ships[p.currentShipIndex].unitSpecialTile = upgrades[shopIndex, i].newTileCapacity;
+                p.unitManager.ships[p.currentShipIndex].upgrade = type;
+                break;
+            case UpgradeSystem.UpgradeType.ShootCapacity:
+                //p.unitManager.ships[p.currentShipIndex].unitSpecialShot = upgrades[shopIndex, i].newShootCapacity;
+                p.unitManager.ships[p.currentShipIndex].upgrade = type;
+                break;
+        }
+
+        p.unitManager.ships[p.currentShipIndex].canBeUpgrade = false;
+        p.HasDidAnActionClientRpc();
+
+        SoundManager.Instance.PlaySoundLocally(SoundManager.Instance.buyUpgrade);
+    }
 }
