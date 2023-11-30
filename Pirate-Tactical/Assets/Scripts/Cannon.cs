@@ -41,10 +41,10 @@ public class Cannon : NetworkBehaviour
     }
 
     [ClientRpc]
-    public void SetColorClientRpc()
+    public void SetColorClientRpc(ulong id)
     {
         _renderer = GetComponent<SpriteRenderer>();
-        if (ID.Value == 0) _renderer.color = player1;
+        if (id == 0) _renderer.color = player1;
         else _renderer.color = player2;
     }
 }

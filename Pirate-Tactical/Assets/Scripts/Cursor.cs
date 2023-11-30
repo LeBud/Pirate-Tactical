@@ -637,7 +637,7 @@ public class Cursor : NetworkBehaviour
                 GridManager.Instance.AddCannonToTileServerRpc(cTile.pos.Value, NetworkManager.LocalClientId);
                 break;
             case ShipUnit.UnitSpecialTile.Barque:
-                SpawnBarque(t.pos.Value, t);
+                StartCoroutine(SpawnBarque(t.pos.Value, t));
                 break;
             case ShipUnit.UnitSpecialTile.None:
                 break;
@@ -732,6 +732,11 @@ public class Cursor : NetworkBehaviour
 
         if (unitManager.ships[currentShipIndex].barqueSpawn) yield break;
 
+        currentSpecialCharge -= unitManager.ships[currentShipIndex].tileCapacity.specialAbilityCost;
+        unitManager.ships[currentShipIndex].canMove.Value = false;
+        unitManager.ships[currentShipIndex].canShoot.Value = false;
+        TotalActionPoint();
+
         int index = unitManager.ships[currentShipIndex].barqueIndex;
 
         SpawnUnitServerRpc(pos, NetworkManager.LocalClientId, index, true);
@@ -744,13 +749,7 @@ public class Cursor : NetworkBehaviour
         unitManager.ships[index].shipIndexFrom.Value = currentShipIndex;
 
         GridManager.Instance.SetShipOnTileServerRpc(pos, true);
-
         SoundManager.Instance.PlaySoundOnClients(SoundManager.Instance.spawnShip);
-
-        currentSpecialCharge -= unitManager.ships[currentShipIndex].tileCapacity.specialAbilityCost;
-        unitManager.ships[currentShipIndex].canMove.Value = false;
-        unitManager.ships[currentShipIndex].canShoot.Value = false;
-        TotalActionPoint();
     }
 
     IEnumerator TShotFunction(TileScript t)

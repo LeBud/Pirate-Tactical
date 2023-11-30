@@ -48,6 +48,7 @@ public class ShipUnit : NetworkBehaviour
 
     [Header("Upgrade")]
     public bool canBeUpgrade = true;
+    public UpgradeSystem.UpgradeType upgrade;
 
     [Header("Colors")]
     public Color player1Color;
@@ -205,6 +206,11 @@ public class ShipUnit : NetworkBehaviour
                     GameManager.Instance.player1unitLeft--;
                 else if(GetComponent<NetworkObject>().OwnerClientId == 1)
                     GameManager.Instance.player2unitLeft--;
+            }
+
+            if(upgrade != UpgradeSystem.UpgradeType.None)
+            {
+                GridManager.Instance.SpawnShipwrekServerRpc(upgrade, unitPos.Value);
             }
 
             SoundManager.Instance.PlaySoundOnClients(SoundManager.Instance.shipDestroyed);

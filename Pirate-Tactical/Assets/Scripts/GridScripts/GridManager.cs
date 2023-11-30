@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using Unity.Netcode;
 using UnityEngine;
+using UnityEngine.Rendering;
 using UnityEngine.Tilemaps;
 
 public class GridManager : NetworkBehaviour
@@ -39,6 +40,9 @@ public class GridManager : NetworkBehaviour
 
     [Header("Cannon")]
     public Cannon cannonPrefab;
+
+    [Header("Ship wreck")]
+    public Shipwrek shipwreckPrefab;
 
     List<Cannon> cannonsOnMap = new List<Cannon>();
 
@@ -557,7 +561,7 @@ public class GridManager : NetworkBehaviour
         c.GetComponent<NetworkObject>().Spawn();
         c.ID.Value = id;
         c.tiles = PathfindScript.GetCombatZoneSize(t, 3);
-        c.SetColorClientRpc();
+        c.SetColorClientRpc(id);
 
         t.cannonInTile.Value = true;
 
@@ -613,6 +617,23 @@ public class GridManager : NetworkBehaviour
         }
 
         SoundManager.Instance.PlaySoundOnClients(SoundManager.Instance.shipDestroyed);
+    }
+
+    [ServerRpc]
+    public void SpawnShipwrekServerRpc(UpgradeSystem.UpgradeType upgrade, Vector2 pos)
+    {
+        Shipwrek shipwrek = Instantiate(shipwreckPrefab, pos, Quaternion.identity);
+        shipwrek.GetComponent<NetworkObject>().Spawn();
+        shipwrek.upgradeType.Value = upgrade;
+
+        SetShipwreckOnMapServerRpc(pos, true);
+    }
+
+    [ServerRpc]
+    public void SetShipwreckOnMapServerRpc(Vector2 pos, bool active)
+    {
+        TileScript t = GetTileAtPosition(pos);
+        t.shipwrek.Value = active;
     }
 
 }

@@ -37,6 +37,7 @@ public class TileScript : NetworkBehaviour
     public NetworkVariable<bool> mineInTile = new NetworkVariable<bool>(false, NetworkVariableReadPermission.Everyone);
     public NetworkVariable<int> shopIndex = new NetworkVariable<int>(0, NetworkVariableReadPermission.Everyone);
     public NetworkVariable<bool> cannonInTile = new NetworkVariable<bool>(false, NetworkVariableReadPermission.Everyone);
+    public NetworkVariable<bool> shipwrek = new NetworkVariable<bool>(false, NetworkVariableReadPermission.Everyone);
     
     #region PathFinding
 
