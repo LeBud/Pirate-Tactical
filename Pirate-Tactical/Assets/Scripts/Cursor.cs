@@ -125,13 +125,14 @@ public class Cursor : NetworkBehaviour
 
         for (int i = 0; i < unitManager.ships.Length; i++)
         {
-            if (unitManager.ships[i] == null) continue;
-
-            unitManager.ships[i].canBeSelected.Value = true;
-            unitManager.ships[i].canShoot.Value = true;
-            unitManager.ships[i].canMove.Value = true;
-            totalShootPoint++;
-            totalMovePoint++;
+            if (unitManager.ships[i] != null)
+            {
+                unitManager.ships[i].canBeSelected.Value = true;
+                unitManager.ships[i].canShoot.Value = true;
+                unitManager.ships[i].canMove.Value = true;
+                totalShootPoint++;
+                totalMovePoint++;
+            }
         }
 
         TotalActionPoint();
@@ -304,6 +305,13 @@ public class Cursor : NetworkBehaviour
             return;
         }
 
+        if (!canPlay.Value)
+        {
+            shipSelected = false;
+            HideTiles();
+            return;
+        }
+
         HandleKeyboardInputs();
 
         Vector3 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
@@ -315,12 +323,6 @@ public class Cursor : NetworkBehaviour
         if (!tile.HasValue) return;
         cTile = tile.Value.transform.GetComponent<TileScript>();
 
-        if (!canPlay.Value)
-        {
-            shipSelected = false;
-            HideTiles();
-            return;
-        }
 
         if (Input.GetMouseButtonDown(0) && shipSelected)
         {
@@ -419,8 +421,8 @@ public class Cursor : NetworkBehaviour
             }
         }
 
-        if (Input.GetButtonDown("Cancel") && shipSelected || (shipSelected && !unitManager.ships[currentShipIndex].canBeSelected.Value))
-            SelectShip(cTile);
+        if (Input.GetButtonDown("Cancel") || (shipSelected && !unitManager.ships[currentShipIndex].canBeSelected.Value))
+            DeselectShip();
     }
 
     void HandleKeyboardInputs()
@@ -462,6 +464,16 @@ public class Cursor : NetworkBehaviour
                 SoundManager.Instance.PlaySoundLocally(SoundManager.Instance.selectShip);
                 break;
             }
+        }
+    }
+
+    void DeselectShip()
+    {
+        if (shipSelected)
+        {
+            SoundManager.Instance.PlaySoundLocally(SoundManager.Instance.deselectShip);
+            shipSelected = false;
+            HideTiles();
         }
     }
 

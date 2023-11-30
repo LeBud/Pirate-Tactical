@@ -117,19 +117,29 @@ public class GameManager : NetworkBehaviour
 
         while (true)
         {
-            foreach (Cursor player in players)
+            for (int i = 0; i < 2; i++)
             {
-                player.CalculateHealthClientRpc();
+                for (int x = 0; x < players[i].unitManager.ships.Length; x++)
+                {
+                    if (players[i].unitManager.ships[x] != null)
+                    {
+                        int life = players[i].unitManager.ships[x].unitLife.Value;
+                        float percent = (float)life / players[i].unitManager.ships[x].maxHealth;
+                        players[i].unitManager.ships[x].SetHealthBarClientRpc(percent, life);
+                    }
+                }
+                players[i].CalculateHealthClientRpc();
             }
 
-            HUD.Instance.UpdateHealthBarClientRpc();
+            /*HUD.Instance.UpdateHealthBarClientRpc();
             foreach(ShipUnit s in ships)
             {
                 if(s == null) continue;
 
                 float percent = (float)s.unitLife.Value / s.maxHealth;
                 s.SetHealthBarClientRpc(percent, s.unitLife.Value);
-            }
+            }*/
+
             yield return new WaitForSeconds(.25f);
             if(gameState == GameState.GameFinish)
                 yield break;
@@ -162,8 +172,8 @@ public class GameManager : NetworkBehaviour
             return;
         }
 
-        NetworkManager.ConnectedClients[0].PlayerObject.GetComponent<Cursor>().canPlay.Value = false;
-        NetworkManager.ConnectedClients[1].PlayerObject.GetComponent<Cursor>().canPlay.Value = false;
+        players[0].canPlay.Value = false;
+        players[1].canPlay.Value = false;
 
         switch (gameState)
         {
@@ -171,9 +181,7 @@ public class GameManager : NetworkBehaviour
                 FinishGameOnServerRpc();
                 return;
             case GameState.GameStarting:
-                {
-                    gameState = GameState.selectingShips;
-                }
+                gameState = GameState.selectingShips;
                 break;
             case GameState.Player1Turn:
                 gameState = GameState.Player2Turn;
@@ -241,22 +249,36 @@ public class GameManager : NetworkBehaviour
         {
             currentRound.Value++;
 
-            ShipUnit[] ships = FindObjectsOfType<ShipUnit>();
+            /*ShipUnit[] ships = FindObjectsOfType<ShipUnit>();
             if (ships.Length > 0)
             {
                 foreach (ShipUnit s in ships)
                 {
                     s.UpdateUnitClientRpc();
                 }
+            }*/
+
+
+            for(int i = 0; i < 2; i++)
+            {
+                players[i].RechargeSpecialClientRpc();
+                players[i].CalculateHealthClientRpc();
+                players[i].GoldGainClientRpc();
+
+                for(int x = 0; x < players[i].unitManager.ships.Length; x++)
+                {
+                    if(players[i].unitManager.ships[x] != null)
+                        players[i].unitManager.ships[x].UpdateUnitClientRpc();
+                }
             }
 
-            Cursor[] players = FindObjectsOfType<Cursor>();
+            /*Cursor[] players = FindObjectsOfType<Cursor>();
             foreach (Cursor player in players)
             {
                 player.RechargeSpecialClientRpc();
                 player.CalculateHealthClientRpc();
                 player.GoldGainClientRpc();
-            }
+            }*/
 
             if (currentRound.Value >= startRoundCombatZone && currentRound.Value % 2 != 1 && GridManager.Instance.combatZoneSize.Value > 4 && !combatZoneShrinkEveryRound)
                 GridManager.Instance.combatZoneSize.Value--;
@@ -270,7 +292,7 @@ public class GameManager : NetworkBehaviour
         //Setup pour que seulement le joueur puisse spawn ses unités puis l'autre joueur eznsuite
         if (gameState == GameState.Player1Turn)
         {
-            Cursor currentP = NetworkManager.ConnectedClients[0].PlayerObject.GetComponent<Cursor>();
+            /*Cursor currentP = NetworkManager.ConnectedClients[0].PlayerObject.GetComponent<Cursor>();
             currentP.canPlay.Value = true;
 
             if (currentRound.Value == 0)
@@ -279,11 +301,19 @@ public class GameManager : NetworkBehaviour
             }
 
             if (!currentP.unitManager.allShipSpawned.Value) return;
-            currentP.ResetShipsActionClientRpc();
+            currentP.ResetShipsActionClientRpc();*/
+            
+            players[0].canPlay.Value = true;
+
+            if (currentRound.Value == 0)
+                players[0].SetSpawnableTileClientRpc(0);
+
+            if (players[0].unitManager.allShipSpawned.Value)
+                players[0].ResetShipsActionClientRpc();
         }
         else if (gameState == GameState.Player2Turn)
         {
-            Cursor currentP = NetworkManager.ConnectedClients[1].PlayerObject.GetComponent<Cursor>();
+            /*Cursor currentP = NetworkManager.ConnectedClients[1].PlayerObject.GetComponent<Cursor>();
             currentP.canPlay.Value = true;
 
             if (currentRound.Value == 0)
@@ -292,7 +322,15 @@ public class GameManager : NetworkBehaviour
             }
 
             if (!currentP.unitManager.allShipSpawned.Value) return;
-            currentP.ResetShipsActionClientRpc();
+            currentP.ResetShipsActionClientRpc();*/
+
+            players[1].canPlay.Value = true;
+
+            if (currentRound.Value == 0)
+                players[1].SetSpawnableTileClientRpc(1);
+
+            if (players[1].unitManager.allShipSpawned.Value)
+                players[1].ResetShipsActionClientRpc();
         }
     }
 
@@ -301,7 +339,7 @@ public class GameManager : NetworkBehaviour
     [ServerRpc]
     public void FinishGameOnServerRpc()
     {
-        ShipUnit[] ships = FindObjectsOfType<ShipUnit>();
+        /*ShipUnit[] ships = FindObjectsOfType<ShipUnit>();
         if (ships.Length > 0)
         {
             foreach (ShipUnit s in ships)
@@ -317,6 +355,19 @@ public class GameManager : NetworkBehaviour
             player.RechargeSpecialClientRpc();
             player.CalculateHealthClientRpc();
             player.GoldGainClientRpc();
+        }*/
+
+        for (int i = 0; i < 2; i++)
+        {
+            players[i].RechargeSpecialClientRpc();
+            players[i].CalculateHealthClientRpc();
+            players[i].GoldGainClientRpc();
+
+            for (int x = 0; x < players[i].unitManager.ships.Length; x++)
+            {
+                if (players[i].unitManager.ships[x] != null)
+                    players[i].unitManager.ships[x].UpdateUnitClientRpc();
+            }
         }
 
         string winner = "";
@@ -329,7 +380,6 @@ public class GameManager : NetworkBehaviour
             winner = "Player 1 won";
 
         HUD.Instance.SetGameStateClientRpc(winner, currentRound.Value);
-
     }
 
     //Initialise Player

@@ -176,7 +176,9 @@ public class HUD : NetworkBehaviour
     [ClientRpc]
     public void SetGameStateClientRpc(string gameState, int round)
     {
-        if(round == 0)
+        if(round == -1)
+            gameStateTxt.text = gameState;
+        else if(round == 0)
             gameStateTxt.text = gameState + "\nspawn ships";
         else
             gameStateTxt.text = gameState + "\nround " + round;

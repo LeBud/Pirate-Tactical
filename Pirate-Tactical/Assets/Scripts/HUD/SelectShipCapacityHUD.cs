@@ -22,6 +22,8 @@ public class SelectShipCapacityHUD : NetworkBehaviour
     public CapacitiesSO[] sloopTileCapacities;
 
     public Button readyBtt;
+    public string bttReadyTxt;
+    public string bttNotReadyTxt;
 
     [Header("DropDowns")]
     public TMP_Dropdown galionShot;
@@ -163,6 +165,10 @@ public class SelectShipCapacityHUD : NetworkBehaviour
     public void GetReady()
     {
         isReady = !isReady;
+        if (isReady)
+            readyBtt.GetComponentInChildren<TextMeshProUGUI>().text = bttReadyTxt;
+        else
+            readyBtt.GetComponentInChildren<TextMeshProUGUI>().text = bttNotReadyTxt;
 
         player.isReady.Value = isReady;
     }

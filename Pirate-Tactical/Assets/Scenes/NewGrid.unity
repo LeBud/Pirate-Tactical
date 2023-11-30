@@ -16552,7 +16552,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &1120386599
 RectTransform:
   m_ObjectHideFlags: 0
@@ -19618,6 +19618,8 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 218df1453f289dc4fbc280e9a55e8532, type: 2}
   - {fileID: 11400000, guid: 476abe6bc9ed9344895c31f5aecbc04c, type: 2}
   readyBtt: {fileID: 157384572}
+  bttReadyTxt: "pr\xEAt"
+  bttNotReadyTxt: "pas pr\xEAt"
   galionShot: {fileID: 1137523388}
   galionTile: {fileID: 1916364432}
   brigantinShot: {fileID: 1258488609}
@@ -25629,7 +25631,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1904836288}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
   m_Name: 
@@ -25642,7 +25644,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 0}
+  m_Sprite: {fileID: 10915, guid: 0000000000000000f000000000000000, type: 0}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
