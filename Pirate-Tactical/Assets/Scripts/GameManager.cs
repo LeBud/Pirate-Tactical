@@ -100,6 +100,8 @@ public class GameManager : NetworkBehaviour
             player.CalculateHealthClientRpc();
         }
 
+        HUD.Instance.UpdateHealthBarClientRpc();
+
         yield return new WaitForSeconds(.5f);
 
         SetUpGameBaseInfoServerRpc();
@@ -130,6 +132,8 @@ public class GameManager : NetworkBehaviour
                 }
                 players[i].CalculateHealthClientRpc();
             }
+
+            HUD.Instance.UpdateHealthBarClientRpc();
 
             yield return new WaitForSeconds(.25f);
             if(gameState == GameState.GameFinish)
@@ -256,6 +260,8 @@ public class GameManager : NetworkBehaviour
                 }
             }
 
+            HUD.Instance.UpdateHealthBarClientRpc();
+
             if (currentRound.Value >= startRoundCombatZone && currentRound.Value % 2 != 1 && GridManager.Instance.combatZoneSize.Value > 4 && !combatZoneShrinkEveryRound)
                 GridManager.Instance.combatZoneSize.Value--;
             else if (currentRound.Value >= startRoundCombatZone && GridManager.Instance.combatZoneSize.Value > 4 && combatZoneShrinkEveryRound)
@@ -313,6 +319,8 @@ public class GameManager : NetworkBehaviour
                     players[i].unitManager.ships[x].UpdateUnitClientRpc();
             }
         }
+
+        HUD.Instance.UpdateHealthBarClientRpc();
 
         string winner = "";
 

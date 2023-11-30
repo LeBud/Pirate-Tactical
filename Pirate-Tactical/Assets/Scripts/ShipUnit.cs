@@ -191,6 +191,8 @@ public class ShipUnit : NetworkBehaviour
         foreach (Cursor c in p)
             c.CalculateHealthClientRpc();
 
+        HUD.Instance.UpdateHealthBarClientRpc();
+        
         //Only set to true when an enemy unit attack this one with his special and has a passive effect
         if (passiveAttack && !hasGoneThroughWater)
             GivePassiveFireToUnitClientRpc(effectDuration, dmg);

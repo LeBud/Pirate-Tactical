@@ -106,8 +106,6 @@ public class Cursor : NetworkBehaviour
         }
 
         SetHealthServerRpc(newHealth);
-        if (GameManager.Instance.currentRound.Value > 0)
-            HUD.Instance.UpdateHealthBarClientRpc();
     }
 
     [ClientRpc]
@@ -259,6 +257,8 @@ public class Cursor : NetworkBehaviour
             unitManager.ships[index].unitPos.Value = new Vector3(pos.x, pos.y, -1);
             unitManager.ships[index].SetShipColorClientRpc(id);
         }
+
+        HUD.Instance.SetShipOnHUD();
     }
 
     #endregion
