@@ -39,7 +39,7 @@ public class HUD : NetworkBehaviour
     public GameObject inGameHUD;
     public Transform shipsDisplay;
     public Transform shipHighlight;
-    public GameObject shipPref;
+    public Transform enemyShipsDisplay;
 
     [Header("Upgrade")]
     public GameObject upgradeWindow;
@@ -57,8 +57,6 @@ public class HUD : NetworkBehaviour
 
     int playerMaxHealth;
     int enemyMaxHealth;
-
-    int shipLenght;
 
     private void Awake()
     {
@@ -128,26 +126,39 @@ public class HUD : NetworkBehaviour
     {
         if (player == null) return;
 
-        if(shipLenght != player.unitManager.ships.Length)
+        for(int i = 0; i<player.unitManager.ships.Length; i++)
         {
-            //Spawn Object (meme si on les spawn pas)
-            foreach(Transform t in shipsDisplay)
-                Destroy(t.gameObject);
-
-            for(int i = 0; i<player.unitManager.ships.Length; i++)
+            if (player.unitManager.ships[i] != null)
             {
-                if (player.unitManager.ships[i] != null)
-                {
-                    //Dire de faire apparaitre les objets là
-                    GameObject o = Instantiate(shipPref, shipsDisplay);
-                    o.transform.GetChild(i).GetChild(3).GetComponent<TextMeshProUGUI>().text = player.unitManager.ships[i].damage.Value.ToString();
-                    o.transform.GetChild(i).GetChild(4).GetComponent<TextMeshProUGUI>().text = player.unitManager.ships[i].shotCapacity.specialAbilityCost.ToString();
-                    o.GetComponent<Button>().onClick.AddListener(() => { SelectShipOnHUD(i); });
-                }
+                shipsDisplay.GetChild(i).gameObject.SetActive(true);
+                shipsDisplay.GetChild(i).transform.GetChild(3).GetComponent<TextMeshProUGUI>().text = player.unitManager.ships[i].unitLife.Value.ToString();
+                shipsDisplay.GetChild(i).transform.GetChild(4).GetComponent<TextMeshProUGUI>().text = player.unitManager.ships[i].shotCapacity.specialAbilityCost.ToString();
+                //Mettre des sprites
+                //shipsDisplay.GetChild(i).transform.GetChild(5).GetComponent<TextMeshProUGUI>().text = player.unitManager.ships[i].unitSpecialShot.Value.ToString();
+                //shipsDisplay.GetChild(i).transform.GetChild(6).GetComponent<TextMeshProUGUI>().text = player.unitManager.ships[i].unitSpecialTile.Value.ToString();
             }
-            shipLenght = player.unitManager.ships.Length;
+            else
+                shipsDisplay.GetChild(i).gameObject.SetActive(false);
         }
+    }
 
+    public void SetEnemiesShip()
+    {
+        if (enemyPlayer == null) return;
+
+        for (int i = 0; i < enemyPlayer.unitManager.ships.Length; i++)
+        {
+            if (enemyPlayer.unitManager.ships[i] != null)
+            {
+                enemyShipsDisplay.GetChild(i).gameObject.SetActive(true);
+                enemyShipsDisplay.GetChild(i).transform.GetChild(2).GetComponent<TextMeshProUGUI>().text = enemyPlayer.unitManager.ships[i].unitLife.Value.ToString();
+                //Mettre des sprites
+                //enemyShipsDisplay.GetChild(i).transform.GetChild(4).GetComponent<TextMeshProUGUI>().text = enemyPlayer.unitManager.ships[i].unitSpecialShot.Value.ToString();
+                //enemyShipsDisplay.GetChild(i).transform.GetChild(4).GetComponent<TextMeshProUGUI>().text = enemyPlayer.unitManager.ships[i].unitSpecialTile.Value.ToString();
+            }
+            else
+                enemyShipsDisplay.GetChild(i).gameObject.SetActive(false);
+        }
     }
 
     string GetCurrentMode(int i)
@@ -235,6 +246,8 @@ public class HUD : NetworkBehaviour
     [ClientRpc]
     public void UpdateHealthBarClientRpc()
     {
+        if (player == null || enemyPlayer == null) return;
+
         playerSlider.value = player.totalPlayerHealth.Value;
         enemyPlayerSlider.value = enemyPlayer.totalPlayerHealth.Value;
 
@@ -242,6 +255,7 @@ public class HUD : NetworkBehaviour
         enemyHealthTxt.text = enemyPlayer.totalPlayerHealth.Value.ToString() + " / " + enemyMaxHealth;
 
         SetShipOnHUD();
+        SetEnemiesShip();
     }
 
     [ClientRpc]
@@ -290,9 +304,9 @@ public class HUD : NetworkBehaviour
             else if (id == 1) enemyPlayerName.text = GameManager.Instance.player2.Value.ToString();
         }
 
-        shipLenght = player.unitManager.ships.Length;
+
         SetShipOnHUD();
-        
+        SetEnemiesShip();
     }
 
 #endregion

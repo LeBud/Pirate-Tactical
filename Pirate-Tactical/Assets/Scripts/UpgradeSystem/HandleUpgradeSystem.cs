@@ -154,11 +154,11 @@ public class HandleUpgradeSystem : NetworkBehaviour
                 p.unitManager.ships[p.currentShipIndex].upgrade = upgrades[shopIndex, i].upgradeType;
                 break;
             case UpgradeSystem.UpgradeType.TileCapacity:
-                p.unitManager.ships[p.currentShipIndex].unitSpecialTile = upgrades[shopIndex, i].newTileCapacity;
+                p.unitManager.ships[p.currentShipIndex].unitSpecialTile.Value = upgrades[shopIndex, i].newTileCapacity;
                 p.unitManager.ships[p.currentShipIndex].upgrade = upgrades[shopIndex, i].upgradeType;
                 break;
             case UpgradeSystem.UpgradeType.ShootCapacity:
-                p.unitManager.ships[p.currentShipIndex].unitSpecialShot = upgrades[shopIndex, i].newShootCapacity;
+                p.unitManager.ships[p.currentShipIndex].unitSpecialShot.Value = upgrades[shopIndex, i].newShootCapacity;
                 p.unitManager.ships[p.currentShipIndex].upgrade = upgrades[shopIndex, i].upgradeType;
                 break;
         }

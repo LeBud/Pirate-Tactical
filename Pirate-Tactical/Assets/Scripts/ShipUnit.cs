@@ -33,10 +33,11 @@ public class ShipUnit : NetworkBehaviour
     public NetworkVariable<int> accostDmgBoost = new NetworkVariable<int>(0, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
 
     [Header("Unit Special stats")]
-    public UnitSpecialShot unitSpecialShot;
-    public UnitSpecialTile unitSpecialTile;
+    public NetworkVariable<UnitSpecialShot> unitSpecialShot = new NetworkVariable<UnitSpecialShot>(0, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
+    public NetworkVariable<UnitSpecialTile> unitSpecialTile = new NetworkVariable<UnitSpecialTile>(0, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
     public CapacitiesSO shotCapacity;
     public CapacitiesSO tileCapacity;
+    public bool upgradedCapacity = false;
 
     [Header("Barque Parameters")]
     public bool barqueSpawn = false;
@@ -89,14 +90,14 @@ public class ShipUnit : NetworkBehaviour
 
         if (!isBark)
         {
-            unitSpecialShot = shotCapacity.shootCapacity;
-            unitSpecialTile = tileCapacity.tileCapacity;
+            unitSpecialShot.Value = shotCapacity.shootCapacity;
+            unitSpecialTile.Value = tileCapacity.tileCapacity;
         }
     }
 
     private void Update()
     {
-        if (!IsServer) return;
+        if (!IsOwner) return;
 
         if (transform.position != new Vector3(unitPos.Value.x, unitPos.Value.y, -1) && !isMoving)
             StartCoroutine(MoveShip());

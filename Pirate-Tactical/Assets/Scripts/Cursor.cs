@@ -629,7 +629,7 @@ public class Cursor : NetworkBehaviour
     {
         if (!t.Walkable && t.shipOnTile.Value) return;
 
-        switch (unitManager.ships[currentShipIndex].unitSpecialTile)
+        switch (unitManager.ships[currentShipIndex].unitSpecialTile.Value)
         {
             case ShipUnit.UnitSpecialTile.BlockTile:
                 GridManager.Instance.BlockedTileServerRpc(t.pos.Value, NetworkManager.LocalClientId, unitManager.ships[currentShipIndex].tileCapacity.tilePassiveDuration);
@@ -659,7 +659,7 @@ public class Cursor : NetworkBehaviour
 
     void HandleSpecialUnitAttackOnUnit(TileScript t)
     {
-        switch (unitManager.ships[currentShipIndex].unitSpecialShot)
+        switch (unitManager.ships[currentShipIndex].unitSpecialShot.Value)
         {
             case ShipUnit.UnitSpecialShot.PushUnit:
                 GridManager.Instance.PushUnitServerRpc(t.pos.Value, unitManager.ships[currentShipIndex].unitPos.Value, NetworkManager.LocalClientId);

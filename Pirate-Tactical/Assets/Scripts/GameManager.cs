@@ -100,7 +100,8 @@ public class GameManager : NetworkBehaviour
             player.CalculateHealthClientRpc();
         }
 
-        HUD.Instance.UpdateHealthBarClientRpc();
+        if (currentRound.Value > 0)
+            HUD.Instance.UpdateHealthBarClientRpc();
 
         yield return new WaitForSeconds(.5f);
 
@@ -260,7 +261,8 @@ public class GameManager : NetworkBehaviour
                 }
             }
 
-            HUD.Instance.UpdateHealthBarClientRpc();
+            if(currentRound.Value > 0)
+                HUD.Instance.UpdateHealthBarClientRpc();
 
             if (currentRound.Value >= startRoundCombatZone && currentRound.Value % 2 != 1 && GridManager.Instance.combatZoneSize.Value > 4 && !combatZoneShrinkEveryRound)
                 GridManager.Instance.combatZoneSize.Value--;
@@ -320,7 +322,8 @@ public class GameManager : NetworkBehaviour
             }
         }
 
-        HUD.Instance.UpdateHealthBarClientRpc();
+        if (currentRound.Value > 0)
+            HUD.Instance.UpdateHealthBarClientRpc();
 
         string winner = "";
 
