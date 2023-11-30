@@ -131,27 +131,35 @@ public class HandleUpgradeSystem : NetworkBehaviour
         {
             case UpgradeSystem.UpgradeType.Accost:
                 p.unitManager.ships[p.currentShipIndex].accostDmgBoost.Value += upgrades[shopIndex, i].value;
+                p.unitManager.ships[p.currentShipIndex].upgrade = upgrades[shopIndex, i].upgradeType;
                 break;
             case UpgradeSystem.UpgradeType.Damage:
                 p.unitManager.ships[p.currentShipIndex].damage.Value += upgrades[shopIndex, i].value;
+                p.unitManager.ships[p.currentShipIndex].upgrade = upgrades[shopIndex, i].upgradeType;
                 break;
             case UpgradeSystem.UpgradeType.ManaGain:
                 p.specialGainPerRound += upgrades[shopIndex, i].value;
+                p.unitManager.ships[p.currentShipIndex].upgrade = upgrades[shopIndex, i].upgradeType;
                 break;
             case UpgradeSystem.UpgradeType.MoveRange:
                 p.unitManager.ships[p.currentShipIndex].unitMoveRange += upgrades[shopIndex, i].value;
+                p.unitManager.ships[p.currentShipIndex].upgrade = upgrades[shopIndex, i].upgradeType;
                 break;
             case UpgradeSystem.UpgradeType.TotalMana:
                 p.maxSpecialCharge += upgrades[shopIndex, i].value;
+                p.unitManager.ships[p.currentShipIndex].upgrade = upgrades[shopIndex, i].upgradeType;
                 break;
             case UpgradeSystem.UpgradeType.ShootRange:
                 p.unitManager.ships[p.currentShipIndex].unitShootRange += upgrades[shopIndex, i].value;
+                p.unitManager.ships[p.currentShipIndex].upgrade = upgrades[shopIndex, i].upgradeType;
                 break;
             case UpgradeSystem.UpgradeType.TileCapacity:
                 p.unitManager.ships[p.currentShipIndex].unitSpecialTile = upgrades[shopIndex, i].newTileCapacity;
+                p.unitManager.ships[p.currentShipIndex].upgrade = upgrades[shopIndex, i].upgradeType;
                 break;
             case UpgradeSystem.UpgradeType.ShootCapacity:
                 p.unitManager.ships[p.currentShipIndex].unitSpecialShot = upgrades[shopIndex, i].newShootCapacity;
+                p.unitManager.ships[p.currentShipIndex].upgrade = upgrades[shopIndex, i].upgradeType;
                 break;
         }
 

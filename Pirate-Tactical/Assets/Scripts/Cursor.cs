@@ -340,11 +340,14 @@ public class Cursor : NetworkBehaviour
                             bool alliesUnit = false;
                             foreach (var ship in unitManager.ships)
                             {
-                                if (ship.unitPos.Value == cTile.pos.Value && ship.clientIdOwner == NetworkManager.LocalClientId && ship.canBeSelected.Value)
+                                if(ship != null)
                                 {
-                                    alliesUnit = true;
-                                    SelectShip(cTile);
-                                    break;
+                                    if (ship.unitPos.Value == cTile.pos.Value && ship.clientIdOwner == NetworkManager.LocalClientId && ship.canBeSelected.Value)
+                                    {
+                                        alliesUnit = true;
+                                        SelectShip(cTile);
+                                        break;
+                                    }
                                 }
                             }
                             if (!alliesUnit)

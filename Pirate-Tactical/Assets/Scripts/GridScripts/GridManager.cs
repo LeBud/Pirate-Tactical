@@ -625,6 +625,7 @@ public class GridManager : NetworkBehaviour
         Shipwrek shipwrek = Instantiate(shipwreckPrefab, pos, Quaternion.identity);
         shipwrek.GetComponent<NetworkObject>().Spawn();
         shipwrek.upgradeType.Value = upgrade;
+        shipwrek.pos = pos;
 
         SetShipwreckOnMapServerRpc(pos, true);
     }

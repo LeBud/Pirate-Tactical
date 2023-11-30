@@ -288,6 +288,13 @@ public class GameManager : NetworkBehaviour
             else if (currentRound.Value >= startRoundCombatZone && GridManager.Instance.combatZoneSize.Value > 4 && combatZoneShrinkEveryRound)
                 GridManager.Instance.combatZoneSize.Value--;
 
+            Shipwrek[] wreck = FindObjectsOfType<Shipwrek>();
+            if(wreck.Length > 0)
+            {
+                foreach (var w in wreck)
+                    w.CheckForRoundToDisappearServerRpc();
+            }
+
             if (currentRound.Value > 0 && !poolingStarted)
                 PoolingInfosToUpdate();
         }
