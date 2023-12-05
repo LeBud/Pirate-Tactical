@@ -12,10 +12,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ae24bb6ea95332e4ab79f27d29d4ce27, type: 3}
   m_Name: Damage
   m_EditorClassIdentifier: 
-  upName: damage+
-  upDescription: description
+  upName: Doublez les canons !
+  upDescription: "Vous r\xE9alisez 3 d\xE9g\xE2ts de plus lorsque vous tirer sur
+    un ennemis"
   upgradeType: 1
   value: 3
   goldCost: 120
-  newShootCapacity: 0
-  newTileCapacity: 0

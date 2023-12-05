@@ -130,9 +130,11 @@ public class HUD : NetworkBehaviour
 
     }
 
-    public void SetShipOnHUD()
+    public IEnumerator SetShipOnHUD()
     {
-        if (player == null) return;
+        if (player == null) yield break;
+
+        yield return new WaitForSeconds(0.5f);
 
         for(int i = 0; i<player.unitManager.ships.Length; i++)
         {
@@ -150,9 +152,11 @@ public class HUD : NetworkBehaviour
         }
     }
 
-    public void SetEnemiesShip()
+    public IEnumerator SetEnemiesShip()
     {
-        if (enemyPlayer == null) return;
+        if (enemyPlayer == null) yield break;
+
+        yield return new WaitForSeconds(0.5f);
 
         for (int i = 0; i < enemyPlayer.unitManager.ships.Length; i++)
         {
@@ -262,8 +266,8 @@ public class HUD : NetworkBehaviour
         playerHealthTxt.text = player.totalPlayerHealth.Value.ToString() + " / " + playerMaxHealth;
         enemyHealthTxt.text = enemyPlayer.totalPlayerHealth.Value.ToString() + " / " + enemyMaxHealth;
 
-        SetShipOnHUD();
-        SetEnemiesShip();
+        StartCoroutine(SetShipOnHUD());
+        StartCoroutine(SetEnemiesShip());
     }
 
     [ClientRpc]
@@ -313,8 +317,8 @@ public class HUD : NetworkBehaviour
         }
 
 
-        SetShipOnHUD();
-        SetEnemiesShip();
+        StartCoroutine(SetShipOnHUD());
+        StartCoroutine(SetEnemiesShip());
     }
 
 #endregion

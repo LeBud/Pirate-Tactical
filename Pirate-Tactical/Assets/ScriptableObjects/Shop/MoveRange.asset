@@ -12,10 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ae24bb6ea95332e4ab79f27d29d4ce27, type: 3}
   m_Name: MoveRange
   m_EditorClassIdentifier: 
-  upName: move +1
-  upDescription: description
+  upName: Sortez les voiles !
+  upDescription: "Vous pouvez vous d\xE9placer sur une distance d'une case suppl\xE9mentaire"
   upgradeType: 2
   value: 1
   goldCost: 120
-  newShootCapacity: 0
-  newTileCapacity: 0

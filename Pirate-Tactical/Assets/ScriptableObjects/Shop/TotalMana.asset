@@ -12,10 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ae24bb6ea95332e4ab79f27d29d4ce27, type: 3}
   m_Name: TotalMana
   m_EditorClassIdentifier: 
-  upName: totalmana+
-  upDescription: description
+  upName: "Capacit\xE9 de charge"
+  upDescription: "Votre charge total de sp\xE9ciale est augment\xE9 de 20 points"
   upgradeType: 5
   value: 20
   goldCost: 120
-  newShootCapacity: 0
-  newTileCapacity: 0

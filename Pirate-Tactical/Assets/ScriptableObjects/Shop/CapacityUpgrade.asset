@@ -12,8 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ae24bb6ea95332e4ab79f27d29d4ce27, type: 3}
   m_Name: CapacityUpgrade
   m_EditorClassIdentifier: 
-  upName: Upgrade Capacity
-  upDescription: Upgrade your capacities
+  upName: "Cpacit\xE9 Am\xE9liorer"
+  upDescription: "Am\xE9liorer vos capacit\xE9 au niveau sup\xE9rieur (WIP)"
   upgradeType: 7
   value: 0
   goldCost: 240

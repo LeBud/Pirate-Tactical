@@ -12,10 +12,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ae24bb6ea95332e4ab79f27d29d4ce27, type: 3}
   m_Name: ManaGain
   m_EditorClassIdentifier: 
-  upName: managain+
-  upDescription: description
+  upName: "Gain de charge sp\xE9ciale"
+  upDescription: "Vous obtenez 5 points de charge sp\xE9ciale suppl\xE9mentaire \xE0
+    la fin de chaque tour."
   upgradeType: 6
   value: 5
   goldCost: 120
-  newShootCapacity: 0
-  newTileCapacity: 0
