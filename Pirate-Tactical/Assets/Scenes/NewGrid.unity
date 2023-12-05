@@ -4291,7 +4291,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6960e84d07fb87f47956e7a81d71c4e6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_ProtocolType: 1
+  m_ProtocolType: 0
   m_MaxPacketQueueSize: 128
   m_MaxPayloadSize: 6144
   m_HeartbeatTimeoutMS: 500
@@ -6516,7 +6516,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &421887028
 RectTransform:
   m_ObjectHideFlags: 0
@@ -15160,7 +15160,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &1107832327
 RectTransform:
   m_ObjectHideFlags: 0
@@ -18539,10 +18539,7 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 588db06bae0c75f41be9531e803359cc, type: 2}
   - {fileID: 11400000, guid: aee0b2e56299fdf42b9d7f60afa71b8b, type: 2}
   - {fileID: 11400000, guid: 38c8f38897a26774db1d7b66bda6c6a6, type: 2}
-  allCapacityUpgrades:
-  - {fileID: 11400000, guid: 5f6b66f7698ae614a8ad449008a0d85d, type: 2}
-  - {fileID: 11400000, guid: 35981e2ea75a7b24984300b287273537, type: 2}
-  - {fileID: 11400000, guid: bcf39cdd1da62a04a9c516b71aca5918, type: 2}
+  CapacityUpgrade: {fileID: 11400000, guid: 5f6b66f7698ae614a8ad449008a0d85d, type: 2}
 --- !u!114 &1381260911
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -360,7 +360,7 @@ public class Cursor : NetworkBehaviour
                             if (unitManager.ships[currentShipIndex].canBeUpgrade)
                                 HUD.Instance.UpgradeWindow(true, cTile.shopIndex.Value);
                         }
-                        else if (cTile.shipwrek.Value)
+                        else if (cTile.shipwrek.Value) //Récupérer une amélioration
                         {
                             if (unitManager.ships[currentShipIndex].canBeUpgrade)
                             {

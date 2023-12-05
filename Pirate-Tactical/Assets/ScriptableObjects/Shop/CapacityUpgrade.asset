@@ -10,12 +10,10 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: ae24bb6ea95332e4ab79f27d29d4ce27, type: 3}
-  m_Name: newCapacity2
+  m_Name: CapacityUpgrade
   m_EditorClassIdentifier: 
-  upName: capacity2
-  upDescription: description
-  upgradeType: 8
+  upName: Upgrade Capacity
+  upDescription: Upgrade your capacities
+  upgradeType: 7
   value: 0
   goldCost: 240
-  newShootCapacity: 0
-  newTileCapacity: 3

@@ -49,6 +49,7 @@ public class ShipUnit : NetworkBehaviour
 
     [Header("Upgrade")]
     public bool canBeUpgrade = true;
+    public bool capacitiesUpgraded = false;
     public UpgradeSystem.UpgradeType upgrade;
 
     [Header("Colors")]
