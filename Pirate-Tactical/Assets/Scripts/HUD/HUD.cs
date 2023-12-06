@@ -168,8 +168,8 @@ public class HUD : NetworkBehaviour
                 enemyShipsDisplay.GetChild(i).gameObject.SetActive(true);
                 enemyShipsDisplay.GetChild(i).transform.GetChild(2).GetComponent<TextMeshProUGUI>().text = enemyPlayer.unitManager.ships[i].unitLife.Value.ToString();
                 //Mettre des sprites
-                enemyShipsDisplay.GetChild(i).transform.GetChild(4).GetComponent<Image>().sprite = GetIconShot(enemyPlayer.unitManager.ships[i].unitSpecialShot.Value);
-                enemyShipsDisplay.GetChild(i).transform.GetChild(5).GetComponent<Image>().sprite = GetIconTile(enemyPlayer.unitManager.ships[i].unitSpecialTile.Value);
+                enemyShipsDisplay.GetChild(i).transform.GetChild(3).GetComponent<Image>().sprite = GetIconShot(enemyPlayer.unitManager.ships[i].unitSpecialShot.Value);
+                enemyShipsDisplay.GetChild(i).transform.GetChild(4).GetComponent<Image>().sprite = GetIconTile(enemyPlayer.unitManager.ships[i].unitSpecialTile.Value);
             }
             else
                 enemyShipsDisplay.GetChild(i).gameObject.SetActive(false);

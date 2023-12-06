@@ -14,6 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   capacityName: Vent contraire
   capacityDescription: "Ralentissez votre adversaire en limitant ses d\xE9placements"
+  icon: {fileID: 21300000, guid: 8f9e20690e5be4745b646d36c7003643, type: 3}
   specialAbilityCost: 20
   shootCapacity: 5
   specialShootRange: 3

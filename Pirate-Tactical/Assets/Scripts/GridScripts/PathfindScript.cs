@@ -20,8 +20,6 @@ public class PathfindScript : MonoBehaviour
             processed.Add(current);
             toSearch.Remove(current);
 
-            current.SetColor(2);
-
             if (current == targetNode)
             {
                 var currentPathTile = targetNode;
@@ -55,7 +53,6 @@ public class PathfindScript : MonoBehaviour
                     {
                         neighbor.SetH(neighbor.GetTileDistance(targetNode.pos.Value));
                         toSearch.Add(neighbor);
-                        neighbor.SetColor(1);
                     }
                 }
             }

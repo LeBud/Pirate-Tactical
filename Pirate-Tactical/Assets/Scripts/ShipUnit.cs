@@ -91,11 +91,6 @@ public class ShipUnit : NetworkBehaviour
         SetHealthBarClientRpc(healthPercent, unitLife.Value);
         baseMoveRange = unitMoveRange;
 
-        if (!isBark)
-        {
-            unitSpecialShot.Value = shotCapacity.shootCapacity;
-            unitSpecialTile.Value = tileCapacity.tileCapacity;
-        }
     }
 
     private void Update()

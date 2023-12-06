@@ -15,6 +15,7 @@ MonoBehaviour:
   capacityName: "Tir enflamm\xE9"
   capacityDescription: "Tir\xE9 un boulet enflamm\xE9 sur votre adversaire qui infligeront
     des d\xE9gats passifs"
+  icon: {fileID: 21300000, guid: 533822fe24b670046acdfe8109599076, type: 3}
   specialAbilityCost: 40
   shootCapacity: 3
   specialShootRange: 4

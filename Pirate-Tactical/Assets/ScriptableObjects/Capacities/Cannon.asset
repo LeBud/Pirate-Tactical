@@ -15,6 +15,7 @@ MonoBehaviour:
   capacityName: Canon
   capacityDescription: "Poser un canon sur une ile qui infligera des d\xE9gats aux
     ennemis qui rentre dans son p\xE9rim\xE8tre"
+  icon: {fileID: 21300000, guid: db0e793e0fa523747bcf35db35f37c6f, type: 3}
   specialAbilityCost: 20
   shootCapacity: 0
   specialShootRange: 0
