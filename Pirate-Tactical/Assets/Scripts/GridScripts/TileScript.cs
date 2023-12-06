@@ -28,6 +28,7 @@ public class TileScript : NetworkBehaviour
     public bool ShopTile = true;
     public bool canAccessShop = true;
     public bool canSpawnShip = false;
+    public bool upgradedMine = false;
 
     public NetworkVariable<Vector2> pos = new NetworkVariable<Vector2>(Vector2.zero, NetworkVariableReadPermission.Everyone);
     public NetworkVariable<bool> shipOnTile = new NetworkVariable<bool>(false, NetworkVariableReadPermission.Everyone);

@@ -8,7 +8,9 @@ public class Cannon : NetworkBehaviour
 {
     [Header("Stats")]
     public int damage;
+    public int upgradedDamage = 7;
     public NetworkVariable<ulong> ID = new NetworkVariable<ulong>();
+    public bool upgraded = false;
 
     public int index;
     public List<TileScript> tiles = new List<TileScript>();
@@ -35,8 +37,13 @@ public class Cannon : NetworkBehaviour
                 break;
             }
 
-        if(foundShip)
-            GridManager.Instance.DamageUnitNoActionServerRpc(damage, shipMovedPos, ID.Value, false, 0, false);
+        if (foundShip)
+        {
+            if(!upgraded)
+                GridManager.Instance.DamageUnitNoActionServerRpc(damage, shipMovedPos, ID.Value, false, 0, false);
+            else if(upgraded)
+                GridManager.Instance.DamageUnitNoActionServerRpc(upgradedDamage, shipMovedPos, ID.Value, false, 0, false);
+        }
 
     }
 

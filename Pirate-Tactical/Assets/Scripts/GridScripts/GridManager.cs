@@ -27,7 +27,9 @@ public class GridManager : NetworkBehaviour
     List<TileScript> outOfCombatZoneTiles = new List<TileScript>();
 
     public int combatZoneDamage = 4;
-    public int mineDamage = 13;
+    public int mineDamage = 10;
+    public int upgradedMineDamage = 15;
+    public int upgradedMineZoneDamage = 7;
 
     [Header("TileMap Editor")]
     public Tilemap map;
@@ -141,10 +143,10 @@ public class GridManager : NetworkBehaviour
     }
 
     [ServerRpc(RequireOwnership = false)]
-    public void ApplyEffectOnShipServerRpc(Vector2 pos, int duration, ulong id)
+    public void ApplyEffectOnShipServerRpc(Vector2 pos, int duration, ulong id, bool upgraded)
     {
         ShipUnit unit = GetShipAtPos(pos);
-        unit.GiveWindEffectClientRpc(duration);
+        unit.GiveWindEffectClientRpc(duration, upgraded);
 
         Cursor p = NetworkManager.ConnectedClients[id].PlayerObject.GetComponent<Cursor>();
         p.HasDidAnActionClientRpc();
@@ -154,7 +156,7 @@ public class GridManager : NetworkBehaviour
     #region DamageUnit
 
     [ServerRpc(RequireOwnership = false)]
-    public void DamageUnitServerRpc(int damage, Vector2 pos, ulong id, bool passiveAttack, int effectDuration, bool special, bool hasGoThroughWater)
+    public void DamageUnitServerRpc(int damage, Vector2 pos, ulong id, bool passiveAttack, int effectDuration, bool special, bool hasGoThroughWater, bool fireUpgraded)
     {
         ShipUnit ships = GetShipAtPos(pos);
 
@@ -167,6 +169,19 @@ public class GridManager : NetworkBehaviour
                 isEnemy = true;
                 ships.TakeDamageServerRpc(damage, pos, passiveAttack, effectDuration, hasGoThroughWater);
             }
+        }
+
+        if (fireUpgraded && !hasGoThroughWater)
+        {
+            Vector2 check = pos;
+            if (GetShipAtPos(new Vector2(check.x + 1, check.y)))
+                GetShipAtPos(new Vector2(check.x + 1, check.y)).TakeDamageServerRpc(damage, new Vector2(check.x + 1, check.y), passiveAttack, 1, hasGoThroughWater);
+            if (GetShipAtPos(new Vector2(check.x - 1, check.y)))
+                GetShipAtPos(new Vector2(check.x - 1, check.y)).TakeDamageServerRpc(damage, new Vector2(check.x - 1, check.y), passiveAttack, 1, hasGoThroughWater);
+            if (GetShipAtPos(new Vector2(check.x, check.y + 1)))
+                GetShipAtPos(new Vector2(check.x, check.y + 1)).TakeDamageServerRpc(damage, new Vector2(check.x, check.y + 1), passiveAttack, 1, hasGoThroughWater);
+            if (GetShipAtPos(new Vector2(check.x, check.y - 1)))
+                GetShipAtPos(new Vector2(check.x, check.y - 1)).TakeDamageServerRpc(damage, new Vector2(check.x, check.y - 1), passiveAttack, 1, hasGoThroughWater);
         }
 
         if (isEnemy)
@@ -309,7 +324,7 @@ public class GridManager : NetworkBehaviour
         {
             if (GetTileAtPosition(posToCheck).mineInTile.Value)
             {
-                SetMineOnTileServerRpc(posToCheck, 0, false);
+                SetMineOnTileServerRpc(posToCheck, 0, false, false);
                 DamageUnitByMineServerRpc(mineDamage, posToCheck, false, 0);
             }
             Cursor p = NetworkManager.ConnectedClients[id].PlayerObject.GetComponent<Cursor>();
@@ -406,7 +421,7 @@ public class GridManager : NetworkBehaviour
         {
             if (GetTileAtPosition(posToCheck).mineInTile.Value)
             {
-                SetMineOnTileServerRpc(posToCheck, 0, false);
+                SetMineOnTileServerRpc(posToCheck, 0, false, false);
                 DamageUnitByMineServerRpc(mineDamage, posToCheck, false, 0);
             }
             Cursor p = NetworkManager.ConnectedClients[id].PlayerObject.GetComponent<Cursor>();
@@ -424,18 +439,69 @@ public class GridManager : NetworkBehaviour
     {
         ShipUnit[] ships = FindObjectsOfType<ShipUnit>();
 
+        if (GetTileAtPosition(pos).upgradedMine)
+            damage = upgradedMineDamage;
+
+        //Ajouter un check si la tile est upgrade pour les dégats de zone;
+
         for (int i = 0; i < ships.Length; i++)
         {
             if (ships[i].unitPos.Value == pos)
             {
                 ships[i].TakeDamageServerRpc(damage, pos, passiveAttack, effectDuration, false);
                 break;
-
             }
         }
 
-    }
+        #region UpgradedMineAoE
+        if (GetTileAtPosition(pos).upgradedMine)
+        {
+            Vector2 check = pos;
+            ShipUnit unit = GetShipAtPos(pos);
+            if(GetShipAtPos(new Vector2(check.x + 1, check.y)))
+            {
+                unit = GetShipAtPos(new Vector2(check.x + 1, check.y));
+                unit.TakeDamageServerRpc(upgradedMineZoneDamage, new Vector2(check.x + 1, check.y), false, 0, false);
+            }
+            if (GetShipAtPos(new Vector2(check.x - 1, check.y)))
+            {
+                unit = GetShipAtPos(new Vector2(check.x - 1, check.y));
+                unit.TakeDamageServerRpc(upgradedMineZoneDamage, new Vector2(check.x - 1, check.y), false, 0, false);
+            }
+            if (GetShipAtPos(new Vector2(check.x, check.y + 1)))
+            {
+                unit = GetShipAtPos(new Vector2(check.x, check.y + 1));
+                unit.TakeDamageServerRpc(upgradedMineZoneDamage, new Vector2(check.x, check.y + 1), false, 0, false);
+            }
+            if (GetShipAtPos(new Vector2(check.x, check.y - 1)))
+            {
+                unit = GetShipAtPos(new Vector2(check.x, check.y - 1));
+                unit.TakeDamageServerRpc(upgradedMineZoneDamage, new Vector2(check.x, check.y - 1), false, 0, false);
+            }
+            if (GetShipAtPos(new Vector2(check.x + 1, check.y + 1)))
+            {
+                unit = GetShipAtPos(new Vector2(check.x + 1, check.y + 1));
+                unit.TakeDamageServerRpc(upgradedMineZoneDamage, new Vector2(check.x + 1, check.y + 1), false, 0, false);
+            }
+            if (GetShipAtPos(new Vector2(check.x + 1, check.y - 1)))
+            {
+                unit = GetShipAtPos(new Vector2(check.x + 1, check.y - 1));
+                unit.TakeDamageServerRpc(upgradedMineZoneDamage, new Vector2(check.x + 1, check.y - 1), false, 0, false);
+            }
+            if (GetShipAtPos(new Vector2(check.x - 1, check.y + 1)))
+            {
+                unit = GetShipAtPos(new Vector2(check.x - 1, check.y + 1));
+                unit.TakeDamageServerRpc(upgradedMineZoneDamage, new Vector2(check.x - 1, check.y + 1), false, 0, false);
+            }
+            if (GetShipAtPos(new Vector2(check.x - 1, check.y - 1)))
+            {
+                unit = GetShipAtPos(new Vector2(check.x - 1, check.y - 1));
+                unit.TakeDamageServerRpc(upgradedMineZoneDamage, new Vector2(check.x - 1, check.y - 1), false, 0, false);
+            }
+        }
+        #endregion
 
+    }
 
     [ServerRpc(RequireOwnership = false)]
     public void SetShipOnTileServerRpc(Vector2 tilePos, bool active)
@@ -461,7 +527,7 @@ public class GridManager : NetworkBehaviour
                     blockedTiles.Add(t);
 
                     if (t.mineInTile.Value)
-                        SetMineOnTileServerRpc(t.pos.Value, 0, false);
+                        SetMineOnTileServerRpc(t.pos.Value, 0, false, false);
 
                     Cursor p = NetworkManager.ConnectedClients[id].PlayerObject.GetComponent<Cursor>();
                     p.UseManaClientRpc();
@@ -472,14 +538,16 @@ public class GridManager : NetworkBehaviour
     }
 
     [ServerRpc(RequireOwnership = false)]
-    public void SetMineOnTileServerRpc(Vector2 tilePos, ulong id, bool active)
+    public void SetMineOnTileServerRpc(Vector2 tilePos, ulong id, bool active, bool upgraded)
     {
         if (!active && dictionnary.Contains(tilePos))
         {
             foreach (var t in tilesGrid)
                 if (t.pos.Value == tilePos)
                 {
+                    //Ajouter un check si la tile est upgrade pour les dégats de zone;
                     t.mineInTile.Value = false;
+                    t.upgradedMine = false;
                     foreach(ulong _id in NetworkManager.ConnectedClientsIds)
                         t.SetMineTileToClientRpc(_id, false);
                     SoundManager.Instance.PlaySoundOnClients(SoundManager.Instance.mineExploding);
@@ -492,6 +560,7 @@ public class GridManager : NetworkBehaviour
                 if (t.pos.Value == tilePos && !t.shipOnTile.Value)
                 {
                     t.mineInTile.Value = true;
+                    t.upgradedMine = upgraded;
                     t.SetMineTileToClientRpc(id, true);
                     Cursor p = NetworkManager.ConnectedClients[id].PlayerObject.GetComponent<Cursor>();
                     p.UseManaClientRpc();
@@ -543,7 +612,7 @@ public class GridManager : NetworkBehaviour
                 outOfCombatZoneTiles.Add(t);
                 t.tileOutOfCombatZone.Value = true;
                 t.SetTileToOutOfZoneClientRpc();
-                SetMineOnTileServerRpc(t.pos.Value, 0, false);
+                SetMineOnTileServerRpc(t.pos.Value, 0, false, false);
             }
         }
 
@@ -551,7 +620,7 @@ public class GridManager : NetworkBehaviour
     }
 
     [ServerRpc(RequireOwnership = false)]
-    public void AddCannonToTileServerRpc(Vector2 pos, ulong id)
+    public void AddCannonToTileServerRpc(Vector2 pos, ulong id, bool upgraded)
     {
         TileScript t = GetTileAtPosition(pos);
 
@@ -560,7 +629,14 @@ public class GridManager : NetworkBehaviour
         Cannon c = Instantiate(cannonPrefab, new Vector3(pos.x, pos.y, -1), Quaternion.identity);
         c.GetComponent<NetworkObject>().Spawn();
         c.ID.Value = id;
-        c.tiles = PathfindScript.GetCombatZoneSize(t, 3);
+        if(!upgraded)
+            c.tiles = PathfindScript.GetCombatZoneSize(t, 3);
+        else if (upgraded)
+            c.tiles = PathfindScript.GetCombatZoneSize(t, 4);
+
+        if(upgraded)
+            c.upgraded = true;
+
         c.SetColorClientRpc(id);
 
         t.cannonInTile.Value = true;

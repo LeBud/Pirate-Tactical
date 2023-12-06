@@ -237,10 +237,14 @@ public class ShipUnit : NetworkBehaviour
     }
 
     [ClientRpc]
-    public void GiveWindEffectClientRpc(int roundDuration)
+    public void GiveWindEffectClientRpc(int roundDuration, bool upgraded)
     {
         roundToStopWindEffect = roundDuration + GameManager.Instance.currentRound.Value;
-        unitMoveRange -= 2;
+        if (!upgraded)
+            unitMoveRange -= 2;
+        else if (upgraded)
+            unitMoveRange = 0;
+
         if(unitMoveRange < 0) unitMoveRange = 0;
     }
 

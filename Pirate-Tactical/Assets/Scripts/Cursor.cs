@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Unity.Collections;
 using Unity.Netcode;
+using Unity.VisualScripting;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
@@ -388,7 +389,7 @@ public class Cursor : NetworkBehaviour
 
                     if (cTile.shipOnTile.Value && canShoot && unitManager.ships[currentShipIndex].canShoot.Value)
                     {
-                        GridManager.Instance.DamageUnitServerRpc(unitManager.ships[currentShipIndex].damage.Value, cTile.pos.Value, NetworkManager.LocalClientId, false, 0, false, HasGoThroughWaterCapacity(cTile));
+                        GridManager.Instance.DamageUnitServerRpc(unitManager.ships[currentShipIndex].damage.Value, cTile.pos.Value, NetworkManager.LocalClientId, false, 0, false, HasGoThroughWaterCapacity(cTile), false);
                         SoundManager.Instance.PlaySoundOnClients(SoundManager.Instance.attack);
                     }
                     else if (cTile.cannonInTile.Value && canShoot && unitManager.ships[currentShipIndex].canShoot.Value)
@@ -638,16 +639,16 @@ public class Cursor : NetworkBehaviour
                     break;
                 case ShipUnit.UnitSpecialTile.Mine:
                     if(!t.Walkable)
-                        GridManager.Instance.SetMineOnTileServerRpc(t.pos.Value, NetworkManager.LocalClientId, true);
+                        GridManager.Instance.SetMineOnTileServerRpc(t.pos.Value, NetworkManager.LocalClientId, true, false);
                     break;
                 case ShipUnit.UnitSpecialTile.Teleport:
                     TeleportShip(t);
                     break;
                 case ShipUnit.UnitSpecialTile.FouilleOr:
-                    SearchGold();
+                    SearchGold(false);
                     break;
                 case ShipUnit.UnitSpecialTile.CanonSurIle:
-                    GridManager.Instance.AddCannonToTileServerRpc(cTile.pos.Value, NetworkManager.LocalClientId);
+                    GridManager.Instance.AddCannonToTileServerRpc(cTile.pos.Value, NetworkManager.LocalClientId, false);
                     break;
                 case ShipUnit.UnitSpecialTile.Barque:
                     StartCoroutine(SpawnBarque(t.pos.Value, t));
@@ -665,16 +666,16 @@ public class Cursor : NetworkBehaviour
                     break;
                 case ShipUnit.UnitSpecialTile.Mine:
                     if (!t.Walkable)
-                        GridManager.Instance.SetMineOnTileServerRpc(t.pos.Value, NetworkManager.LocalClientId, true);
+                        GridManager.Instance.SetMineOnTileServerRpc(t.pos.Value, NetworkManager.LocalClientId, true, true);
                     break;
                 case ShipUnit.UnitSpecialTile.Teleport:
                     TeleportShip(t);
                     break;
                 case ShipUnit.UnitSpecialTile.FouilleOr:
-                    SearchGold();
+                    SearchGold(true);
                     break;
                 case ShipUnit.UnitSpecialTile.CanonSurIle:
-                    GridManager.Instance.AddCannonToTileServerRpc(cTile.pos.Value, NetworkManager.LocalClientId);
+                    GridManager.Instance.AddCannonToTileServerRpc(cTile.pos.Value, NetworkManager.LocalClientId, true);
                     break;
                 case ShipUnit.UnitSpecialTile.Barque:
                     StartCoroutine(SpawnBarque(t.pos.Value, t));
@@ -697,16 +698,16 @@ public class Cursor : NetworkBehaviour
                     GridManager.Instance.PushUnitServerRpc(t.pos.Value, unitManager.ships[currentShipIndex].unitPos.Value, NetworkManager.LocalClientId);
                     break;
                 case ShipUnit.UnitSpecialShot.TShot:
-                    StartCoroutine(TShotFunction(t));
+                    StartCoroutine(TShotFunction(t, false));
                     break;
                 case ShipUnit.UnitSpecialShot.FireShot:
-                    GridManager.Instance.DamageUnitServerRpc(unitManager.ships[currentShipIndex].shotCapacity.specialAbilityDamage, t.pos.Value, NetworkManager.LocalClientId, unitManager.ships[currentShipIndex].shotCapacity.specialPassifDamage, unitManager.ships[currentShipIndex].shotCapacity.shootPassiveDuration, true, HasGoThroughWaterCapacity(cTile));
+                    GridManager.Instance.DamageUnitServerRpc(unitManager.ships[currentShipIndex].shotCapacity.specialAbilityDamage, t.pos.Value, NetworkManager.LocalClientId, unitManager.ships[currentShipIndex].shotCapacity.specialPassifDamage, unitManager.ships[currentShipIndex].shotCapacity.shootPassiveDuration, true, HasGoThroughWaterCapacity(cTile), false);
                     break;
                 case ShipUnit.UnitSpecialShot.TirBrochette:
                     StartCoroutine(BrochetteShot(t));
                     break;
                 case ShipUnit.UnitSpecialShot.VentContraire:
-                    GridManager.Instance.ApplyEffectOnShipServerRpc(t.pos.Value, unitManager.ships[currentShipIndex].shotCapacity.shootPassiveDuration, NetworkManager.LocalClientId);
+                    GridManager.Instance.ApplyEffectOnShipServerRpc(t.pos.Value, unitManager.ships[currentShipIndex].shotCapacity.shootPassiveDuration, NetworkManager.LocalClientId, false);
                     break;
                 case ShipUnit.UnitSpecialShot.Grappin:
                     GridManager.Instance.PullUnitServerRpc(t.pos.Value, unitManager.ships[currentShipIndex].unitPos.Value, NetworkManager.LocalClientId);
@@ -723,16 +724,16 @@ public class Cursor : NetworkBehaviour
                     GridManager.Instance.PushUnitServerRpc(t.pos.Value, unitManager.ships[currentShipIndex].unitPos.Value, NetworkManager.LocalClientId);
                     break;
                 case ShipUnit.UnitSpecialShot.TShot:
-                    StartCoroutine(TShotFunction(t));
+                    StartCoroutine(TShotFunction(t, true));
                     break;
                 case ShipUnit.UnitSpecialShot.FireShot:
-                    GridManager.Instance.DamageUnitServerRpc(unitManager.ships[currentShipIndex].shotCapacity.specialAbilityDamage, t.pos.Value, NetworkManager.LocalClientId, unitManager.ships[currentShipIndex].shotCapacity.specialPassifDamage, unitManager.ships[currentShipIndex].shotCapacity.shootPassiveDuration, true, HasGoThroughWaterCapacity(cTile));
+                    GridManager.Instance.DamageUnitServerRpc(unitManager.ships[currentShipIndex].shotCapacity.specialAbilityDamage, t.pos.Value, NetworkManager.LocalClientId, unitManager.ships[currentShipIndex].shotCapacity.specialPassifDamage, unitManager.ships[currentShipIndex].shotCapacity.shootPassiveDuration, true, HasGoThroughWaterCapacity(cTile), true);
                     break;
                 case ShipUnit.UnitSpecialShot.TirBrochette:
                     StartCoroutine(BrochetteShot(t));
                     break;
                 case ShipUnit.UnitSpecialShot.VentContraire:
-                    GridManager.Instance.ApplyEffectOnShipServerRpc(t.pos.Value, unitManager.ships[currentShipIndex].shotCapacity.shootPassiveDuration, NetworkManager.LocalClientId);
+                    GridManager.Instance.ApplyEffectOnShipServerRpc(t.pos.Value, unitManager.ships[currentShipIndex].shotCapacity.shootPassiveDuration - 1, NetworkManager.LocalClientId, true);
                     break;
                 case ShipUnit.UnitSpecialShot.Grappin:
                     GridManager.Instance.PullUnitServerRpc(t.pos.Value, unitManager.ships[currentShipIndex].unitPos.Value, NetworkManager.LocalClientId);
@@ -757,7 +758,7 @@ public class Cursor : NetworkBehaviour
         if (t.mineInTile.Value)
         {
             stepOnMine = true;
-            GridManager.Instance.SetMineOnTileServerRpc(t.pos.Value, NetworkManager.LocalClientId, false);
+            GridManager.Instance.SetMineOnTileServerRpc(t.pos.Value, NetworkManager.LocalClientId, false, false);
         }
 
         if (stepOnMine)
@@ -771,10 +772,11 @@ public class Cursor : NetworkBehaviour
         TotalActionPoint();
     }
 
-    void SearchGold()
+    void SearchGold(bool upgraded)
     {
         int rdm = Random.Range(0, 101);
         int foundGold = 0;
+        int foundMana = 0;
 
         if (rdm >= 75)
             foundGold = 15;
@@ -785,9 +787,24 @@ public class Cursor : NetworkBehaviour
         else
             foundGold = 0;
 
+        if (upgraded)
+        {
+            if (rdm >= 75)
+                foundMana = 30;
+            else if (rdm >= 50)
+                foundMana = 20;
+            else if (rdm >= 25)
+                foundMana = 10;
+            else
+                foundMana = 0;
+        }
+
         playerGold += foundGold;
 
         currentSpecialCharge -= unitManager.ships[currentShipIndex].tileCapacity.specialAbilityCost;
+
+        currentSpecialCharge += foundMana;
+        
         totalMovePoint--;
         totalShootPoint--;
         unitManager.ships[currentShipIndex].canMove.Value = false;
@@ -821,11 +838,11 @@ public class Cursor : NetworkBehaviour
         SoundManager.Instance.PlaySoundOnClients(SoundManager.Instance.spawnShip);
     }
 
-    IEnumerator TShotFunction(TileScript t)
+    IEnumerator TShotFunction(TileScript t, bool upgraded)
     {
         if (t.pos.Value.x == unitManager.ships[currentShipIndex].currentTile.pos.Value.x)
         {
-            GridManager.Instance.DamageUnitServerRpc(unitManager.ships[currentShipIndex].shotCapacity.specialAbilityDamage, t.pos.Value, NetworkManager.LocalClientId, false, 0, true, HasGoThroughWaterCapacity(cTile));
+            GridManager.Instance.DamageUnitServerRpc(unitManager.ships[currentShipIndex].shotCapacity.specialAbilityDamage, t.pos.Value, NetworkManager.LocalClientId, false, 0, true, HasGoThroughWaterCapacity(cTile), false);
 
             Debug.Log("Same X");
 
@@ -838,9 +855,10 @@ public class Cursor : NetworkBehaviour
                 posToCheck = new Vector2(t.pos.Value.x + x, t.pos.Value.y);
                 if (GridManager.Instance.GetTileAtPosition(posToCheck).shipOnTile.Value)
                 {
-                    Debug.Log("Ship");
-
-                    GridManager.Instance.DamageUnitNoActionServerRpc(unitManager.ships[currentShipIndex].shotCapacity.specialAbilityDamage / 2, posToCheck, NetworkManager.LocalClientId, false, 0, HasGoThroughWaterCapacity(cTile));
+                    if (!upgraded)
+                        GridManager.Instance.DamageUnitNoActionServerRpc(unitManager.ships[currentShipIndex].shotCapacity.specialAbilityDamage / 2, posToCheck, NetworkManager.LocalClientId, false, 0, HasGoThroughWaterCapacity(cTile));
+                    else if(upgraded)
+                        GridManager.Instance.DamageUnitNoActionServerRpc(unitManager.ships[currentShipIndex].shotCapacity.specialAbilityDamage, posToCheck, NetworkManager.LocalClientId, false, 0, HasGoThroughWaterCapacity(cTile));
                     break;
                 }
             }
@@ -849,16 +867,26 @@ public class Cursor : NetworkBehaviour
                 posToCheck = new Vector2(t.pos.Value.x - x, t.pos.Value.y);
                 if (GridManager.Instance.GetTileAtPosition(posToCheck).shipOnTile.Value)
                 {
-                    Debug.Log("Ship");
-
-                    GridManager.Instance.DamageUnitNoActionServerRpc(unitManager.ships[currentShipIndex].shotCapacity.specialAbilityDamage / 2, posToCheck, NetworkManager.LocalClientId, false, 0, HasGoThroughWaterCapacity(cTile));
+                    if (!upgraded)
+                        GridManager.Instance.DamageUnitNoActionServerRpc(unitManager.ships[currentShipIndex].shotCapacity.specialAbilityDamage / 2, posToCheck, NetworkManager.LocalClientId, false, 0, HasGoThroughWaterCapacity(cTile));
+                    else if(upgraded)
+                        GridManager.Instance.DamageUnitNoActionServerRpc(unitManager.ships[currentShipIndex].shotCapacity.specialAbilityDamage, posToCheck, NetworkManager.LocalClientId, false, 0, HasGoThroughWaterCapacity(cTile));
                     break;
                 }
+            }
+
+            if (upgraded)
+            {
+                //Check si c'est au dessus ou en dessous
+                if(unitManager.ships[currentShipIndex].unitPos.Value.y > cTile.pos.Value.y)
+                    GridManager.Instance.DamageUnitNoActionServerRpc(unitManager.ships[currentShipIndex].shotCapacity.specialAbilityDamage, new Vector2(t.pos.Value.x, t.pos.Value.y - 1), NetworkManager.LocalClientId, false, 0, false);
+                else
+                    GridManager.Instance.DamageUnitNoActionServerRpc(unitManager.ships[currentShipIndex].shotCapacity.specialAbilityDamage, new Vector2(t.pos.Value.x, t.pos.Value.y + 1), NetworkManager.LocalClientId, false, 0, false);
             }
         }
         else if (t.pos.Value.y == unitManager.ships[currentShipIndex].currentTile.pos.Value.y)
         {
-            GridManager.Instance.DamageUnitServerRpc(unitManager.ships[currentShipIndex].shotCapacity.specialAbilityDamage, t.pos.Value, NetworkManager.LocalClientId, false, 0, true, HasGoThroughWaterCapacity(cTile));
+            GridManager.Instance.DamageUnitServerRpc(unitManager.ships[currentShipIndex].shotCapacity.specialAbilityDamage, t.pos.Value, NetworkManager.LocalClientId, false, 0, true, HasGoThroughWaterCapacity(cTile), false);
 
             Debug.Log("Same Y");
 
@@ -871,8 +899,10 @@ public class Cursor : NetworkBehaviour
                 posToCheck = new Vector2(t.pos.Value.x, t.pos.Value.y + y);
                 if (GridManager.Instance.GetTileAtPosition(posToCheck).shipOnTile.Value)
                 {
-                    Debug.Log("Ship");
-                    GridManager.Instance.DamageUnitNoActionServerRpc(unitManager.ships[currentShipIndex].shotCapacity.specialAbilityDamage / 2, posToCheck, NetworkManager.LocalClientId, false, 0, HasGoThroughWaterCapacity(cTile));
+                    if (!upgraded)
+                        GridManager.Instance.DamageUnitNoActionServerRpc(unitManager.ships[currentShipIndex].shotCapacity.specialAbilityDamage / 2, posToCheck, NetworkManager.LocalClientId, false, 0, HasGoThroughWaterCapacity(cTile));
+                    else if (upgraded)
+                        GridManager.Instance.DamageUnitNoActionServerRpc(unitManager.ships[currentShipIndex].shotCapacity.specialAbilityDamage, posToCheck, NetworkManager.LocalClientId, false, 0, HasGoThroughWaterCapacity(cTile));
                     break;
                 }
             }
@@ -881,11 +911,21 @@ public class Cursor : NetworkBehaviour
                 posToCheck = new Vector2(t.pos.Value.x, t.pos.Value.y - y);
                 if (GridManager.Instance.GetTileAtPosition(posToCheck).shipOnTile.Value)
                 {
-                    Debug.Log("Ship");
-
-                    GridManager.Instance.DamageUnitNoActionServerRpc(unitManager.ships[currentShipIndex].shotCapacity.specialAbilityDamage / 2, posToCheck, NetworkManager.LocalClientId, false, 0, HasGoThroughWaterCapacity(cTile));
+                    if (!upgraded)
+                        GridManager.Instance.DamageUnitNoActionServerRpc(unitManager.ships[currentShipIndex].shotCapacity.specialAbilityDamage / 2, posToCheck, NetworkManager.LocalClientId, false, 0, HasGoThroughWaterCapacity(cTile));
+                    else if (upgraded)
+                        GridManager.Instance.DamageUnitNoActionServerRpc(unitManager.ships[currentShipIndex].shotCapacity.specialAbilityDamage, posToCheck, NetworkManager.LocalClientId, false, 0, HasGoThroughWaterCapacity(cTile));
                     break;
                 }
+            }
+
+            if (upgraded)
+            {
+                //Check si c'est au dessus ou en dessous
+                if (unitManager.ships[currentShipIndex].unitPos.Value.x > cTile.pos.Value.x)
+                    GridManager.Instance.DamageUnitNoActionServerRpc(unitManager.ships[currentShipIndex].shotCapacity.specialAbilityDamage, new Vector2(t.pos.Value.x - 1, t.pos.Value.y), NetworkManager.LocalClientId, false, 0, false);
+                else
+                    GridManager.Instance.DamageUnitNoActionServerRpc(unitManager.ships[currentShipIndex].shotCapacity.specialAbilityDamage, new Vector2(t.pos.Value.x + 1, t.pos.Value.y), NetworkManager.LocalClientId, false, 0, false);
             }
         }
     }
@@ -897,7 +937,7 @@ public class Cursor : NetworkBehaviour
 
         if (t.pos.Value.x == unitManager.ships[currentShipIndex].currentTile.pos.Value.x)
         {
-            GridManager.Instance.DamageUnitServerRpc(unitManager.ships[currentShipIndex].shotCapacity.specialAbilityDamage, t.pos.Value, NetworkManager.LocalClientId, false, 0, true, HasGoThroughWaterCapacity(cTile));
+            GridManager.Instance.DamageUnitServerRpc(unitManager.ships[currentShipIndex].shotCapacity.specialAbilityDamage, t.pos.Value, NetworkManager.LocalClientId, false, 0, true, HasGoThroughWaterCapacity(cTile), false);
 
             yield return new WaitForSeconds(.5f);
 
@@ -932,7 +972,7 @@ public class Cursor : NetworkBehaviour
         }
         else if (t.pos.Value.y == unitManager.ships[currentShipIndex].currentTile.pos.Value.y)
         {
-            GridManager.Instance.DamageUnitServerRpc(unitManager.ships[currentShipIndex].shotCapacity.specialAbilityDamage, t.pos.Value, NetworkManager.LocalClientId, false, 0, true, HasGoThroughWaterCapacity(cTile));
+            GridManager.Instance.DamageUnitServerRpc(unitManager.ships[currentShipIndex].shotCapacity.specialAbilityDamage, t.pos.Value, NetworkManager.LocalClientId, false, 0, true, HasGoThroughWaterCapacity(cTile), false);
 
             yield return new WaitForSeconds(.5f);
 
@@ -1069,7 +1109,7 @@ public class Cursor : NetworkBehaviour
                 foreach (var item in allTiles)
                     item.SetColor(3);
 
-                GridManager.Instance.SetMineOnTileServerRpc(path[value].pos.Value, NetworkManager.LocalClientId, false);
+                GridManager.Instance.SetMineOnTileServerRpc(path[value].pos.Value, NetworkManager.LocalClientId, false, false);
 
                 break;
             }
