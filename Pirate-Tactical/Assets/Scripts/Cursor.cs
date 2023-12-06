@@ -629,29 +629,59 @@ public class Cursor : NetworkBehaviour
     {
         if (!t.Walkable && t.shipOnTile.Value) return;
 
-        switch (unitManager.ships[currentShipIndex].unitSpecialTile.Value)
+        if (!unitManager.ships[currentShipIndex].upgradedCapacity)
         {
-            case ShipUnit.UnitSpecialTile.BlockTile:
-                GridManager.Instance.BlockedTileServerRpc(t.pos.Value, NetworkManager.LocalClientId, unitManager.ships[currentShipIndex].tileCapacity.tilePassiveDuration);
-                break;
-            case ShipUnit.UnitSpecialTile.Mine:
-                if(!t.Walkable)
-                    GridManager.Instance.SetMineOnTileServerRpc(t.pos.Value, NetworkManager.LocalClientId, true);
-                break;
-            case ShipUnit.UnitSpecialTile.Teleport:
-                TeleportShip(t);
-                break;
-            case ShipUnit.UnitSpecialTile.FouilleOr:
-                SearchGold();
-                break;
-            case ShipUnit.UnitSpecialTile.CanonSurIle:
-                GridManager.Instance.AddCannonToTileServerRpc(cTile.pos.Value, NetworkManager.LocalClientId);
-                break;
-            case ShipUnit.UnitSpecialTile.Barque:
-                StartCoroutine(SpawnBarque(t.pos.Value, t));
-                break;
-            case ShipUnit.UnitSpecialTile.None:
-                break;
+            switch (unitManager.ships[currentShipIndex].unitSpecialTile.Value)
+            {
+                case ShipUnit.UnitSpecialTile.BlockTile:
+                    GridManager.Instance.BlockedTileServerRpc(t.pos.Value, NetworkManager.LocalClientId, unitManager.ships[currentShipIndex].tileCapacity.tilePassiveDuration);
+                    break;
+                case ShipUnit.UnitSpecialTile.Mine:
+                    if(!t.Walkable)
+                        GridManager.Instance.SetMineOnTileServerRpc(t.pos.Value, NetworkManager.LocalClientId, true);
+                    break;
+                case ShipUnit.UnitSpecialTile.Teleport:
+                    TeleportShip(t);
+                    break;
+                case ShipUnit.UnitSpecialTile.FouilleOr:
+                    SearchGold();
+                    break;
+                case ShipUnit.UnitSpecialTile.CanonSurIle:
+                    GridManager.Instance.AddCannonToTileServerRpc(cTile.pos.Value, NetworkManager.LocalClientId);
+                    break;
+                case ShipUnit.UnitSpecialTile.Barque:
+                    StartCoroutine(SpawnBarque(t.pos.Value, t));
+                    break;
+                case ShipUnit.UnitSpecialTile.None:
+                    break;
+            }
+        }
+        else //Capacités upgrade
+        {
+            switch (unitManager.ships[currentShipIndex].unitSpecialTile.Value)
+            {
+                case ShipUnit.UnitSpecialTile.BlockTile:
+                    GridManager.Instance.BlockedTileServerRpc(t.pos.Value, NetworkManager.LocalClientId, unitManager.ships[currentShipIndex].tileCapacity.tilePassiveDuration);
+                    break;
+                case ShipUnit.UnitSpecialTile.Mine:
+                    if (!t.Walkable)
+                        GridManager.Instance.SetMineOnTileServerRpc(t.pos.Value, NetworkManager.LocalClientId, true);
+                    break;
+                case ShipUnit.UnitSpecialTile.Teleport:
+                    TeleportShip(t);
+                    break;
+                case ShipUnit.UnitSpecialTile.FouilleOr:
+                    SearchGold();
+                    break;
+                case ShipUnit.UnitSpecialTile.CanonSurIle:
+                    GridManager.Instance.AddCannonToTileServerRpc(cTile.pos.Value, NetworkManager.LocalClientId);
+                    break;
+                case ShipUnit.UnitSpecialTile.Barque:
+                    StartCoroutine(SpawnBarque(t.pos.Value, t));
+                    break;
+                case ShipUnit.UnitSpecialTile.None:
+                    break;
+            }
         }
 
         SoundManager.Instance.PlaySoundOnClients(SoundManager.Instance.tileCapacity);
@@ -659,29 +689,57 @@ public class Cursor : NetworkBehaviour
 
     void HandleSpecialUnitAttackOnUnit(TileScript t)
     {
-        switch (unitManager.ships[currentShipIndex].unitSpecialShot.Value)
+        if (!unitManager.ships[currentShipIndex].upgradedCapacity)
         {
-            case ShipUnit.UnitSpecialShot.PushUnit:
-                GridManager.Instance.PushUnitServerRpc(t.pos.Value, unitManager.ships[currentShipIndex].unitPos.Value, NetworkManager.LocalClientId);
-                break;
-            case ShipUnit.UnitSpecialShot.TShot:
-                StartCoroutine(TShotFunction(t));
-                break;
-            case ShipUnit.UnitSpecialShot.FireShot:
-                GridManager.Instance.DamageUnitServerRpc(unitManager.ships[currentShipIndex].shotCapacity.specialAbilityDamage, t.pos.Value, NetworkManager.LocalClientId, unitManager.ships[currentShipIndex].shotCapacity.specialPassifDamage, unitManager.ships[currentShipIndex].shotCapacity.shootPassiveDuration, true, HasGoThroughWaterCapacity(cTile));
-                break;
-            case ShipUnit.UnitSpecialShot.TirBrochette:
-                StartCoroutine(BrochetteShot(t));
-                break;
-            case ShipUnit.UnitSpecialShot.VentContraire:
-                GridManager.Instance.ApplyEffectOnShipServerRpc(t.pos.Value, unitManager.ships[currentShipIndex].shotCapacity.shootPassiveDuration, NetworkManager.LocalClientId);
-                break;
-            case ShipUnit.UnitSpecialShot.Grappin:
-                GridManager.Instance.PullUnitServerRpc(t.pos.Value, unitManager.ships[currentShipIndex].unitPos.Value, NetworkManager.LocalClientId);
-                break;
-            case ShipUnit.UnitSpecialShot.None:
-                break;
-
+            switch (unitManager.ships[currentShipIndex].unitSpecialShot.Value)
+            {
+                case ShipUnit.UnitSpecialShot.PushUnit:
+                    GridManager.Instance.PushUnitServerRpc(t.pos.Value, unitManager.ships[currentShipIndex].unitPos.Value, NetworkManager.LocalClientId);
+                    break;
+                case ShipUnit.UnitSpecialShot.TShot:
+                    StartCoroutine(TShotFunction(t));
+                    break;
+                case ShipUnit.UnitSpecialShot.FireShot:
+                    GridManager.Instance.DamageUnitServerRpc(unitManager.ships[currentShipIndex].shotCapacity.specialAbilityDamage, t.pos.Value, NetworkManager.LocalClientId, unitManager.ships[currentShipIndex].shotCapacity.specialPassifDamage, unitManager.ships[currentShipIndex].shotCapacity.shootPassiveDuration, true, HasGoThroughWaterCapacity(cTile));
+                    break;
+                case ShipUnit.UnitSpecialShot.TirBrochette:
+                    StartCoroutine(BrochetteShot(t));
+                    break;
+                case ShipUnit.UnitSpecialShot.VentContraire:
+                    GridManager.Instance.ApplyEffectOnShipServerRpc(t.pos.Value, unitManager.ships[currentShipIndex].shotCapacity.shootPassiveDuration, NetworkManager.LocalClientId);
+                    break;
+                case ShipUnit.UnitSpecialShot.Grappin:
+                    GridManager.Instance.PullUnitServerRpc(t.pos.Value, unitManager.ships[currentShipIndex].unitPos.Value, NetworkManager.LocalClientId);
+                    break;
+                case ShipUnit.UnitSpecialShot.None:
+                    break;
+            }
+        }
+        else //Capacités upgrade
+        {
+            switch (unitManager.ships[currentShipIndex].unitSpecialShot.Value)
+            {
+                case ShipUnit.UnitSpecialShot.PushUnit:
+                    GridManager.Instance.PushUnitServerRpc(t.pos.Value, unitManager.ships[currentShipIndex].unitPos.Value, NetworkManager.LocalClientId);
+                    break;
+                case ShipUnit.UnitSpecialShot.TShot:
+                    StartCoroutine(TShotFunction(t));
+                    break;
+                case ShipUnit.UnitSpecialShot.FireShot:
+                    GridManager.Instance.DamageUnitServerRpc(unitManager.ships[currentShipIndex].shotCapacity.specialAbilityDamage, t.pos.Value, NetworkManager.LocalClientId, unitManager.ships[currentShipIndex].shotCapacity.specialPassifDamage, unitManager.ships[currentShipIndex].shotCapacity.shootPassiveDuration, true, HasGoThroughWaterCapacity(cTile));
+                    break;
+                case ShipUnit.UnitSpecialShot.TirBrochette:
+                    StartCoroutine(BrochetteShot(t));
+                    break;
+                case ShipUnit.UnitSpecialShot.VentContraire:
+                    GridManager.Instance.ApplyEffectOnShipServerRpc(t.pos.Value, unitManager.ships[currentShipIndex].shotCapacity.shootPassiveDuration, NetworkManager.LocalClientId);
+                    break;
+                case ShipUnit.UnitSpecialShot.Grappin:
+                    GridManager.Instance.PullUnitServerRpc(t.pos.Value, unitManager.ships[currentShipIndex].unitPos.Value, NetworkManager.LocalClientId);
+                    break;
+                case ShipUnit.UnitSpecialShot.None:
+                    break;
+            }
         }
 
         SoundManager.Instance.PlaySoundOnClients(SoundManager.Instance.offensiveCapacity);
