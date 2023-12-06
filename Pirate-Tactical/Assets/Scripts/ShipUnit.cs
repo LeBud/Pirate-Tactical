@@ -33,8 +33,8 @@ public class ShipUnit : NetworkBehaviour
     public NetworkVariable<int> accostDmgBoost = new NetworkVariable<int>(0, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
 
     [Header("Unit Special stats")]
-    public NetworkVariable<UnitSpecialShot> unitSpecialShot = new NetworkVariable<UnitSpecialShot>(0, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);
-    public NetworkVariable<UnitSpecialTile> unitSpecialTile = new NetworkVariable<UnitSpecialTile>(0, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);
+    public NetworkVariable<UnitSpecialShot> unitSpecialShot = new NetworkVariable<UnitSpecialShot>(0, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
+    public NetworkVariable<UnitSpecialTile> unitSpecialTile = new NetworkVariable<UnitSpecialTile>(0, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
     public CapacitiesSO shotCapacity;
     public CapacitiesSO tileCapacity;
     public bool upgradedCapacity = false;
@@ -84,13 +84,18 @@ public class ShipUnit : NetworkBehaviour
 
     private void Start()
     {
+        if (IsOwner)
+        {
+            unitSpecialShot.Value = shotCapacity.shootCapacity;
+            unitSpecialTile.Value = tileCapacity.tileCapacity;
+        }
+
         if (!IsServer) return;
 
         healthPercent = (float)unitLife.Value / maxHealth;
         healthDisplay.localScale = new Vector3(healthPercent, 1, 1);
         SetHealthBarClientRpc(healthPercent, unitLife.Value);
         baseMoveRange = unitMoveRange;
-
     }
 
     private void Update()
