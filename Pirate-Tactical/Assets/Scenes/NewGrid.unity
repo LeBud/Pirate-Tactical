@@ -10854,23 +10854,23 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   playSounds: 0
-  attack: {fileID: 0}
+  attack: {fileID: 8300000, guid: 20026f71e49ba78478c8228f38b17b33, type: 3}
   offensiveCapacity: {fileID: 0}
   tileCapacity: {fileID: 0}
   takeDamage: {fileID: 0}
   startMoving: {fileID: 8300000, guid: 44f8e32ba38cbf44b8bfa8279dffc5ad, type: 3}
   stopMoving: {fileID: 8300000, guid: 44f8e32ba38cbf44b8bfa8279dffc5ad, type: 3}
-  buyUpgrade: {fileID: 0}
-  mineExploding: {fileID: 0}
+  buyUpgrade: {fileID: 8300000, guid: 9446e2ec7f707f84389ca91d291235aa, type: 3}
+  mineExploding: {fileID: 8300000, guid: de24b230401405b42b99f7c061aaae7a, type: 3}
   spawnShip: {fileID: 0}
   selectShip: {fileID: 0}
   deselectShip: {fileID: 0}
   shipDestroyed: {fileID: 0}
   shipSink: {fileID: 0}
-  changeShipMode: {fileID: 8300000, guid: 44f8e32ba38cbf44b8bfa8279dffc5ad, type: 3}
-  accost: {fileID: 0}
+  changeShipMode: {fileID: 0}
+  accost: {fileID: 8300000, guid: c12a7e402bb5e09478aff65565003465, type: 3}
   fireDamage: {fileID: 0}
-  zoneShrinking: {fileID: 0}
+  zoneShrinking: {fileID: 8300000, guid: 9b5fd6dade9e5b244b0dea546b0fa8a4, type: 3}
   gameStarting: {fileID: 0}
   music: {fileID: 0}
   timer: {fileID: 0}
@@ -20006,7 +20006,9 @@ MonoBehaviour:
   combatZoneSize:
     m_InternalValue: 0
   combatZoneDamage: 4
-  mineDamage: 13
+  mineDamage: 10
+  upgradedMineDamage: 15
+  upgradedMineZoneDamage: 7
   map: {fileID: 102743947}
   waterSprite: {fileID: 21300000, guid: 4e7be7527c1b0c44199ff2184ada7002, type: 3}
   landSprite: {fileID: 21300000, guid: c04c22eacafbb864fb512ea81b2f2e00, type: 3}

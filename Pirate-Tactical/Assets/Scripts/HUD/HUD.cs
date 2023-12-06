@@ -58,6 +58,9 @@ public class HUD : NetworkBehaviour
     int playerMaxHealth;
     int enemyMaxHealth;
 
+    [Header("Icons")]
+    public List<CapacitiesSO> capacities;
+
     private void Awake()
     {
         if(Instance == null)
@@ -144,8 +147,8 @@ public class HUD : NetworkBehaviour
                 shipsDisplay.GetChild(i).transform.GetChild(3).GetComponent<TextMeshProUGUI>().text = player.unitManager.ships[i].unitLife.Value.ToString();
                 shipsDisplay.GetChild(i).transform.GetChild(4).GetComponent<TextMeshProUGUI>().text = player.unitManager.ships[i].shotCapacity.specialAbilityCost.ToString();
                 //Mettre des sprites
-                //shipsDisplay.GetChild(i).transform.GetChild(5).GetComponent<TextMeshProUGUI>().text = player.unitManager.ships[i].unitSpecialShot.Value.ToString();
-                //shipsDisplay.GetChild(i).transform.GetChild(6).GetComponent<TextMeshProUGUI>().text = player.unitManager.ships[i].unitSpecialTile.Value.ToString();
+                //shipsDisplay.GetChild(i).transform.GetChild(5).GetComponent<Image>().sprite = player.unitManager.ships[i].unitSpecialShot.Value.ToString();
+                //shipsDisplay.GetChild(i).transform.GetChild(6).GetComponent<Image>().sprite = player.unitManager.ships[i].unitSpecialTile.Value.ToString();
             }
             else
                 shipsDisplay.GetChild(i).gameObject.SetActive(false);
@@ -165,12 +168,33 @@ public class HUD : NetworkBehaviour
                 enemyShipsDisplay.GetChild(i).gameObject.SetActive(true);
                 enemyShipsDisplay.GetChild(i).transform.GetChild(2).GetComponent<TextMeshProUGUI>().text = enemyPlayer.unitManager.ships[i].unitLife.Value.ToString();
                 //Mettre des sprites
-                //enemyShipsDisplay.GetChild(i).transform.GetChild(4).GetComponent<TextMeshProUGUI>().text = enemyPlayer.unitManager.ships[i].unitSpecialShot.Value.ToString();
-                //enemyShipsDisplay.GetChild(i).transform.GetChild(4).GetComponent<TextMeshProUGUI>().text = enemyPlayer.unitManager.ships[i].unitSpecialTile.Value.ToString();
+                enemyShipsDisplay.GetChild(i).transform.GetChild(4).GetComponent<Image>().sprite = GetIconShot(enemyPlayer.unitManager.ships[i].unitSpecialShot.Value);
+                enemyShipsDisplay.GetChild(i).transform.GetChild(5).GetComponent<Image>().sprite = GetIconTile(enemyPlayer.unitManager.ships[i].unitSpecialTile.Value);
             }
             else
                 enemyShipsDisplay.GetChild(i).gameObject.SetActive(false);
         }
+    }
+
+    Sprite GetIconShot(ShipUnit.UnitSpecialShot shot)
+    {
+        foreach(var c in capacities)
+        {
+            if (c.shootCapacity == shot)
+                return c.icon;
+        }
+
+        return null;
+    }
+
+    Sprite GetIconTile(ShipUnit.UnitSpecialTile shot)
+    {
+        foreach (var c in capacities)
+        {
+            if (c.tileCapacity == shot)
+                return c.icon;
+        }
+        return null;
     }
 
     string GetCurrentMode(int i)
@@ -322,4 +346,5 @@ public class HUD : NetworkBehaviour
     }
 
 #endregion
+
 }

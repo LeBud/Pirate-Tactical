@@ -7,6 +7,7 @@ public class CapacitiesSO : ScriptableObject
 {
     public string capacityName;
     public string capacityDescription;
+    public Sprite icon;
 
     [Header("Capacity Cost")]
     public int specialAbilityCost;
