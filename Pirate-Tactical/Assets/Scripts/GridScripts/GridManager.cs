@@ -250,6 +250,8 @@ public class GridManager : NetworkBehaviour
 
         bool hasStop = false;
 
+        Vector2 finalPos = pushShip;
+
         if (upgraded)
         {
             if (ships.unitName == ShipUnit.UnitType.Galion)
@@ -262,7 +264,7 @@ public class GridManager : NetworkBehaviour
             Debug.Log("Force de poussé : " + amountPush);
         }
 
-        for(int i = 1; i <= amountPush; i++)
+        for(int i = 0; i < amountPush; i++)
         {
             Debug.Log("Boucle se joue " + i);
             if (ships.unitPos.Value == pushShip)
@@ -273,7 +275,7 @@ public class GridManager : NetworkBehaviour
                     if (currentShip.x > pushShip.x)
                     {
                         //alors -1
-                        posToCheck = new Vector2(ships.unitPos.Value.x - i, ships.unitPos.Value.y);
+                        posToCheck = new Vector2(finalPos.x - 1, finalPos.y);
                         if (dictionnary.Contains(posToCheck))
                         {
                             TileScript t = GetTileAtPosition(posToCheck);
@@ -285,7 +287,7 @@ public class GridManager : NetworkBehaviour
                                 hasStop = true;
                                 break;
                             }
-                            else if (t.Walkable && t.shipOnTile.Value)
+                            else if (t.Walkable && t.shipOnTile.Value && !t.mineInTile.Value)
                             {
                                 ships.TakeDamageServerRpc(collisionDamage, ships.unitPos.Value, false, 0, false);
                                 GetShipAtPos(posToCheck).TakeDamageServerRpc(collisionDamage, ships.unitPos.Value, false, 0, false);
@@ -294,11 +296,16 @@ public class GridManager : NetworkBehaviour
                                 hasStop = true;
                                 break;
                             }
+                            else if (t.Walkable && !t.shipOnTile.Value && t.mineInTile.Value)
+                            {
+                                finalPos = posToCheck;
+
+                                hasStop = true;
+                                break;
+                            }
                             else if (t.Walkable && !t.shipOnTile.Value && !t.blockedTile.Value)
                             {
-                                ships.unitPos.Value = new Vector3(posToCheck.x, posToCheck.y, -1);
-                                ships.SetNewTileClientRpc(posToCheck);
-                                SetShipOnTileServerRpc(ships.unitPos.Value, true);
+                                finalPos = new Vector2(finalPos.x - 1, finalPos.y);
                                 hasPush = true;
                             }
                         }
@@ -306,7 +313,7 @@ public class GridManager : NetworkBehaviour
                     else
                     {
                         //alors +1
-                        posToCheck = new Vector2(ships.unitPos.Value.x + i, ships.unitPos.Value.y);
+                        posToCheck = new Vector2(finalPos.x + 1, finalPos.y);
                         if (dictionnary.Contains(posToCheck))
                         {
                             TileScript t = GetTileAtPosition(posToCheck);
@@ -318,7 +325,7 @@ public class GridManager : NetworkBehaviour
                                 hasStop = true;
                                 break;
                             }
-                            else if (t.Walkable && t.shipOnTile.Value)
+                            else if (t.Walkable && t.shipOnTile.Value && !t.mineInTile.Value)
                             {
                                 ships.TakeDamageServerRpc(collisionDamage, ships.unitPos.Value, false, 0, false);
                                 GetShipAtPos(posToCheck).TakeDamageServerRpc(collisionDamage, ships.unitPos.Value, false, 0, false);
@@ -327,11 +334,16 @@ public class GridManager : NetworkBehaviour
                                 hasStop = true;
                                 break;
                             }
+                            else if (t.Walkable && !t.shipOnTile.Value && t.mineInTile.Value)
+                            {
+                                finalPos = posToCheck;
+
+                                hasStop = true;
+                                break;
+                            }
                             else if (t.Walkable && !t.shipOnTile.Value && !t.blockedTile.Value)
                             {
-                                ships.unitPos.Value = new Vector3(posToCheck.x, posToCheck.y, -1);
-                                ships.SetNewTileClientRpc(posToCheck);
-                                SetShipOnTileServerRpc(ships.unitPos.Value, true);
+                                finalPos = new Vector2(finalPos.x + 1, finalPos.y);
                                 hasPush = true;
                             }
                         }
@@ -342,7 +354,7 @@ public class GridManager : NetworkBehaviour
                     if (currentShip.y > pushShip.y)
                     {
                         //alors -1
-                        posToCheck = new Vector2(ships.unitPos.Value.x, ships.unitPos.Value.y - i);
+                        posToCheck = new Vector2(finalPos.x, finalPos.y - 1);
                         if (dictionnary.Contains(posToCheck))
                         {
                             TileScript t = GetTileAtPosition(posToCheck);
@@ -354,7 +366,7 @@ public class GridManager : NetworkBehaviour
                                 hasStop = true;
                                 break;
                             }
-                            else if (t.Walkable && t.shipOnTile.Value)
+                            else if (t.Walkable && t.shipOnTile.Value && !t.mineInTile.Value)
                             {
                                 ships.TakeDamageServerRpc(collisionDamage, ships.unitPos.Value, false, 0, false);
                                 GetShipAtPos(posToCheck).TakeDamageServerRpc(collisionDamage, ships.unitPos.Value, false, 0, false);
@@ -363,11 +375,16 @@ public class GridManager : NetworkBehaviour
                                 hasStop = true;
                                 break;
                             }
+                            else if (t.Walkable && !t.shipOnTile.Value && t.mineInTile.Value)
+                            {
+                                finalPos = posToCheck;
+
+                                hasStop = true;
+                                break;
+                            }
                             else if (t.Walkable && !t.shipOnTile.Value && !t.blockedTile.Value)
                             {
-                                ships.unitPos.Value = new Vector3(posToCheck.x, posToCheck.y, -1);
-                                ships.SetNewTileClientRpc(posToCheck);
-                                SetShipOnTileServerRpc(ships.unitPos.Value, true);
+                                finalPos = new Vector2(finalPos.x, finalPos.y - 1);
                                 hasPush = true;
                             }
                         }
@@ -375,7 +392,7 @@ public class GridManager : NetworkBehaviour
                     else
                     {
                         //alors +1
-                        posToCheck = new Vector2(ships.unitPos.Value.x, ships.unitPos.Value.y + i);
+                        posToCheck = new Vector2(finalPos.x, finalPos.y + 1);
                         if (dictionnary.Contains(posToCheck))
                         {
                             TileScript t = GetTileAtPosition(posToCheck);
@@ -387,7 +404,7 @@ public class GridManager : NetworkBehaviour
                                 hasStop = true;
                                 break;
                             }
-                            else if (t.Walkable && t.shipOnTile.Value)
+                            else if (t.Walkable && t.shipOnTile.Value && !t.mineInTile.Value)
                             {
                                 ships.TakeDamageServerRpc(collisionDamage, ships.unitPos.Value, false, 0, false);
                                 GetShipAtPos(posToCheck).TakeDamageServerRpc(collisionDamage, ships.unitPos.Value, false, 0, false);
@@ -396,11 +413,16 @@ public class GridManager : NetworkBehaviour
                                 hasStop = true;
                                 break;
                             }
+                            else if(t.Walkable && !t.shipOnTile.Value && t.mineInTile.Value)
+                            {
+                                finalPos = posToCheck;
+
+                                hasStop = true;
+                                break;
+                            }
                             else if (t.Walkable && !t.shipOnTile.Value && !t.blockedTile.Value)
                             {
-                                ships.unitPos.Value = new Vector3(posToCheck.x, posToCheck.y, -1);
-                                ships.SetNewTileClientRpc(posToCheck);
-                                SetShipOnTileServerRpc(ships.unitPos.Value, true);
+                                finalPos = new Vector2(finalPos.x, finalPos.y + 1);
                                 hasPush = true;
                             }
                         }
@@ -411,13 +433,17 @@ public class GridManager : NetworkBehaviour
             //Ici pour dire fini
             finished++;
         }
-        
+
+        ships.unitPos.Value = new Vector3(finalPos.x, finalPos.y, -1);
+        ships.SetNewTileClientRpc(finalPos);
+        SetShipOnTileServerRpc(ships.unitPos.Value, true);
+
         if (hasPush && !isBrochetteShot && amountPush == finished)
         {
-            if (GetTileAtPosition(posToCheck).mineInTile.Value)
+            if (GetTileAtPosition(finalPos).mineInTile.Value)
             {
-                SetMineOnTileServerRpc(posToCheck, 0, false, false);
-                DamageUnitByMineServerRpc(mineDamage, posToCheck, false, 0);
+                SetMineOnTileServerRpc(finalPos, 0, false, false);
+                DamageUnitByMineServerRpc(mineDamage, finalPos, false, 0);
             }
             Cursor p = NetworkManager.ConnectedClients[id].PlayerObject.GetComponent<Cursor>();
             p.HasDidAnActionClientRpc();
@@ -425,10 +451,10 @@ public class GridManager : NetworkBehaviour
         }
         else if (hasStop)
         {
-            if (GetTileAtPosition(posToCheck).mineInTile.Value)
+            if (GetTileAtPosition(finalPos).mineInTile.Value)
             {
-                SetMineOnTileServerRpc(posToCheck, 0, false, false);
-                DamageUnitByMineServerRpc(mineDamage, posToCheck, false, 0);
+                SetMineOnTileServerRpc(finalPos, 0, false, false);
+                DamageUnitByMineServerRpc(mineDamage, finalPos, false, 0);
             }
             Cursor p = NetworkManager.ConnectedClients[id].PlayerObject.GetComponent<Cursor>();
             p.HasDidAnActionClientRpc();
@@ -447,6 +473,8 @@ public class GridManager : NetworkBehaviour
         int finished = 0;
         bool hasStop = false;
 
+        Vector2 finalPos = pushShip;
+
         if (upgraded)
         {
             if (ships.unitName == ShipUnit.UnitType.Galion)
@@ -457,7 +485,7 @@ public class GridManager : NetworkBehaviour
                 amountPull = 3;
         }
 
-        for(int i = 1; i <= amountPull; i++)
+        for(int i = 0; i < amountPull; i++)
         {
             if (ships.unitPos.Value == pushShip)
             {
@@ -467,7 +495,7 @@ public class GridManager : NetworkBehaviour
                     if (currentShip.x > pushShip.x)
                     {
                         //alors -1
-                        posToCheck = new Vector2(ships.unitPos.Value.x + i, ships.unitPos.Value.y);
+                        posToCheck = new Vector2(finalPos.x + 1, finalPos.y);
                         if (dictionnary.Contains(posToCheck))
                         {
                             TileScript t = GetTileAtPosition(posToCheck);
@@ -479,7 +507,7 @@ public class GridManager : NetworkBehaviour
                                 hasStop = true;
                                 break;
                             }
-                            else if (t.Walkable && t.shipOnTile.Value)
+                            else if (t.Walkable && t.shipOnTile.Value && !t.mineInTile.Value)
                             {
                                 ships.TakeDamageServerRpc(collisionDamage, ships.unitPos.Value, false, 0, false);
                                 GetShipAtPos(posToCheck).TakeDamageServerRpc(collisionDamage, ships.unitPos.Value, false, 0, false);
@@ -488,11 +516,16 @@ public class GridManager : NetworkBehaviour
                                 hasStop = true;
                                 break;
                             }
+                            else if (t.Walkable && !t.shipOnTile.Value && t.mineInTile.Value)
+                            {
+                                finalPos = posToCheck;
+
+                                hasStop = true;
+                                break;
+                            }
                             else if (t.Walkable && !t.shipOnTile.Value && !t.blockedTile.Value)
                             {
-                                ships.unitPos.Value = new Vector3(posToCheck.x, posToCheck.y, -1);
-                                ships.SetNewTileClientRpc(posToCheck);
-                                SetShipOnTileServerRpc(ships.unitPos.Value, true);
+                                finalPos = new Vector2(finalPos.x + 1, finalPos.y);
                                 hasPull = true;
                             }
                         }
@@ -500,7 +533,7 @@ public class GridManager : NetworkBehaviour
                     else
                     {
                         //alors +1
-                        posToCheck = new Vector2(ships.unitPos.Value.x - i, ships.unitPos.Value.y);
+                        posToCheck = new Vector2(finalPos.x - 1, finalPos.y);
                         if (dictionnary.Contains(posToCheck))
                         {
                             TileScript t = GetTileAtPosition(posToCheck);
@@ -512,7 +545,7 @@ public class GridManager : NetworkBehaviour
                                 hasStop = true;
                                 break;
                             }
-                            else if (t.Walkable && t.shipOnTile.Value)
+                            else if (t.Walkable && t.shipOnTile.Value && !t.mineInTile.Value)
                             {
                                 ships.TakeDamageServerRpc(collisionDamage, ships.unitPos.Value, false, 0, false);
                                 GetShipAtPos(posToCheck).TakeDamageServerRpc(collisionDamage, ships.unitPos.Value, false, 0, false);
@@ -521,11 +554,16 @@ public class GridManager : NetworkBehaviour
                                 hasStop = true;
                                 break;
                             }
+                            else if (t.Walkable && !t.shipOnTile.Value && t.mineInTile.Value)
+                            {
+                                finalPos = posToCheck;
+
+                                hasStop = true;
+                                break;
+                            }
                             else if (t.Walkable && !t.shipOnTile.Value && !t.blockedTile.Value)
                             {
-                                ships.unitPos.Value = new Vector3(posToCheck.x, posToCheck.y, -1);
-                                ships.SetNewTileClientRpc(posToCheck);
-                                SetShipOnTileServerRpc(ships.unitPos.Value, true);
+                                finalPos = new Vector2(finalPos.x - 1, finalPos.y);
                                 hasPull = true;
                             }
                         }
@@ -536,7 +574,7 @@ public class GridManager : NetworkBehaviour
                     if (currentShip.y > pushShip.y)
                     {
                         //alors -1
-                        posToCheck = new Vector2(ships.unitPos.Value.x, ships.unitPos.Value.y + i);
+                        posToCheck = new Vector2(finalPos.x, finalPos.y + 1);
                         if (dictionnary.Contains(posToCheck))
                         {
                             TileScript t = GetTileAtPosition(posToCheck);
@@ -548,7 +586,7 @@ public class GridManager : NetworkBehaviour
                                 hasStop = true;
                                 break;
                             }
-                            else if (t.Walkable && t.shipOnTile.Value)
+                            else if (t.Walkable && t.shipOnTile.Value && !t.mineInTile.Value)
                             {
                                 ships.TakeDamageServerRpc(collisionDamage, ships.unitPos.Value, false, 0, false);
                                 GetShipAtPos(posToCheck).TakeDamageServerRpc(collisionDamage, ships.unitPos.Value, false, 0, false);
@@ -557,11 +595,16 @@ public class GridManager : NetworkBehaviour
                                 hasStop = true;
                                 break;
                             }
+                            else if (t.Walkable && !t.shipOnTile.Value && t.mineInTile.Value)
+                            {
+                                finalPos = posToCheck;
+
+                                hasStop = true;
+                                break;
+                            }
                             else if (t.Walkable && !t.shipOnTile.Value && !t.blockedTile.Value)
                             {
-                                ships.unitPos.Value = new Vector3(posToCheck.x, posToCheck.y, -1);
-                                ships.SetNewTileClientRpc(posToCheck);
-                                SetShipOnTileServerRpc(ships.unitPos.Value, true);
+                                finalPos = new Vector2(finalPos.x, finalPos.y + 1);
                                 hasPull = true;
                             }
                         }
@@ -569,7 +612,7 @@ public class GridManager : NetworkBehaviour
                     else
                     {
                         //alors +1
-                        posToCheck = new Vector2(ships.unitPos.Value.x, ships.unitPos.Value.y - i);
+                        posToCheck = new Vector2(finalPos.x, finalPos.y - 1);
                         if (dictionnary.Contains(posToCheck))
                         {
                             TileScript t = GetTileAtPosition(posToCheck);
@@ -581,7 +624,7 @@ public class GridManager : NetworkBehaviour
                                 hasStop = true;
                                 break;
                             }
-                            else if (t.Walkable && t.shipOnTile.Value)
+                            else if (t.Walkable && t.shipOnTile.Value && !t.mineInTile.Value)
                             {
                                 ships.TakeDamageServerRpc(collisionDamage, ships.unitPos.Value, false, 0, false);
                                 GetShipAtPos(posToCheck).TakeDamageServerRpc(collisionDamage, ships.unitPos.Value, false, 0, false);
@@ -590,17 +633,21 @@ public class GridManager : NetworkBehaviour
                                 hasStop = true;
                                 break;
                             }
+                            else if (t.Walkable && !t.shipOnTile.Value && t.mineInTile.Value)
+                            {
+                                finalPos = posToCheck;
+
+                                hasStop = true;
+                                break;
+                            }
                             else if (t.Walkable && !t.shipOnTile.Value && !t.blockedTile.Value)
                             {
-                                ships.unitPos.Value = new Vector3(posToCheck.x, posToCheck.y, -1);
-                                ships.SetNewTileClientRpc(posToCheck);
-                                SetShipOnTileServerRpc(ships.unitPos.Value, true);
+                                finalPos = new Vector2(finalPos.x, finalPos.y - 1);
                                 hasPull = true;
                             }
                         }
                     }
                 }
-
             }
             finished++;
         }
@@ -608,10 +655,10 @@ public class GridManager : NetworkBehaviour
 
         if (hasPull && finished == amountPull)
         {
-            if (GetTileAtPosition(posToCheck).mineInTile.Value)
+            if (GetTileAtPosition(finalPos).mineInTile.Value)
             {
-                SetMineOnTileServerRpc(posToCheck, 0, false, false);
-                DamageUnitByMineServerRpc(mineDamage, posToCheck, false, 0);
+                SetMineOnTileServerRpc(finalPos, 0, false, false);
+                DamageUnitByMineServerRpc(mineDamage, finalPos, false, 0);
             }
             Cursor p = NetworkManager.ConnectedClients[id].PlayerObject.GetComponent<Cursor>();
             p.HasDidAnActionClientRpc();
@@ -619,17 +666,16 @@ public class GridManager : NetworkBehaviour
         }
         else if (hasStop)
         {
-            if (GetTileAtPosition(posToCheck).mineInTile.Value)
+            if (GetTileAtPosition(finalPos).mineInTile.Value)
             {
-                SetMineOnTileServerRpc(posToCheck, 0, false, false);
-                DamageUnitByMineServerRpc(mineDamage, posToCheck, false, 0);
+                SetMineOnTileServerRpc(finalPos, 0, false, false);
+                DamageUnitByMineServerRpc(mineDamage, finalPos, false, 0);
             }
             Cursor p = NetworkManager.ConnectedClients[id].PlayerObject.GetComponent<Cursor>();
             p.HasDidAnActionClientRpc();
             p.UseManaClientRpc();
         }
     }
-
     #endregion
 
     #region ModifyTile
