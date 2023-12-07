@@ -133,7 +133,7 @@ public class HandleUpgradeSystem : NetworkBehaviour
                 p.unitManager.ships[p.currentShipIndex].upgrade = upgrades[shopIndex, i].upgradeType;
                 break;
             case UpgradeSystem.UpgradeType.Capacity:
-                p.unitManager.ships[p.currentShipIndex].capacitiesUpgraded = true;
+                p.unitManager.ships[p.currentShipIndex].upgradedCapacity = true;
                 p.unitManager.ships[p.currentShipIndex].upgrade = upgrades[shopIndex, i].upgradeType;
                 break;
         }

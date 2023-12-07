@@ -52,6 +52,8 @@ public class Cursor : NetworkBehaviour
 
     public NetworkVariable<bool> isReady = new NetworkVariable<bool>(false, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
 
+    int blockedOrientation = 0;
+
     private void Start()
     {
         if (!IsClient) return;
@@ -231,6 +233,13 @@ public class Cursor : NetworkBehaviour
     void UnitNewPosServerRpc(Vector2 pos, int index)
     {
         unitManager.ships[index].unitPos.Value = pos;
+    }
+
+    [ServerRpc(RequireOwnership = false)]
+    void UnitTpNewPosServerRpc(Vector2 targetShip, Vector2 newPos)
+    {
+        ShipUnit unit = GridManager.Instance.GetShipAtPos(targetShip);
+        unit.unitPos.Value = newPos;
     }
 
     [ServerRpc(RequireOwnership = false)]
@@ -451,6 +460,12 @@ public class Cursor : NetworkBehaviour
             currentModeIndex = 4;
         if(Input.GetKeyDown(KeyCode.Alpha4))
             currentModeIndex = 3;
+
+        if (Input.GetButtonDown("Jump"))
+            blockedOrientation++;
+
+        if (blockedOrientation > 1)
+            blockedOrientation = 0;
     }
 
     void SelectShip(TileScript t)
@@ -635,7 +650,7 @@ public class Cursor : NetworkBehaviour
             switch (unitManager.ships[currentShipIndex].unitSpecialTile.Value)
             {
                 case ShipUnit.UnitSpecialTile.BlockTile:
-                    GridManager.Instance.BlockedTileServerRpc(t.pos.Value, NetworkManager.LocalClientId, unitManager.ships[currentShipIndex].tileCapacity.tilePassiveDuration);
+                    GridManager.Instance.BlockedTileServerRpc(t.pos.Value, NetworkManager.LocalClientId, unitManager.ships[currentShipIndex].tileCapacity.tilePassiveDuration, false, 0);
                     break;
                 case ShipUnit.UnitSpecialTile.Mine:
                     if(!t.Walkable)
@@ -662,14 +677,14 @@ public class Cursor : NetworkBehaviour
             switch (unitManager.ships[currentShipIndex].unitSpecialTile.Value)
             {
                 case ShipUnit.UnitSpecialTile.BlockTile:
-                    GridManager.Instance.BlockedTileServerRpc(t.pos.Value, NetworkManager.LocalClientId, unitManager.ships[currentShipIndex].tileCapacity.tilePassiveDuration);
+                    GridManager.Instance.BlockedTileServerRpc(t.pos.Value, NetworkManager.LocalClientId, unitManager.ships[currentShipIndex].tileCapacity.tilePassiveDuration, true, blockedOrientation);
                     break;
                 case ShipUnit.UnitSpecialTile.Mine:
                     if (!t.Walkable)
                         GridManager.Instance.SetMineOnTileServerRpc(t.pos.Value, NetworkManager.LocalClientId, true, true);
                     break;
                 case ShipUnit.UnitSpecialTile.Teleport:
-                    TeleportShip(t);
+                    UpgradedTP(t);
                     break;
                 case ShipUnit.UnitSpecialTile.FouilleOr:
                     SearchGold(true);
@@ -679,6 +694,9 @@ public class Cursor : NetworkBehaviour
                     break;
                 case ShipUnit.UnitSpecialTile.Barque:
                     StartCoroutine(SpawnBarque(t.pos.Value, t));
+                    break;
+                case ShipUnit.UnitSpecialTile.ExplodeBarque:
+                    ExplodeBarque();
                     break;
                 case ShipUnit.UnitSpecialTile.None:
                     break;
@@ -695,7 +713,7 @@ public class Cursor : NetworkBehaviour
             switch (unitManager.ships[currentShipIndex].unitSpecialShot.Value)
             {
                 case ShipUnit.UnitSpecialShot.PushUnit:
-                    GridManager.Instance.PushUnitServerRpc(t.pos.Value, unitManager.ships[currentShipIndex].unitPos.Value, NetworkManager.LocalClientId);
+                    GridManager.Instance.PushUnitServerRpc(t.pos.Value, unitManager.ships[currentShipIndex].unitPos.Value, NetworkManager.LocalClientId, false, false);
                     break;
                 case ShipUnit.UnitSpecialShot.TShot:
                     StartCoroutine(TShotFunction(t, false));
@@ -704,13 +722,13 @@ public class Cursor : NetworkBehaviour
                     GridManager.Instance.DamageUnitServerRpc(unitManager.ships[currentShipIndex].shotCapacity.specialAbilityDamage, t.pos.Value, NetworkManager.LocalClientId, unitManager.ships[currentShipIndex].shotCapacity.specialPassifDamage, unitManager.ships[currentShipIndex].shotCapacity.shootPassiveDuration, true, HasGoThroughWaterCapacity(cTile), false);
                     break;
                 case ShipUnit.UnitSpecialShot.TirBrochette:
-                    StartCoroutine(BrochetteShot(t));
+                    StartCoroutine(BrochetteShot(t, false));
                     break;
                 case ShipUnit.UnitSpecialShot.VentContraire:
                     GridManager.Instance.ApplyEffectOnShipServerRpc(t.pos.Value, unitManager.ships[currentShipIndex].shotCapacity.shootPassiveDuration, NetworkManager.LocalClientId, false);
                     break;
                 case ShipUnit.UnitSpecialShot.Grappin:
-                    GridManager.Instance.PullUnitServerRpc(t.pos.Value, unitManager.ships[currentShipIndex].unitPos.Value, NetworkManager.LocalClientId);
+                    GridManager.Instance.PullUnitServerRpc(t.pos.Value, unitManager.ships[currentShipIndex].unitPos.Value, NetworkManager.LocalClientId, false);
                     break;
                 case ShipUnit.UnitSpecialShot.None:
                     break;
@@ -721,7 +739,7 @@ public class Cursor : NetworkBehaviour
             switch (unitManager.ships[currentShipIndex].unitSpecialShot.Value)
             {
                 case ShipUnit.UnitSpecialShot.PushUnit:
-                    GridManager.Instance.PushUnitServerRpc(t.pos.Value, unitManager.ships[currentShipIndex].unitPos.Value, NetworkManager.LocalClientId);
+                    GridManager.Instance.PushUnitServerRpc(t.pos.Value, unitManager.ships[currentShipIndex].unitPos.Value, NetworkManager.LocalClientId, true, false);
                     break;
                 case ShipUnit.UnitSpecialShot.TShot:
                     StartCoroutine(TShotFunction(t, true));
@@ -730,13 +748,13 @@ public class Cursor : NetworkBehaviour
                     GridManager.Instance.DamageUnitServerRpc(unitManager.ships[currentShipIndex].shotCapacity.specialAbilityDamage, t.pos.Value, NetworkManager.LocalClientId, unitManager.ships[currentShipIndex].shotCapacity.specialPassifDamage, unitManager.ships[currentShipIndex].shotCapacity.shootPassiveDuration, true, HasGoThroughWaterCapacity(cTile), true);
                     break;
                 case ShipUnit.UnitSpecialShot.TirBrochette:
-                    StartCoroutine(BrochetteShot(t));
+                    StartCoroutine(BrochetteShot(t, true));
                     break;
                 case ShipUnit.UnitSpecialShot.VentContraire:
                     GridManager.Instance.ApplyEffectOnShipServerRpc(t.pos.Value, unitManager.ships[currentShipIndex].shotCapacity.shootPassiveDuration - 1, NetworkManager.LocalClientId, true);
                     break;
                 case ShipUnit.UnitSpecialShot.Grappin:
-                    GridManager.Instance.PullUnitServerRpc(t.pos.Value, unitManager.ships[currentShipIndex].unitPos.Value, NetworkManager.LocalClientId);
+                    GridManager.Instance.PullUnitServerRpc(t.pos.Value, unitManager.ships[currentShipIndex].unitPos.Value, NetworkManager.LocalClientId, true);
                     break;
                 case ShipUnit.UnitSpecialShot.None:
                     break;
@@ -769,6 +787,77 @@ public class Cursor : NetworkBehaviour
         totalShootPoint--;
         unitManager.ships[currentShipIndex].canMove.Value = false;
         unitManager.ships[currentShipIndex].canShoot.Value = false;
+        TotalActionPoint();
+    }
+
+    void UpgradedTP(TileScript t)
+    {
+        if (!t.Walkable || t.blockedTile.Value) return;
+
+        if (t.shipOnTile.Value)
+        {
+            //Swap ships placement
+            ShipUnit ship = GridManager.Instance.GetShipAtPos(t.pos.Value);
+            UnitTpNewPosServerRpc(ship.unitPos.Value, unitManager.ships[currentShipIndex].currentTile.pos.Value);
+            ship.UpdateCurrentTileClientRpc(unitManager.ships[currentShipIndex].currentTile.pos.Value);
+
+            UnitNewPosServerRpc(t.pos.Value, currentShipIndex);
+            unitManager.ships[currentShipIndex].currentTile = t;
+        }
+        else
+        {
+            GridManager.Instance.SetShipOnTileServerRpc(unitManager.ships[currentShipIndex].currentTile.pos.Value, false);
+            UnitNewPosServerRpc(t.pos.Value, currentShipIndex);
+            GridManager.Instance.SetShipOnTileServerRpc(t.pos.Value, true);
+            unitManager.ships[currentShipIndex].currentTile = t;
+        }
+
+
+        Vector2 check = t.pos.Value;
+        if(GridManager.Instance.GetTileAtPosition(new Vector2(check.x + 1, check.y)))
+            GridManager.Instance.DamageUnitNoActionServerRpc(3, new Vector2(check.x + 1, check.y), NetworkManager.LocalClientId, false, 0, HasGoThroughWaterCapacity(t));
+        if (GridManager.Instance.GetTileAtPosition(new Vector2(check.x - 1, check.y)))
+            GridManager.Instance.DamageUnitNoActionServerRpc(3, new Vector2(check.x - 1, check.y), NetworkManager.LocalClientId, false, 0, HasGoThroughWaterCapacity(t));
+        if (GridManager.Instance.GetTileAtPosition(new Vector2(check.x, check.y + 1)))
+            GridManager.Instance.DamageUnitNoActionServerRpc(3, new Vector2(check.x, check.y + 1), NetworkManager.LocalClientId, false, 0, HasGoThroughWaterCapacity(t));
+        if (GridManager.Instance.GetTileAtPosition(new Vector2(check.x, check.y - 1)))
+            GridManager.Instance.DamageUnitNoActionServerRpc(3, new Vector2(check.x, check.y - 1), NetworkManager.LocalClientId, false, 0, HasGoThroughWaterCapacity(t));
+
+        bool stepOnMine = false;
+        if (t.mineInTile.Value)
+        {
+            stepOnMine = true;
+            GridManager.Instance.SetMineOnTileServerRpc(t.pos.Value, NetworkManager.LocalClientId, false, false);
+        }
+
+        if (stepOnMine)
+            GridManager.Instance.DamageUnitByMineServerRpc(GridManager.Instance.mineDamage, t.pos.Value, false, 0);
+
+        currentSpecialCharge -= unitManager.ships[currentShipIndex].tileCapacity.specialAbilityCost;
+        totalMovePoint--;
+        totalShootPoint--;
+        unitManager.ships[currentShipIndex].canMove.Value = false;
+        unitManager.ships[currentShipIndex].canShoot.Value = false;
+        TotalActionPoint();
+    }
+
+    void ExplodeBarque()
+    {
+        Vector2 check = unitManager.ships[currentShipIndex].unitPos.Value;
+
+        if (GridManager.Instance.GetTileAtPosition(new Vector2(check.x + 1, check.y)))
+            GridManager.Instance.DamageUnitNoActionServerRpc(6, new Vector2(check.x + 1, check.y), NetworkManager.LocalClientId, false, 0, false);
+        if (GridManager.Instance.GetTileAtPosition(new Vector2(check.x - 1, check.y)))
+            GridManager.Instance.DamageUnitNoActionServerRpc(6, new Vector2(check.x - 1, check.y), NetworkManager.LocalClientId, false, 0, false);
+        if (GridManager.Instance.GetTileAtPosition(new Vector2(check.x, check.y + 1)))
+            GridManager.Instance.DamageUnitNoActionServerRpc(6, new Vector2(check.x, check.y + 1), NetworkManager.LocalClientId, false, 0, false);
+        if (GridManager.Instance.GetTileAtPosition(new Vector2(check.x, check.y - 1)))
+            GridManager.Instance.DamageUnitNoActionServerRpc(6, new Vector2(check.x, check.y - 1), NetworkManager.LocalClientId, false, 0, false);
+
+        currentSpecialCharge -= unitManager.ships[currentShipIndex].tileCapacity.specialAbilityCost;
+        totalMovePoint--;
+        totalShootPoint--;
+        unitManager.ships[currentShipIndex].TakeDamageServerRpc(24, unitManager.ships[currentShipIndex].unitPos.Value, false, 0, false);
         TotalActionPoint();
     }
 
@@ -930,7 +1019,7 @@ public class Cursor : NetworkBehaviour
         }
     }
 
-    IEnumerator BrochetteShot(TileScript t)
+    IEnumerator BrochetteShot(TileScript t, bool upgraded)
     {
         Vector2 unitPos = unitManager.ships[currentShipIndex].unitPos.Value;
         Vector2 targetUnit = t.pos.Value;
@@ -1003,6 +1092,9 @@ public class Cursor : NetworkBehaviour
                 }
             }
         }
+
+        if(upgraded)
+            GridManager.Instance.PushUnitServerRpc(t.pos.Value, unitManager.ships[currentShipIndex].unitPos.Value, NetworkManager.LocalClientId,false, true);
     }
 
     #endregion

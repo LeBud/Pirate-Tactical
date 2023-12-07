@@ -26,10 +26,12 @@ public class GridManager : NetworkBehaviour
     List<TileScript> blockedTiles = new List<TileScript>();
     List<TileScript> outOfCombatZoneTiles = new List<TileScript>();
 
+    [Header("Damages")]
     public int combatZoneDamage = 4;
     public int mineDamage = 10;
     public int upgradedMineDamage = 15;
     public int upgradedMineZoneDamage = 7;
+    public int collisionDamage;
 
     [Header("TileMap Editor")]
     public Tilemap map;
@@ -113,7 +115,6 @@ public class GridManager : NetworkBehaviour
         }
     }
 
-    //Permet d'obtenir une tile avec sa position
     public TileScript GetTileAtPosition(Vector2 pos)
     {
         if (dictionnary.Contains(pos))
@@ -236,91 +237,189 @@ public class GridManager : NetworkBehaviour
 
     #region Push/Pull Ship
     [ServerRpc(RequireOwnership = false)]
-    public void PushUnitServerRpc(Vector2 pushShip, Vector2 currentShip, ulong id)
+    public void PushUnitServerRpc(Vector2 pushShip, Vector2 currentShip, ulong id, bool upgraded, bool isBrochetteShot)
     {
         ShipUnit ships = GetShipAtPos(pushShip);
         Vector2 posToCheck = new Vector2();
 
         bool hasPush = false;
 
-        if (ships.unitPos.Value == pushShip)
-        {
-            SetShipOnTileServerRpc(pushShip, false);
-            if(currentShip.y == pushShip.y)
-            {
-                if(currentShip.x > pushShip.x)
-                {
-                    //alors -1
-                    posToCheck = new Vector2(ships.unitPos.Value.x - 1, ships.unitPos.Value.y);
-                    if (dictionnary.Contains(posToCheck))
-                    {
-                        TileScript t = GetTileAtPosition(posToCheck);
-                        if(t.Walkable && !t.shipOnTile.Value && !t.blockedTile.Value)
-                        {
-                            ships.unitPos.Value = new Vector3(posToCheck.x, posToCheck.y, -1);
-                            ships.SetNewTileClientRpc(posToCheck);
-                            SetShipOnTileServerRpc(ships.unitPos.Value, true);
-                            hasPush = true;
-                        }
-                    }
-                }
-                else
-                {
-                    //alors +1
-                    posToCheck = new Vector2(ships.unitPos.Value.x + 1, ships.unitPos.Value.y);
-                    if (dictionnary.Contains(posToCheck))
-                    {
-                        TileScript t = GetTileAtPosition(posToCheck);
-                        if (t.Walkable && !t.shipOnTile.Value && !t.blockedTile.Value)
-                        {
-                            ships.unitPos.Value = new Vector3(posToCheck.x, posToCheck.y, -1);
-                            ships.SetNewTileClientRpc(posToCheck);
-                            SetShipOnTileServerRpc(ships.unitPos.Value, true);
-                            hasPush = true;
-                        }
-                    }
-                }
-            }
-            else if (currentShip.x == pushShip.x)
-            {
-                if (currentShip.y > pushShip.y)
-                {
-                    //alors -1
-                    posToCheck = new Vector2(ships.unitPos.Value.x, ships.unitPos.Value.y - 1);
-                    if (dictionnary.Contains(posToCheck))
-                    {
-                        TileScript t = GetTileAtPosition(posToCheck);
-                        if (t.Walkable && !t.shipOnTile.Value && !t.blockedTile.Value)
-                        {
-                            ships.unitPos.Value = new Vector3(posToCheck.x, posToCheck.y, -1);
-                            ships.SetNewTileClientRpc(posToCheck);
-                            SetShipOnTileServerRpc( ships.unitPos.Value, true);
-                            hasPush = true;
-                        }
-                    }
-                }
-                else
-                {
-                    //alors +1
-                    posToCheck = new Vector2(ships.unitPos.Value.x, ships.unitPos.Value.y + 1);
-                    if (dictionnary.Contains(posToCheck))
-                    {
-                        TileScript t = GetTileAtPosition(posToCheck);
-                        if (t.Walkable && !t.shipOnTile.Value && !t.blockedTile.Value)
-                        {
-                            ships.unitPos.Value = new Vector3(posToCheck.x, posToCheck.y, -1);
-                            ships.SetNewTileClientRpc(posToCheck);
-                            SetShipOnTileServerRpc(ships.unitPos.Value, true);
-                            hasPush = true;
-                        }
-                    }
-                }
-            }
+        int amountPush = 1;
+        int finished = 0;
 
+        bool hasStop = false;
+
+        if (upgraded)
+        {
+            if (ships.unitName == ShipUnit.UnitType.Galion)
+                amountPush = 1;
+            else if (ships.unitName == ShipUnit.UnitType.Brigantin)
+                amountPush = 2;
+            else if (ships.unitName == ShipUnit.UnitType.Sloop)
+                amountPush = 3;
+        }
+
+        for(int i = 0; i < amountPush; i++)
+        {
+            if (ships.unitPos.Value == pushShip)
+            {
+                SetShipOnTileServerRpc(pushShip, false);
+                if (currentShip.y == pushShip.y)
+                {
+                    if (currentShip.x > pushShip.x)
+                    {
+                        //alors -1
+                        posToCheck = new Vector2(ships.unitPos.Value.x - 1, ships.unitPos.Value.y);
+                        if (dictionnary.Contains(posToCheck))
+                        {
+                            TileScript t = GetTileAtPosition(posToCheck);
+                            if (!t.Walkable && !t.shipOnTile.Value)
+                            {
+                                ships.TakeDamageServerRpc(collisionDamage, ships.unitPos.Value, false, 0, false);
+                                hasPush = true;
+
+                                hasStop = true;
+                                break;
+                            }
+                            else if (t.Walkable && t.shipOnTile.Value)
+                            {
+                                ships.TakeDamageServerRpc(collisionDamage, ships.unitPos.Value, false, 0, false);
+                                GetShipAtPos(posToCheck).TakeDamageServerRpc(collisionDamage, ships.unitPos.Value, false, 0, false);
+                                hasPush = true;
+
+                                hasStop = true;
+                                break;
+                            }
+                            else if (t.Walkable && !t.shipOnTile.Value && !t.blockedTile.Value)
+                            {
+                                ships.unitPos.Value = new Vector3(posToCheck.x, posToCheck.y, -1);
+                                ships.SetNewTileClientRpc(posToCheck);
+                                SetShipOnTileServerRpc(ships.unitPos.Value, true);
+                                hasPush = true;
+                            }
+                        }
+                    }
+                    else
+                    {
+                        //alors +1
+                        posToCheck = new Vector2(ships.unitPos.Value.x + 1, ships.unitPos.Value.y);
+                        if (dictionnary.Contains(posToCheck))
+                        {
+                            TileScript t = GetTileAtPosition(posToCheck);
+                            if (!t.Walkable && !t.shipOnTile.Value)
+                            {
+                                ships.TakeDamageServerRpc(collisionDamage, ships.unitPos.Value, false, 0, false);
+                                hasPush = true;
+
+                                hasStop = true;
+                                break;
+                            }
+                            else if (t.Walkable && t.shipOnTile.Value)
+                            {
+                                ships.TakeDamageServerRpc(collisionDamage, ships.unitPos.Value, false, 0, false);
+                                GetShipAtPos(posToCheck).TakeDamageServerRpc(collisionDamage, ships.unitPos.Value, false, 0, false);
+                                hasPush = true;
+
+                                hasStop = true;
+                                break;
+                            }
+                            else if (t.Walkable && !t.shipOnTile.Value && !t.blockedTile.Value)
+                            {
+                                ships.unitPos.Value = new Vector3(posToCheck.x, posToCheck.y, -1);
+                                ships.SetNewTileClientRpc(posToCheck);
+                                SetShipOnTileServerRpc(ships.unitPos.Value, true);
+                                hasPush = true;
+                            }
+                        }
+                    }
+                }
+                else if (currentShip.x == pushShip.x)
+                {
+                    if (currentShip.y > pushShip.y)
+                    {
+                        //alors -1
+                        posToCheck = new Vector2(ships.unitPos.Value.x, ships.unitPos.Value.y - 1);
+                        if (dictionnary.Contains(posToCheck))
+                        {
+                            TileScript t = GetTileAtPosition(posToCheck);
+                            if (!t.Walkable && !t.shipOnTile.Value)
+                            {
+                                ships.TakeDamageServerRpc(collisionDamage, ships.unitPos.Value, false, 0, false);
+                                hasPush = true;
+
+                                hasStop = true;
+                                break;
+                            }
+                            else if (t.Walkable && t.shipOnTile.Value)
+                            {
+                                ships.TakeDamageServerRpc(collisionDamage, ships.unitPos.Value, false, 0, false);
+                                GetShipAtPos(posToCheck).TakeDamageServerRpc(collisionDamage, ships.unitPos.Value, false, 0, false);
+                                hasPush = true;
+
+                                hasStop = true;
+                                break;
+                            }
+                            else if (t.Walkable && !t.shipOnTile.Value && !t.blockedTile.Value)
+                            {
+                                ships.unitPos.Value = new Vector3(posToCheck.x, posToCheck.y, -1);
+                                ships.SetNewTileClientRpc(posToCheck);
+                                SetShipOnTileServerRpc(ships.unitPos.Value, true);
+                                hasPush = true;
+                            }
+                        }
+                    }
+                    else
+                    {
+                        //alors +1
+                        posToCheck = new Vector2(ships.unitPos.Value.x, ships.unitPos.Value.y + 1);
+                        if (dictionnary.Contains(posToCheck))
+                        {
+                            TileScript t = GetTileAtPosition(posToCheck);
+                            if (!t.Walkable && !t.shipOnTile.Value)
+                            {
+                                ships.TakeDamageServerRpc(collisionDamage, ships.unitPos.Value, false, 0, false);
+                                hasPush = true;
+
+                                hasStop = true;
+                                break;
+                            }
+                            else if (t.Walkable && t.shipOnTile.Value)
+                            {
+                                ships.TakeDamageServerRpc(collisionDamage, ships.unitPos.Value, false, 0, false);
+                                GetShipAtPos(posToCheck).TakeDamageServerRpc(collisionDamage, ships.unitPos.Value, false, 0, false);
+                                hasPush = true;
+
+                                hasStop = true;
+                                break;
+                            }
+                            else if (t.Walkable && !t.shipOnTile.Value && !t.blockedTile.Value)
+                            {
+                                ships.unitPos.Value = new Vector3(posToCheck.x, posToCheck.y, -1);
+                                ships.SetNewTileClientRpc(posToCheck);
+                                SetShipOnTileServerRpc(ships.unitPos.Value, true);
+                                hasPush = true;
+                            }
+                        }
+                    }
+                }
+
+            }
+            //Ici pour dire fini
+            finished++;
         }
         
-
-        if (hasPush)
+        if (hasPush && !isBrochetteShot && amountPush == finished)
+        {
+            if (GetTileAtPosition(posToCheck).mineInTile.Value)
+            {
+                SetMineOnTileServerRpc(posToCheck, 0, false, false);
+                DamageUnitByMineServerRpc(mineDamage, posToCheck, false, 0);
+            }
+            Cursor p = NetworkManager.ConnectedClients[id].PlayerObject.GetComponent<Cursor>();
+            p.HasDidAnActionClientRpc();
+            p.UseManaClientRpc();
+        }
+        else if (hasStop)
         {
             if (GetTileAtPosition(posToCheck).mineInTile.Value)
             {
@@ -334,90 +433,187 @@ public class GridManager : NetworkBehaviour
     }
 
     [ServerRpc(RequireOwnership = false)]
-    public void PullUnitServerRpc(Vector2 pushShip, Vector2 currentShip, ulong id)
+    public void PullUnitServerRpc(Vector2 pushShip, Vector2 currentShip, ulong id, bool upgraded)
     {
         ShipUnit ships = GetShipAtPos(pushShip);
         Vector2 posToCheck = new Vector2();
 
         bool hasPull = false;
+        int amountPull = 1;
+        int finished = 0;
+        bool hasStop = false;
 
-        if (ships.unitPos.Value == pushShip)
+        if (upgraded)
         {
-            SetShipOnTileServerRpc(pushShip, false);
-            if (currentShip.y == pushShip.y)
-            {
-                if (currentShip.x > pushShip.x)
-                {
-                    //alors -1
-                    posToCheck = new Vector2(ships.unitPos.Value.x + 1, ships.unitPos.Value.y);
-                    if (dictionnary.Contains(posToCheck))
-                    {
-                        TileScript t = GetTileAtPosition(posToCheck);
-                        if (t.Walkable && !t.shipOnTile.Value && !t.blockedTile.Value)
-                        {
-                            ships.unitPos.Value = new Vector3(posToCheck.x, posToCheck.y, -1);
-                            ships.SetNewTileClientRpc(posToCheck);
-                            SetShipOnTileServerRpc(ships.unitPos.Value, true);
-                            hasPull = true;
-                        }
-                    }
-                }
-                else
-                {
-                    //alors +1
-                    posToCheck = new Vector2(ships.unitPos.Value.x - 1, ships.unitPos.Value.y);
-                    if (dictionnary.Contains(posToCheck))
-                    {
-                        TileScript t = GetTileAtPosition(posToCheck);
-                        if (t.Walkable && !t.shipOnTile.Value && !t.blockedTile.Value)
-                        {
-                            ships.unitPos.Value = new Vector3(posToCheck.x, posToCheck.y, -1);
-                            ships.SetNewTileClientRpc(posToCheck);
-                            SetShipOnTileServerRpc(ships.unitPos.Value, true);
-                            hasPull = true;
-                        }
-                    }
-                }
-            }
-            else if (currentShip.x == pushShip.x)
-            {
-                if (currentShip.y > pushShip.y)
-                {
-                    //alors -1
-                    posToCheck = new Vector2(ships.unitPos.Value.x, ships.unitPos.Value.y + 1);
-                    if (dictionnary.Contains(posToCheck))
-                    {
-                        TileScript t = GetTileAtPosition(posToCheck);
-                        if (t.Walkable && !t.shipOnTile.Value && !t.blockedTile.Value)
-                        {
-                            ships.unitPos.Value = new Vector3(posToCheck.x, posToCheck.y, -1);
-                            ships.SetNewTileClientRpc(posToCheck);
-                            SetShipOnTileServerRpc(ships.unitPos.Value, true);
-                            hasPull = true;
-                        }
-                    }
-                }
-                else
-                {
-                    //alors +1
-                    posToCheck = new Vector2(ships.unitPos.Value.x, ships.unitPos.Value.y - 1);
-                    if (dictionnary.Contains(posToCheck))
-                    {
-                        TileScript t = GetTileAtPosition(posToCheck);
-                        if (t.Walkable && !t.shipOnTile.Value && !t.blockedTile.Value)
-                        {
-                            ships.unitPos.Value = new Vector3(posToCheck.x, posToCheck.y, -1);
-                            ships.SetNewTileClientRpc(posToCheck);
-                            SetShipOnTileServerRpc(ships.unitPos.Value, true);
-                            hasPull = true;
-                        }
-                    }
-                }
-            }
-
+            if (ships.unitName == ShipUnit.UnitType.Galion)
+                amountPull = 1;
+            else if (ships.unitName == ShipUnit.UnitType.Brigantin)
+                amountPull = 2;
+            else if (ships.unitName == ShipUnit.UnitType.Sloop)
+                amountPull = 3;
         }
 
-        if (hasPull)
+        for(int i = 0; i < amountPull; i++)
+        {
+            if (ships.unitPos.Value == pushShip)
+            {
+                SetShipOnTileServerRpc(pushShip, false);
+                if (currentShip.y == pushShip.y)
+                {
+                    if (currentShip.x > pushShip.x)
+                    {
+                        //alors -1
+                        posToCheck = new Vector2(ships.unitPos.Value.x + 1, ships.unitPos.Value.y);
+                        if (dictionnary.Contains(posToCheck))
+                        {
+                            TileScript t = GetTileAtPosition(posToCheck);
+                            if (!t.Walkable && !t.shipOnTile.Value)
+                            {
+                                ships.TakeDamageServerRpc(collisionDamage, ships.unitPos.Value, false, 0, false);
+                                hasPull = true;
+
+                                hasStop = true;
+                                break;
+                            }
+                            else if (t.Walkable && t.shipOnTile.Value)
+                            {
+                                ships.TakeDamageServerRpc(collisionDamage, ships.unitPos.Value, false, 0, false);
+                                GetShipAtPos(posToCheck).TakeDamageServerRpc(collisionDamage, ships.unitPos.Value, false, 0, false);
+                                hasPull = true;
+
+                                hasStop = true;
+                                break;
+                            }
+                            else if (t.Walkable && !t.shipOnTile.Value && !t.blockedTile.Value)
+                            {
+                                ships.unitPos.Value = new Vector3(posToCheck.x, posToCheck.y, -1);
+                                ships.SetNewTileClientRpc(posToCheck);
+                                SetShipOnTileServerRpc(ships.unitPos.Value, true);
+                                hasPull = true;
+                            }
+                        }
+                    }
+                    else
+                    {
+                        //alors +1
+                        posToCheck = new Vector2(ships.unitPos.Value.x - 1, ships.unitPos.Value.y);
+                        if (dictionnary.Contains(posToCheck))
+                        {
+                            TileScript t = GetTileAtPosition(posToCheck);
+                            if (!t.Walkable && !t.shipOnTile.Value)
+                            {
+                                ships.TakeDamageServerRpc(collisionDamage, ships.unitPos.Value, false, 0, false);
+                                hasPull = true;
+
+                                hasStop = true;
+                                break;
+                            }
+                            else if (t.Walkable && t.shipOnTile.Value)
+                            {
+                                ships.TakeDamageServerRpc(collisionDamage, ships.unitPos.Value, false, 0, false);
+                                GetShipAtPos(posToCheck).TakeDamageServerRpc(collisionDamage, ships.unitPos.Value, false, 0, false);
+                                hasPull = true;
+
+                                hasStop = true;
+                                break;
+                            }
+                            else if (t.Walkable && !t.shipOnTile.Value && !t.blockedTile.Value)
+                            {
+                                ships.unitPos.Value = new Vector3(posToCheck.x, posToCheck.y, -1);
+                                ships.SetNewTileClientRpc(posToCheck);
+                                SetShipOnTileServerRpc(ships.unitPos.Value, true);
+                                hasPull = true;
+                            }
+                        }
+                    }
+                }
+                else if (currentShip.x == pushShip.x)
+                {
+                    if (currentShip.y > pushShip.y)
+                    {
+                        //alors -1
+                        posToCheck = new Vector2(ships.unitPos.Value.x, ships.unitPos.Value.y + 1);
+                        if (dictionnary.Contains(posToCheck))
+                        {
+                            TileScript t = GetTileAtPosition(posToCheck);
+                            if (!t.Walkable && !t.shipOnTile.Value)
+                            {
+                                ships.TakeDamageServerRpc(collisionDamage, ships.unitPos.Value, false, 0, false);
+                                hasPull = true;
+
+                                hasStop = true;
+                                break;
+                            }
+                            else if (t.Walkable && t.shipOnTile.Value)
+                            {
+                                ships.TakeDamageServerRpc(collisionDamage, ships.unitPos.Value, false, 0, false);
+                                GetShipAtPos(posToCheck).TakeDamageServerRpc(collisionDamage, ships.unitPos.Value, false, 0, false);
+                                hasPull = true;
+
+                                hasStop = true;
+                                break;
+                            }
+                            else if (t.Walkable && !t.shipOnTile.Value && !t.blockedTile.Value)
+                            {
+                                ships.unitPos.Value = new Vector3(posToCheck.x, posToCheck.y, -1);
+                                ships.SetNewTileClientRpc(posToCheck);
+                                SetShipOnTileServerRpc(ships.unitPos.Value, true);
+                                hasPull = true;
+                            }
+                        }
+                    }
+                    else
+                    {
+                        //alors +1
+                        posToCheck = new Vector2(ships.unitPos.Value.x, ships.unitPos.Value.y - 1);
+                        if (dictionnary.Contains(posToCheck))
+                        {
+                            TileScript t = GetTileAtPosition(posToCheck);
+                            if (!t.Walkable && !t.shipOnTile.Value)
+                            {
+                                ships.TakeDamageServerRpc(collisionDamage, ships.unitPos.Value, false, 0, false);
+                                hasPull = true;
+
+                                hasStop = true;
+                                break;
+                            }
+                            else if (t.Walkable && t.shipOnTile.Value)
+                            {
+                                ships.TakeDamageServerRpc(collisionDamage, ships.unitPos.Value, false, 0, false);
+                                GetShipAtPos(posToCheck).TakeDamageServerRpc(collisionDamage, ships.unitPos.Value, false, 0, false);
+                                hasPull = true;
+
+                                hasStop = true;
+                                break;
+                            }
+                            else if (t.Walkable && !t.shipOnTile.Value && !t.blockedTile.Value)
+                            {
+                                ships.unitPos.Value = new Vector3(posToCheck.x, posToCheck.y, -1);
+                                ships.SetNewTileClientRpc(posToCheck);
+                                SetShipOnTileServerRpc(ships.unitPos.Value, true);
+                                hasPull = true;
+                            }
+                        }
+                    }
+                }
+
+            }
+            finished++;
+        }
+
+
+        if (hasPull && finished == amountPull)
+        {
+            if (GetTileAtPosition(posToCheck).mineInTile.Value)
+            {
+                SetMineOnTileServerRpc(posToCheck, 0, false, false);
+                DamageUnitByMineServerRpc(mineDamage, posToCheck, false, 0);
+            }
+            Cursor p = NetworkManager.ConnectedClients[id].PlayerObject.GetComponent<Cursor>();
+            p.HasDidAnActionClientRpc();
+            p.UseManaClientRpc();
+        }
+        else if (hasStop)
         {
             if (GetTileAtPosition(posToCheck).mineInTile.Value)
             {
@@ -515,25 +711,63 @@ public class GridManager : NetworkBehaviour
     }
 
     [ServerRpc(RequireOwnership = false)]
-    public void BlockedTileServerRpc(Vector2 tilePos, ulong id, int duration)
+    public void BlockedTileServerRpc(Vector2 tilePos, ulong id, int duration, bool upgraded, int dir)
     {
+        Vector2 leftPos = new Vector2();
+        Vector2 rightPos = new Vector2();
+
+        if (upgraded)
+        {
+            switch (dir)
+            {
+                case 0:
+                    leftPos = new Vector2(tilePos.x - 1, tilePos.y);
+                    rightPos = new Vector2(tilePos.x + 1, tilePos.y);
+                    break;
+                case 1:
+                    leftPos = new Vector2(tilePos.x, tilePos.y - 1);
+                    rightPos = new Vector2(tilePos.x, tilePos.y + 1);
+                    break;
+            }
+
+            TileScript l = GetTileAtPosition(leftPos);
+            TileScript r = GetTileAtPosition(rightPos);
+
+            if(l.Walkable && !l.shipOnTile.Value)
+            {
+                l.SetTileToBlockTileClientRpc(true, duration);
+                l.blockedTile.Value = true;
+                blockedTiles.Add(l);
+
+                if (l.mineInTile.Value)
+                    SetMineOnTileServerRpc(l.pos.Value, 0, false, false);
+            }
+            
+            if(r.Walkable && !r.shipOnTile.Value)
+            {
+                r.SetTileToBlockTileClientRpc(true, duration);
+                r.blockedTile.Value = true;
+                blockedTiles.Add(r);
+
+                if (r.mineInTile.Value)
+                    SetMineOnTileServerRpc(r.pos.Value, 0, false, false);
+            }
+        }
+
         if (dictionnary.Contains(tilePos))
         {
-            foreach(var t in tilesGrid)
-                if(t.pos.Value == tilePos && !t.shipOnTile.Value)
-                {
-                    t.SetTileToBlockTileClientRpc(true, duration);
-                    t.blockedTile.Value = true;
-                    blockedTiles.Add(t);
+            TileScript t = GetTileAtPosition(tilePos);
 
-                    if (t.mineInTile.Value)
-                        SetMineOnTileServerRpc(t.pos.Value, 0, false, false);
+            t.SetTileToBlockTileClientRpc(true, duration);
+            t.blockedTile.Value = true;
+            blockedTiles.Add(t);
 
-                    Cursor p = NetworkManager.ConnectedClients[id].PlayerObject.GetComponent<Cursor>();
-                    p.UseManaClientRpc();
-                    p.HasDidAnActionClientRpc();
-                    break;
-                }
+            if (t.mineInTile.Value)
+                SetMineOnTileServerRpc(t.pos.Value, 0, false, false);
+
+            Cursor p = NetworkManager.ConnectedClients[id].PlayerObject.GetComponent<Cursor>();
+            p.UseManaClientRpc();
+            p.HasDidAnActionClientRpc();
         }
     }
 

@@ -8,7 +8,7 @@ public class ShipUnit : NetworkBehaviour
 {
 
     public enum UnitSpecialShot { None, PushUnit, TShot, FireShot, TirBrochette, VentContraire, Grappin}
-    public enum UnitSpecialTile { None, Mine, BlockTile, Teleport, FouilleOr, CanonSurIle, Barque}
+    public enum UnitSpecialTile { None, Mine, BlockTile, Teleport, FouilleOr, CanonSurIle, Barque, ExplodeBarque}
     public enum UnitType { Galion, Brigantin, Sloop}
 
     [Header("NetworkVariables")]
@@ -49,7 +49,7 @@ public class ShipUnit : NetworkBehaviour
 
     [Header("Upgrade")]
     public bool canBeUpgrade = true;
-    public bool capacitiesUpgraded = false;
+    //public bool capacitiesUpgraded = false;
     public UpgradeSystem.UpgradeType upgrade;
 
     [Header("Colors")]
@@ -152,6 +152,12 @@ public class ShipUnit : NetworkBehaviour
             unitSprite.color = player1Color;
         else 
             unitSprite.color = player2Color;
+    }
+
+    [ClientRpc]
+    public void UpdateCurrentTileClientRpc(Vector2 pos)
+    {
+        currentTile = GridManager.Instance.GetTileAtPosition(pos);
     }
 
     IEnumerator MoveShip()
