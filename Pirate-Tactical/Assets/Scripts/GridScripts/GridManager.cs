@@ -5,6 +5,7 @@ using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.Rendering;
 using UnityEngine.Tilemaps;
+using Random = UnityEngine.Random;
 
 public class GridManager : NetworkBehaviour
 {
@@ -257,10 +258,13 @@ public class GridManager : NetworkBehaviour
                 amountPush = 2;
             else if (ships.unitName == ShipUnit.UnitType.Sloop)
                 amountPush = 3;
+
+            Debug.Log("Force de poussé : " + amountPush);
         }
 
-        for(int i = 0; i < amountPush; i++)
+        for(int i = 1; i <= amountPush; i++)
         {
+            Debug.Log("Boucle se joue " + i);
             if (ships.unitPos.Value == pushShip)
             {
                 SetShipOnTileServerRpc(pushShip, false);
@@ -269,7 +273,7 @@ public class GridManager : NetworkBehaviour
                     if (currentShip.x > pushShip.x)
                     {
                         //alors -1
-                        posToCheck = new Vector2(ships.unitPos.Value.x - 1, ships.unitPos.Value.y);
+                        posToCheck = new Vector2(ships.unitPos.Value.x - i, ships.unitPos.Value.y);
                         if (dictionnary.Contains(posToCheck))
                         {
                             TileScript t = GetTileAtPosition(posToCheck);
@@ -302,7 +306,7 @@ public class GridManager : NetworkBehaviour
                     else
                     {
                         //alors +1
-                        posToCheck = new Vector2(ships.unitPos.Value.x + 1, ships.unitPos.Value.y);
+                        posToCheck = new Vector2(ships.unitPos.Value.x + i, ships.unitPos.Value.y);
                         if (dictionnary.Contains(posToCheck))
                         {
                             TileScript t = GetTileAtPosition(posToCheck);
@@ -338,7 +342,7 @@ public class GridManager : NetworkBehaviour
                     if (currentShip.y > pushShip.y)
                     {
                         //alors -1
-                        posToCheck = new Vector2(ships.unitPos.Value.x, ships.unitPos.Value.y - 1);
+                        posToCheck = new Vector2(ships.unitPos.Value.x, ships.unitPos.Value.y - i);
                         if (dictionnary.Contains(posToCheck))
                         {
                             TileScript t = GetTileAtPosition(posToCheck);
@@ -371,7 +375,7 @@ public class GridManager : NetworkBehaviour
                     else
                     {
                         //alors +1
-                        posToCheck = new Vector2(ships.unitPos.Value.x, ships.unitPos.Value.y + 1);
+                        posToCheck = new Vector2(ships.unitPos.Value.x, ships.unitPos.Value.y + i);
                         if (dictionnary.Contains(posToCheck))
                         {
                             TileScript t = GetTileAtPosition(posToCheck);
@@ -453,7 +457,7 @@ public class GridManager : NetworkBehaviour
                 amountPull = 3;
         }
 
-        for(int i = 0; i < amountPull; i++)
+        for(int i = 1; i <= amountPull; i++)
         {
             if (ships.unitPos.Value == pushShip)
             {
@@ -463,7 +467,7 @@ public class GridManager : NetworkBehaviour
                     if (currentShip.x > pushShip.x)
                     {
                         //alors -1
-                        posToCheck = new Vector2(ships.unitPos.Value.x + 1, ships.unitPos.Value.y);
+                        posToCheck = new Vector2(ships.unitPos.Value.x + i, ships.unitPos.Value.y);
                         if (dictionnary.Contains(posToCheck))
                         {
                             TileScript t = GetTileAtPosition(posToCheck);
@@ -496,7 +500,7 @@ public class GridManager : NetworkBehaviour
                     else
                     {
                         //alors +1
-                        posToCheck = new Vector2(ships.unitPos.Value.x - 1, ships.unitPos.Value.y);
+                        posToCheck = new Vector2(ships.unitPos.Value.x - i, ships.unitPos.Value.y);
                         if (dictionnary.Contains(posToCheck))
                         {
                             TileScript t = GetTileAtPosition(posToCheck);
@@ -532,7 +536,7 @@ public class GridManager : NetworkBehaviour
                     if (currentShip.y > pushShip.y)
                     {
                         //alors -1
-                        posToCheck = new Vector2(ships.unitPos.Value.x, ships.unitPos.Value.y + 1);
+                        posToCheck = new Vector2(ships.unitPos.Value.x, ships.unitPos.Value.y + i);
                         if (dictionnary.Contains(posToCheck))
                         {
                             TileScript t = GetTileAtPosition(posToCheck);
@@ -565,7 +569,7 @@ public class GridManager : NetworkBehaviour
                     else
                     {
                         //alors +1
-                        posToCheck = new Vector2(ships.unitPos.Value.x, ships.unitPos.Value.y - 1);
+                        posToCheck = new Vector2(ships.unitPos.Value.x, ships.unitPos.Value.y - i);
                         if (dictionnary.Contains(posToCheck))
                         {
                             TileScript t = GetTileAtPosition(posToCheck);
@@ -863,6 +867,8 @@ public class GridManager : NetworkBehaviour
         Cannon c = Instantiate(cannonPrefab, new Vector3(pos.x, pos.y, -1), Quaternion.identity);
         c.GetComponent<NetworkObject>().Spawn();
         c.ID.Value = id;
+        c.index = Random.Range(1, 1000);
+
         if(!upgraded)
             c.tiles = PathfindScript.GetCombatZoneSize(t, 3);
         else if (upgraded)
