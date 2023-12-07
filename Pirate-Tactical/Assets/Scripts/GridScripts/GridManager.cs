@@ -287,7 +287,7 @@ public class GridManager : NetworkBehaviour
                                 hasStop = true;
                                 break;
                             }
-                            else if (t.Walkable && t.shipOnTile.Value && !t.mineInTile.Value)
+                            else if (t.Walkable && (t.shipOnTile.Value || t.blockedTile.Value) && !t.mineInTile.Value)
                             {
                                 ships.TakeDamageServerRpc(collisionDamage, ships.unitPos.Value, false, 0, false);
                                 GetShipAtPos(posToCheck).TakeDamageServerRpc(collisionDamage, ships.unitPos.Value, false, 0, false);
@@ -325,7 +325,7 @@ public class GridManager : NetworkBehaviour
                                 hasStop = true;
                                 break;
                             }
-                            else if (t.Walkable && t.shipOnTile.Value && !t.mineInTile.Value)
+                            else if (t.Walkable && (t.shipOnTile.Value ||t.blockedTile.Value) && !t.mineInTile.Value)
                             {
                                 ships.TakeDamageServerRpc(collisionDamage, ships.unitPos.Value, false, 0, false);
                                 GetShipAtPos(posToCheck).TakeDamageServerRpc(collisionDamage, ships.unitPos.Value, false, 0, false);
@@ -366,7 +366,7 @@ public class GridManager : NetworkBehaviour
                                 hasStop = true;
                                 break;
                             }
-                            else if (t.Walkable && t.shipOnTile.Value && !t.mineInTile.Value)
+                            else if (t.Walkable && (t.shipOnTile.Value || t.blockedTile.Value) && !t.mineInTile.Value)
                             {
                                 ships.TakeDamageServerRpc(collisionDamage, ships.unitPos.Value, false, 0, false);
                                 GetShipAtPos(posToCheck).TakeDamageServerRpc(collisionDamage, ships.unitPos.Value, false, 0, false);
@@ -404,7 +404,7 @@ public class GridManager : NetworkBehaviour
                                 hasStop = true;
                                 break;
                             }
-                            else if (t.Walkable && t.shipOnTile.Value && !t.mineInTile.Value)
+                            else if (t.Walkable && (t.shipOnTile.Value || t.blockedTile.Value) && !t.mineInTile.Value)
                             {
                                 ships.TakeDamageServerRpc(collisionDamage, ships.unitPos.Value, false, 0, false);
                                 GetShipAtPos(posToCheck).TakeDamageServerRpc(collisionDamage, ships.unitPos.Value, false, 0, false);
@@ -507,7 +507,7 @@ public class GridManager : NetworkBehaviour
                                 hasStop = true;
                                 break;
                             }
-                            else if (t.Walkable && t.shipOnTile.Value && !t.mineInTile.Value)
+                            else if (t.Walkable && (t.shipOnTile.Value || t.blockedTile.Value) && !t.mineInTile.Value)
                             {
                                 ships.TakeDamageServerRpc(collisionDamage, ships.unitPos.Value, false, 0, false);
                                 GetShipAtPos(posToCheck).TakeDamageServerRpc(collisionDamage, ships.unitPos.Value, false, 0, false);
@@ -545,7 +545,7 @@ public class GridManager : NetworkBehaviour
                                 hasStop = true;
                                 break;
                             }
-                            else if (t.Walkable && t.shipOnTile.Value && !t.mineInTile.Value)
+                            else if (t.Walkable && (t.shipOnTile.Value || t.blockedTile.Value) && !t.mineInTile.Value)
                             {
                                 ships.TakeDamageServerRpc(collisionDamage, ships.unitPos.Value, false, 0, false);
                                 GetShipAtPos(posToCheck).TakeDamageServerRpc(collisionDamage, ships.unitPos.Value, false, 0, false);
@@ -586,7 +586,7 @@ public class GridManager : NetworkBehaviour
                                 hasStop = true;
                                 break;
                             }
-                            else if (t.Walkable && t.shipOnTile.Value && !t.mineInTile.Value)
+                            else if (t.Walkable && (t.shipOnTile.Value || t.blockedTile.Value) && !t.mineInTile.Value)
                             {
                                 ships.TakeDamageServerRpc(collisionDamage, ships.unitPos.Value, false, 0, false);
                                 GetShipAtPos(posToCheck).TakeDamageServerRpc(collisionDamage, ships.unitPos.Value, false, 0, false);
@@ -624,7 +624,7 @@ public class GridManager : NetworkBehaviour
                                 hasStop = true;
                                 break;
                             }
-                            else if (t.Walkable && t.shipOnTile.Value && !t.mineInTile.Value)
+                            else if (t.Walkable && (t.shipOnTile.Value || t.blockedTile.Value) && !t.mineInTile.Value)
                             {
                                 ships.TakeDamageServerRpc(collisionDamage, ships.unitPos.Value, false, 0, false);
                                 GetShipAtPos(posToCheck).TakeDamageServerRpc(collisionDamage, ships.unitPos.Value, false, 0, false);

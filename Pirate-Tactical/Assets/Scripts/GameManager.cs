@@ -249,7 +249,8 @@ public class GameManager : NetworkBehaviour
             {
                 players[i].RechargeSpecialClientRpc();
                 players[i].CalculateHealthClientRpc();
-                players[i].GoldGainClientRpc();
+                if(currentRound.Value > 1)
+                    players[i].GoldGainClientRpc();
 
                 if (players[i].unitManager.allShipSpawned.Value)
                 {
@@ -313,7 +314,8 @@ public class GameManager : NetworkBehaviour
         {
             players[i].RechargeSpecialClientRpc();
             players[i].CalculateHealthClientRpc();
-            players[i].GoldGainClientRpc();
+            if (currentRound.Value > 1)
+                players[i].GoldGainClientRpc();
 
             for (int x = 0; x < players[i].unitManager.ships.Length; x++)
             {
