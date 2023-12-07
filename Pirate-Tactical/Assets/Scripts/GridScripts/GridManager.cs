@@ -654,42 +654,42 @@ public class GridManager : NetworkBehaviour
         {
             Vector2 check = pos;
             ShipUnit unit = GetShipAtPos(pos);
-            if(GetShipAtPos(new Vector2(check.x + 1, check.y)))
+            if(GetTileAtPosition(new Vector2(check.x + 1, check.y)).shipOnTile.Value)
             {
                 unit = GetShipAtPos(new Vector2(check.x + 1, check.y));
                 unit.TakeDamageServerRpc(upgradedMineZoneDamage, new Vector2(check.x + 1, check.y), false, 0, false);
             }
-            if (GetShipAtPos(new Vector2(check.x - 1, check.y)))
+            if (GetTileAtPosition(new Vector2(check.x - 1, check.y)).shipOnTile.Value)
             {
                 unit = GetShipAtPos(new Vector2(check.x - 1, check.y));
                 unit.TakeDamageServerRpc(upgradedMineZoneDamage, new Vector2(check.x - 1, check.y), false, 0, false);
             }
-            if (GetShipAtPos(new Vector2(check.x, check.y + 1)))
+            if (GetTileAtPosition(new Vector2(check.x, check.y + 1)).shipOnTile.Value)
             {
                 unit = GetShipAtPos(new Vector2(check.x, check.y + 1));
                 unit.TakeDamageServerRpc(upgradedMineZoneDamage, new Vector2(check.x, check.y + 1), false, 0, false);
             }
-            if (GetShipAtPos(new Vector2(check.x, check.y - 1)))
+            if (GetTileAtPosition(new Vector2(check.x, check.y - 1)).shipOnTile.Value)
             {
                 unit = GetShipAtPos(new Vector2(check.x, check.y - 1));
                 unit.TakeDamageServerRpc(upgradedMineZoneDamage, new Vector2(check.x, check.y - 1), false, 0, false);
             }
-            if (GetShipAtPos(new Vector2(check.x + 1, check.y + 1)))
+            if (GetTileAtPosition(new Vector2(check.x + 1, check.y + 1)).shipOnTile.Value)
             {
                 unit = GetShipAtPos(new Vector2(check.x + 1, check.y + 1));
                 unit.TakeDamageServerRpc(upgradedMineZoneDamage, new Vector2(check.x + 1, check.y + 1), false, 0, false);
             }
-            if (GetShipAtPos(new Vector2(check.x + 1, check.y - 1)))
+            if (GetTileAtPosition(new Vector2(check.x + 1, check.y - 1)).shipOnTile.Value)
             {
                 unit = GetShipAtPos(new Vector2(check.x + 1, check.y - 1));
                 unit.TakeDamageServerRpc(upgradedMineZoneDamage, new Vector2(check.x + 1, check.y - 1), false, 0, false);
             }
-            if (GetShipAtPos(new Vector2(check.x - 1, check.y + 1)))
+            if (GetTileAtPosition(new Vector2(check.x - 1, check.y + 1)).shipOnTile.Value)
             {
                 unit = GetShipAtPos(new Vector2(check.x - 1, check.y + 1));
                 unit.TakeDamageServerRpc(upgradedMineZoneDamage, new Vector2(check.x - 1, check.y + 1), false, 0, false);
             }
-            if (GetShipAtPos(new Vector2(check.x - 1, check.y - 1)))
+            if (GetTileAtPosition(new Vector2(check.x - 1, check.y - 1)).shipOnTile.Value)
             {
                 unit = GetShipAtPos(new Vector2(check.x - 1, check.y - 1));
                 unit.TakeDamageServerRpc(upgradedMineZoneDamage, new Vector2(check.x - 1, check.y - 1), false, 0, false);

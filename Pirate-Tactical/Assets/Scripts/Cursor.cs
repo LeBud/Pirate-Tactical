@@ -814,13 +814,13 @@ public class Cursor : NetworkBehaviour
 
 
         Vector2 check = t.pos.Value;
-        if(GridManager.Instance.GetTileAtPosition(new Vector2(check.x + 1, check.y)))
+        if(GridManager.Instance.GetTileAtPosition(new Vector2(check.x + 1, check.y)).shipOnTile.Value)
             GridManager.Instance.DamageUnitNoActionServerRpc(3, new Vector2(check.x + 1, check.y), NetworkManager.LocalClientId, false, 0, HasGoThroughWaterCapacity(t));
-        if (GridManager.Instance.GetTileAtPosition(new Vector2(check.x - 1, check.y)))
+        if (GridManager.Instance.GetTileAtPosition(new Vector2(check.x - 1, check.y)).shipOnTile.Value)
             GridManager.Instance.DamageUnitNoActionServerRpc(3, new Vector2(check.x - 1, check.y), NetworkManager.LocalClientId, false, 0, HasGoThroughWaterCapacity(t));
-        if (GridManager.Instance.GetTileAtPosition(new Vector2(check.x, check.y + 1)))
+        if (GridManager.Instance.GetTileAtPosition(new Vector2(check.x, check.y + 1)).shipOnTile.Value)
             GridManager.Instance.DamageUnitNoActionServerRpc(3, new Vector2(check.x, check.y + 1), NetworkManager.LocalClientId, false, 0, HasGoThroughWaterCapacity(t));
-        if (GridManager.Instance.GetTileAtPosition(new Vector2(check.x, check.y - 1)))
+        if (GridManager.Instance.GetTileAtPosition(new Vector2(check.x, check.y - 1)).shipOnTile.Value)
             GridManager.Instance.DamageUnitNoActionServerRpc(3, new Vector2(check.x, check.y - 1), NetworkManager.LocalClientId, false, 0, HasGoThroughWaterCapacity(t));
 
         bool stepOnMine = false;
@@ -845,13 +845,13 @@ public class Cursor : NetworkBehaviour
     {
         Vector2 check = unitManager.ships[currentShipIndex].unitPos.Value;
 
-        if (GridManager.Instance.GetTileAtPosition(new Vector2(check.x + 1, check.y)))
+        if (GridManager.Instance.GetTileAtPosition(new Vector2(check.x + 1, check.y)).shipOnTile.Value)
             GridManager.Instance.DamageUnitNoActionServerRpc(6, new Vector2(check.x + 1, check.y), NetworkManager.LocalClientId, false, 0, false);
-        if (GridManager.Instance.GetTileAtPosition(new Vector2(check.x - 1, check.y)))
+        if (GridManager.Instance.GetTileAtPosition(new Vector2(check.x - 1, check.y)).shipOnTile.Value)
             GridManager.Instance.DamageUnitNoActionServerRpc(6, new Vector2(check.x - 1, check.y), NetworkManager.LocalClientId, false, 0, false);
-        if (GridManager.Instance.GetTileAtPosition(new Vector2(check.x, check.y + 1)))
+        if (GridManager.Instance.GetTileAtPosition(new Vector2(check.x, check.y + 1)).shipOnTile.Value)
             GridManager.Instance.DamageUnitNoActionServerRpc(6, new Vector2(check.x, check.y + 1), NetworkManager.LocalClientId, false, 0, false);
-        if (GridManager.Instance.GetTileAtPosition(new Vector2(check.x, check.y - 1)))
+        if (GridManager.Instance.GetTileAtPosition(new Vector2(check.x, check.y - 1)).shipOnTile.Value)
             GridManager.Instance.DamageUnitNoActionServerRpc(6, new Vector2(check.x, check.y - 1), NetworkManager.LocalClientId, false, 0, false);
 
         currentSpecialCharge -= unitManager.ships[currentShipIndex].tileCapacity.specialAbilityCost;

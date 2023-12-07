@@ -20022,6 +20022,7 @@ MonoBehaviour:
   mineDamage: 10
   upgradedMineDamage: 15
   upgradedMineZoneDamage: 7
+  collisionDamage: 4
   map: {fileID: 102743947}
   waterSprite: {fileID: 21300000, guid: 4e7be7527c1b0c44199ff2184ada7002, type: 3}
   landSprite: {fileID: 21300000, guid: c04c22eacafbb864fb512ea81b2f2e00, type: 3}
