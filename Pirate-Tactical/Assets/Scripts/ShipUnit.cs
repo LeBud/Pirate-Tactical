@@ -88,6 +88,7 @@ public class ShipUnit : NetworkBehaviour
         {
             unitSpecialShot.Value = shotCapacity.shootCapacity;
             unitSpecialTile.Value = tileCapacity.tileCapacity;
+            baseMoveRange = unitMoveRange;
         }
 
         if (!IsServer) return;
@@ -95,7 +96,6 @@ public class ShipUnit : NetworkBehaviour
         healthPercent = (float)unitLife.Value / maxHealth;
         healthDisplay.localScale = new Vector3(healthPercent, 1, 1);
         SetHealthBarClientRpc(healthPercent, unitLife.Value);
-        baseMoveRange = unitMoveRange;
     }
 
     private void Update()
