@@ -30,8 +30,7 @@ public class UpgradeHolder : MonoBehaviour
         ID = playerID;
         gold = playerGold;
 
-        if(currentUpgrade.upgradeType != UpgradeSystem.UpgradeType.Capacity)
-            upBuyBtt.onClick.AddListener(() => BuyUpgrade());
+        upBuyBtt.onClick.AddListener(() => BuyUpgrade());
     }
 
     public void BuyUpgrade()

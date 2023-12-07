@@ -54,6 +54,9 @@ public class Cursor : NetworkBehaviour
 
     int blockedOrientation = 0;
 
+    [Header("Visual Feedbacks")]
+    public VisualsFeedbacks vs;
+
     private void Start()
     {
         if (!IsClient) return;
@@ -83,6 +86,7 @@ public class Cursor : NetworkBehaviour
         MyInputs();
         HandleCurrentMode();
         DisplayPath();
+
     }
 
     #region ClientRpcMethods
@@ -315,7 +319,6 @@ public class Cursor : NetworkBehaviour
             return;
         }
 
-
         HandleKeyboardInputs();
 
         Vector3 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
@@ -443,6 +446,19 @@ public class Cursor : NetworkBehaviour
 
         if (Input.GetButtonDown("Cancel") || (shipSelected && !unitManager.ships[currentShipIndex].canBeSelected.Value))
             DeselectShip();
+
+        DisplayVisuals();
+    }
+
+    void DisplayVisuals()
+    {
+        if (shipSelected)
+        {
+            if (unitManager.ships[currentShipIndex].unitSpecialTile.Value == ShipUnit.UnitSpecialTile.BlockTile && unitManager.ships[currentShipIndex].upgradedCapacity && inRangeTiles.Contains(cTile) && currentModeIndex == 3)
+                vs.DisplayBlockedTile(cTile, blockedOrientation);
+        }
+        else
+            vs.StopDisplayBlocked();
     }
 
     void HandleKeyboardInputs()
@@ -1175,7 +1191,7 @@ public class Cursor : NetworkBehaviour
         }
         else
         {
-            foreach (var item in allTiles)
+            foreach (var item in pathHighlight)
                 item.SetColor(3);
         }
 
