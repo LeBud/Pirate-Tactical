@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.Rendering;
@@ -48,6 +49,9 @@ public class GridManager : NetworkBehaviour
 
     [Header("Ship wreck")]
     public Shipwrek shipwreckPrefab;
+
+    [Header("DisplayTxt")]
+    public List<GameObject> displayTxts = new List<GameObject>();
 
     List<Cannon> cannonsOnMap = new List<Cannon>();
 
@@ -999,6 +1003,34 @@ public class GridManager : NetworkBehaviour
     {
         TileScript t = GetTileAtPosition(pos);
         t.shipwrek.Value = active;
+    }
+
+    [ClientRpc]
+    public void DisplayDamageClientRpc(int damage, Vector2 pos)
+    {
+        StartCoroutine(DisplayTxt(damage, pos));
+    }
+
+    IEnumerator DisplayTxt(int damage, Vector2 pos)
+    {
+        int txtNum = 0;
+
+        for(int i = 0; i < displayTxts.Count; i++)
+        {
+            if (displayTxts[i].activeSelf)
+            {
+                txtNum = i;
+                break;
+            }
+        }
+
+        displayTxts[txtNum].SetActive(true);
+        displayTxts[txtNum].transform.position = pos;
+        displayTxts[txtNum].GetComponent<TextMeshProUGUI>().text = damage.ToString();
+
+        yield return new WaitForSeconds(1);
+
+        displayTxts[txtNum].SetActive(false);
     }
 
 }

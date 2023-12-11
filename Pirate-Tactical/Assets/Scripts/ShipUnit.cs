@@ -59,6 +59,7 @@ public class ShipUnit : NetworkBehaviour
     [Header("Others")]
     public SpriteRenderer unitSprite;
     public TMP_Text health;
+    public GameObject highlight;
 
     [HideInInspector]
     public int index;
@@ -177,8 +178,6 @@ public class ShipUnit : NetworkBehaviour
         transform.position = endPos;
 
         isMoving = false;
-        /*transform.position = new Vector3(unitPos.Value.x, unitPos.Value.y, -1);
-        yield return null;*/
     }
 
     [ServerRpc(RequireOwnership = false)]
@@ -191,6 +190,8 @@ public class ShipUnit : NetworkBehaviour
             randomDmg++;
 
         if (hasGoneThroughWater) randomDmg /= 2;
+
+        GridManager.Instance.DisplayDamageClientRpc(randomDmg, pos);
 
         unitLife.Value -= randomDmg;
 

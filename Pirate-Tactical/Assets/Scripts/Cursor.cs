@@ -488,6 +488,7 @@ public class Cursor : NetworkBehaviour
     {
         if(shipSelected)
         {
+            unitManager.ships[currentShipIndex].highlight.SetActive(false);
             SoundManager.Instance.PlaySoundLocally(SoundManager.Instance.deselectShip);
             shipSelected = false;
             HideTiles();
@@ -502,6 +503,7 @@ public class Cursor : NetworkBehaviour
             {
                 currentShipIndex = ship.index;
                 shipSelected = true;
+                unitManager.ships[currentShipIndex].highlight.SetActive(true);
                 DisplayOnSelectedUnit();
                 SoundManager.Instance.PlaySoundLocally(SoundManager.Instance.selectShip);
                 break;
@@ -513,6 +515,7 @@ public class Cursor : NetworkBehaviour
     {
         if (shipSelected)
         {
+            unitManager.ships[currentShipIndex].highlight.SetActive(false);
             SoundManager.Instance.PlaySoundLocally(SoundManager.Instance.deselectShip);
             shipSelected = false;
             HideTiles();
