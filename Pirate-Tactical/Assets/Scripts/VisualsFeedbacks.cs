@@ -5,7 +5,17 @@ using UnityEngine;
 public class VisualsFeedbacks : MonoBehaviour
 {
 
-    public List<TileScript> displayBlock;
+    [Header("Cursor Visual")]
+    public SpriteRenderer cursor;
+    public Sprite classicCursor;
+    public Sprite moveCursor;
+    public Sprite attackCursor;
+    public Sprite accostCursor;
+    public Sprite specialShotCursor;
+    public Sprite specialTileCursor;
+    public Sprite upgradeCursor;
+
+    List<TileScript> displayBlock = new List<TileScript>();
 
     public void DisplayBlockedTile(TileScript t, int dir)
     {
@@ -49,5 +59,39 @@ public class VisualsFeedbacks : MonoBehaviour
                 d.SetColor(3);
 
         displayBlock.Clear();
+    }
+
+    public void CursorDisplay(int index, bool ship)
+    {
+        if (!ship)
+        {
+            cursor.sprite = classicCursor;
+            return;
+        }
+
+        switch(index)
+        {
+            case 0:
+                cursor.sprite = classicCursor; // a déterminer avec les conditions
+                break;
+            case 1:
+                cursor.sprite = moveCursor;
+                break;
+            case 2:
+                cursor.sprite = attackCursor;
+                break;
+            case 3:
+                cursor.sprite = specialTileCursor;
+                break;
+            case 4:
+                cursor.sprite = specialShotCursor;
+                break;
+            case 5:
+                cursor.sprite = accostCursor;
+                break;
+            case 6:
+                cursor.sprite = upgradeCursor;
+                break;
+        }
     }
 }

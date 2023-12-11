@@ -60,6 +60,7 @@ public class ShipUnit : NetworkBehaviour
     public SpriteRenderer unitSprite;
     public TMP_Text health;
     public GameObject highlight;
+    public GameObject usedSprite;
 
     [HideInInspector]
     public int index;
@@ -118,7 +119,11 @@ public class ShipUnit : NetworkBehaviour
             if(!canMove.Value && !canShoot.Value)
             {
                 canBeSelected.Value = false;
+                usedSprite.SetActive(true);
             }
+
+            if(usedSprite.activeSelf)
+                usedSprite.SetActive(false);
         }
     }
 

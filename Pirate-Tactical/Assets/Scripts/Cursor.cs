@@ -4,7 +4,6 @@ using System.Collections.Generic;
 using System.Linq;
 using Unity.Collections;
 using Unity.Netcode;
-using Unity.VisualScripting;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
@@ -86,7 +85,7 @@ public class Cursor : NetworkBehaviour
         MyInputs();
         HandleCurrentMode();
         DisplayPath();
-
+        DisplayVisuals();
     }
 
     #region ClientRpcMethods
@@ -446,8 +445,6 @@ public class Cursor : NetworkBehaviour
 
         if (Input.GetButtonDown("Cancel") || (shipSelected && !unitManager.ships[currentShipIndex].canBeSelected.Value))
             DeselectShip();
-
-        DisplayVisuals();
     }
 
     void DisplayVisuals()
@@ -456,9 +453,19 @@ public class Cursor : NetworkBehaviour
         {
             if (unitManager.ships[currentShipIndex].unitSpecialTile.Value == ShipUnit.UnitSpecialTile.BlockTile && unitManager.ships[currentShipIndex].upgradedCapacity && inRangeTiles.Contains(cTile) && currentModeIndex == 3)
                 vs.DisplayBlockedTile(cTile, blockedOrientation);
+
+            if(cTile.ShopTile && currentModeIndex == 0 && inRangeTiles.Contains(cTile))
+                vs.CursorDisplay(6, true);
+            else if(cTile.shipOnTile.Value && currentModeIndex == 0 && inRangeTiles.Contains(cTile))
+                vs.CursorDisplay(5, true);
+            else
+                vs.CursorDisplay(currentModeIndex, true);
         }
         else
+        {
             vs.StopDisplayBlocked();
+            vs.CursorDisplay(0, false);
+        }
     }
 
     void HandleKeyboardInputs()

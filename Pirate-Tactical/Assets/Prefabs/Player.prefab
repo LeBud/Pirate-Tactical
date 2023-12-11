@@ -205,3 +205,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: aa15f801841937049936cd890b690e1e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  cursor: {fileID: 6776436403522937487}
+  classicCursor: {fileID: 21300000, guid: 5e3339b76b664c44480ca857a44e6984, type: 3}
+  moveCursor: {fileID: 21300000, guid: 1fc68cab5e3667f46adf775f725e3b50, type: 3}
+  attackCursor: {fileID: 21300000, guid: 728bb299c6c3781488d701af5436aa3a, type: 3}
+  accostCursor: {fileID: 21300000, guid: 29619ca9b6f86484aadad921014ccf56, type: 3}
+  specialShotCursor: {fileID: 21300000, guid: 9e601e94eb35f7e4a9eb5eec53fb6400, type: 3}
+  specialTileCursor: {fileID: 21300000, guid: 48d66afde40413744af6573a80ddb4da, type: 3}
+  upgradeCursor: {fileID: 21300000, guid: 472e2b6789578af428625cb0571feb05, type: 3}
