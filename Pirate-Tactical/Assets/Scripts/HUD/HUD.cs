@@ -127,10 +127,10 @@ public class HUD : NetworkBehaviour
                     selectedBtt.position = attackBtt.transform.position;
                     break;
                 case 3:
-                    selectedBtt.position = specialAttackBtt.transform.position;
+                    selectedBtt.position = specialTileBtt.transform.position;
                     break;
                 case 4:
-                    selectedBtt.position = specialTileBtt.transform.position;
+                    selectedBtt.position = specialAttackBtt.transform.position;
                     break;
             }
 
