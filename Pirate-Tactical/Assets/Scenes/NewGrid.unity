@@ -7683,6 +7683,7 @@ RectTransform:
   - {fileID: 1111898974}
   - {fileID: 1932734036}
   - {fileID: 348423325}
+  - {fileID: 673631989}
   - {fileID: 1826828332}
   m_Father: {fileID: 1992191807}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -9575,6 +9576,81 @@ GameObject:
   m_CorrespondingSourceObject: {fileID: 3615930774335691491, guid: 6938d8686b198fe4abf44fc29fb6f783, type: 3}
   m_PrefabInstance: {fileID: 654978564}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &673631988
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 673631989}
+  - component: {fileID: 673631991}
+  - component: {fileID: 673631990}
+  m_Layer: 5
+  m_Name: HoverModeImg
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 0
+--- !u!224 &673631989
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 673631988}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 525094276}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0, y: 1}
+  m_AnchorMax: {x: 0, y: 1}
+  m_AnchoredPosition: {x: -700, y: -525}
+  m_SizeDelta: {x: 90, y: 50}
+  m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &673631990
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 673631988}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Material: {fileID: 0}
+  m_Color: {r: 0, g: 0.5089133, b: 1, a: 0.5019608}
+  m_RaycastTarget: 1
+  m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
+  m_Maskable: 1
+  m_OnCullStateChanged:
+    m_PersistentCalls:
+      m_Calls: []
+  m_Sprite: {fileID: 0}
+  m_Type: 0
+  m_PreserveAspect: 0
+  m_FillCenter: 1
+  m_FillMethod: 4
+  m_FillAmount: 1
+  m_FillClockwise: 1
+  m_FillOrigin: 0
+  m_UseSpriteMesh: 0
+  m_PixelsPerUnitMultiplier: 1
+--- !u!222 &673631991
+CanvasRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 673631988}
+  m_CullTransparentMesh: 1
 --- !u!1 &678355812
 GameObject:
   m_ObjectHideFlags: 0
@@ -19213,7 +19289,7 @@ MonoBehaviour:
         byte0124: 0
         byte0125: 0
   combatZoneShrinkEveryRound: 1
-  spawnShipAnyWhere: 1
+  spawnShipAnyWhere: 0
   canStartGame: 0
   gameState: 0
 --- !u!4 &1381260906
@@ -19286,6 +19362,7 @@ MonoBehaviour:
   specialAttackBtt: {fileID: 2058520743}
   specialTileBtt: {fileID: 1506939360}
   interactBtt: {fileID: 965691966}
+  selectedBtt: {fileID: 673631989}
   inGameHUD: {fileID: 525094275}
   shipsDisplay: {fileID: 1604753764}
   shipHighlight: {fileID: 1848880736}

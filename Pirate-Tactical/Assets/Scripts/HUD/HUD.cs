@@ -34,6 +34,7 @@ public class HUD : NetworkBehaviour
     [SerializeField] Button specialAttackBtt;
     [SerializeField] Button specialTileBtt;
     [SerializeField] Button interactBtt;
+    [SerializeField] Transform selectedBtt;
 
     [Header("Others")]
     public GameObject inGameHUD;
@@ -113,12 +114,33 @@ public class HUD : NetworkBehaviour
                 interactBtt.interactable = false;
             }
 
+            selectedBtt.gameObject.SetActive(true);
+            switch (player.currentModeIndex)
+            {
+                case 0:
+                    selectedBtt.position = interactBtt.transform.position;
+                    break;
+                case 1:
+                    selectedBtt.position = moveBtt.transform.position;
+                    break;
+                case 2:
+                    selectedBtt.position = attackBtt.transform.position;
+                    break;
+                case 3:
+                    selectedBtt.position = specialAttackBtt.transform.position;
+                    break;
+                case 4:
+                    selectedBtt.position = specialTileBtt.transform.position;
+                    break;
+            }
+
         }
         else
         {
             currentShipInfo.text = "ship selected : none ";
             currentMode.text = "none";
             shipHighlight.gameObject.SetActive(false);
+            selectedBtt.gameObject.SetActive(false);
 
             moveBtt.interactable = false;
             attackBtt.interactable = false;
@@ -146,9 +168,6 @@ public class HUD : NetworkBehaviour
                 shipsDisplay.GetChild(i).gameObject.SetActive(true);
                 shipsDisplay.GetChild(i).transform.GetChild(3).GetComponent<TextMeshProUGUI>().text = player.unitManager.ships[i].unitLife.Value.ToString();
                 shipsDisplay.GetChild(i).transform.GetChild(4).GetComponent<TextMeshProUGUI>().text = player.unitManager.ships[i].shotCapacity.specialAbilityCost.ToString();
-                //Mettre des sprites
-                //shipsDisplay.GetChild(i).transform.GetChild(5).GetComponent<Image>().sprite = player.unitManager.ships[i].unitSpecialShot.Value.ToString();
-                //shipsDisplay.GetChild(i).transform.GetChild(6).GetComponent<Image>().sprite = player.unitManager.ships[i].unitSpecialTile.Value.ToString();
             }
             else
                 shipsDisplay.GetChild(i).gameObject.SetActive(false);
@@ -167,7 +186,6 @@ public class HUD : NetworkBehaviour
             {
                 enemyShipsDisplay.GetChild(i).gameObject.SetActive(true);
                 enemyShipsDisplay.GetChild(i).transform.GetChild(2).GetComponent<TextMeshProUGUI>().text = enemyPlayer.unitManager.ships[i].unitLife.Value.ToString();
-                //Mettre des sprites
                 enemyShipsDisplay.GetChild(i).transform.GetChild(3).GetComponent<Image>().sprite = GetIconShot(enemyPlayer.unitManager.ships[i].unitSpecialShot.Value);
                 enemyShipsDisplay.GetChild(i).transform.GetChild(4).GetComponent<Image>().sprite = GetIconTile(enemyPlayer.unitManager.ships[i].unitSpecialTile.Value);
             }
