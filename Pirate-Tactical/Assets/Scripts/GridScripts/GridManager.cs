@@ -69,6 +69,8 @@ public class GridManager : NetworkBehaviour
             combatZoneSize.Value = map.cellBounds.size.x / 2;
         else
             combatZoneSize.Value = map.cellBounds.size.y / 2;
+
+        combatZoneSize.Value += 4;
     }
 
     [ServerRpc]
