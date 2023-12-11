@@ -251,7 +251,7 @@ public class Cursor : NetworkBehaviour
     {
         if (barque)
         {
-            ShipUnit ship = Instantiate(NetworkManager.ConnectedClients[id].PlayerObject.GetComponent<Cursor>().unitManager.barque);
+            ShipUnit ship = Instantiate(NetworkManager.ConnectedClients[id].PlayerObject.GetComponent<Cursor>().unitManager.barque, pos, Quaternion.identity);
             ship.damage.Value = ship.unitDamage;
             ship.GetComponent<NetworkObject>().SpawnWithOwnership(id);
 
@@ -262,7 +262,7 @@ public class Cursor : NetworkBehaviour
         }
         else
         {
-            ShipUnit ship = Instantiate(NetworkManager.ConnectedClients[id].PlayerObject.GetComponent<Cursor>().unitManager.ships[index]);
+            ShipUnit ship = Instantiate(NetworkManager.ConnectedClients[id].PlayerObject.GetComponent<Cursor>().unitManager.ships[index], pos, Quaternion.identity);
             ship.damage.Value = ship.unitDamage;
             ship.GetComponent<NetworkObject>().SpawnWithOwnership(id);
 
