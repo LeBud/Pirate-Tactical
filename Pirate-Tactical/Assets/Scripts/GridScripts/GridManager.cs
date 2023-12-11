@@ -1025,10 +1025,10 @@ public class GridManager : NetworkBehaviour
         }
 
         displayTxts[txtNum].SetActive(true);
-        displayTxts[txtNum].transform.position = pos;
-        displayTxts[txtNum].GetComponent<TextMeshProUGUI>().text = damage.ToString();
+        displayTxts[txtNum].transform.position = new Vector3(pos.x + 0.5f, pos.y, -5);
+        displayTxts[txtNum].GetComponent<TMP_Text>().text = "-" + damage.ToString();
 
-        yield return new WaitForSeconds(1);
+        yield return new WaitForSeconds(2);
 
         displayTxts[txtNum].SetActive(false);
     }
