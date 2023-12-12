@@ -30,6 +30,7 @@ public class LobbyUIScript : MonoBehaviour
     [SerializeField] GameObject playersInLobbyPref;
     [SerializeField] Transform playersInLobbyContainer;
     [SerializeField] Button leaveBtt;
+    [SerializeField] Button startBtt;
 
     private void Awake()
     {
@@ -70,6 +71,7 @@ public class LobbyUIScript : MonoBehaviour
     public void CreateLobby()
     {
         LobbyScript.Instance.CreateLobby(lobbyNameIF.text, false);
+        startBtt.gameObject.SetActive(true);
     }
 
     public void JoinLobby(string code)
