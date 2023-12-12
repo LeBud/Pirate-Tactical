@@ -6,6 +6,7 @@ using UnityEngine;
 
 public class TileScript : NetworkBehaviour
 {
+    [Header("Tile Graph")]
     [SerializeField] SpriteRenderer _renderer;
     public GameObject _highlight;
     public GameObject _highlightRange;
@@ -13,6 +14,7 @@ public class TileScript : NetworkBehaviour
     public GameObject _highlightOutOfCombatZone;
     public GameObject _highlightMine;
     public GameObject _highlightSpawn;
+    public GameObject _blockedTileTemp;
 
     [Header("Normals Colors")]
     public Color normalColor;
