@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using Unity.Netcode;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Rendering;
 using UnityEngine.Tilemaps;
@@ -175,7 +176,7 @@ public class GridManager : NetworkBehaviour
 
         if(ships != null)
         {
-            if (ships.unitPos.Value == pos && ships.GetComponent<NetworkObject>().OwnerClientId != id)
+            if (ships.GetComponent<NetworkObject>().OwnerClientId != id)
             {
                 isEnemy = true;
                 ships.TakeDamageServerRpc(damage, pos, passiveAttack, effectDuration, hasGoThroughWater);
@@ -217,7 +218,7 @@ public class GridManager : NetworkBehaviour
 
         ShipUnit ships = GetShipAtPos(pos);
 
-        if (ships.unitPos.Value == pos && ships.GetComponent<NetworkObject>().OwnerClientId != id)
+        if (ships.GetComponent<NetworkObject>().OwnerClientId != id)
         {
             ships.TakeDamageServerRpc(damage, pos, passiveAttack, effectDuration, hasGoThroughWater);
         }
@@ -230,10 +231,11 @@ public class GridManager : NetworkBehaviour
         ShipUnit enemy = GetShipAtPos(enemyPos);
 
         //Calculate Dmg
-        int allyDmg = ally.unitAccostDamage+ accostAttackBoost + ally.accostDmgBoost.Value;
-        enemy.TakeDamageServerRpc(allyDmg, enemyPos, false, 0, false);
+        int allyDmg = ally.unitAccostDamage + accostAttackBoost + ally.accostDmgBoost.Value;
         int enemyDmg = enemy.unitAccostDamage + enemy.accostDmgBoost.Value;
+
         ally.TakeDamageServerRpc(enemyDmg, allyPos, false, 0, false);
+        enemy.TakeDamageServerRpc(allyDmg, enemyPos, false, 0, false);
         
         //Dépenser les points
         Cursor p = NetworkManager.ConnectedClients[id].PlayerObject.GetComponent<Cursor>();
@@ -692,21 +694,13 @@ public class GridManager : NetworkBehaviour
     [ServerRpc(RequireOwnership = false)]
     public void DamageUnitByMineServerRpc(int damage, Vector2 pos, bool passiveAttack, int effectDuration)
     {
-        ShipUnit[] ships = FindObjectsOfType<ShipUnit>();
+        ShipUnit ships = GetShipAtPos(pos);
 
         if (GetTileAtPosition(pos).upgradedMine)
             damage = upgradedMineDamage;
 
-        //Ajouter un check si la tile est upgrade pour les dégats de zone;
-
-        for (int i = 0; i < ships.Length; i++)
-        {
-            if (ships[i].unitPos.Value == pos)
-            {
-                ships[i].TakeDamageServerRpc(damage, pos, passiveAttack, effectDuration, false);
-                break;
-            }
-        }
+        if (ships != null)
+            ships.TakeDamageServerRpc(damage, pos, passiveAttack, effectDuration, false);
 
         DisplayDamageClientRpc("mine", new Vector2(pos.x, pos.y + 0.5f));
 
@@ -835,33 +829,31 @@ public class GridManager : NetworkBehaviour
     [ServerRpc(RequireOwnership = false)]
     public void SetMineOnTileServerRpc(Vector2 tilePos, ulong id, bool active, bool upgraded)
     {
+        TileScript t = GetTileAtPosition(tilePos);
+
         if (!active && dictionnary.Contains(tilePos))
         {
-            foreach (var t in tilesGrid)
-                if (t.pos.Value == tilePos)
-                {
-                    //Ajouter un check si la tile est upgrade pour les dégats de zone;
-                    t.mineInTile.Value = false;
-                    t.upgradedMine = false;
-                    foreach(ulong _id in NetworkManager.ConnectedClientsIds)
-                        t.SetMineTileToClientRpc(_id, false);
-                    SoundManager.Instance.PlaySoundOnClients(SoundManager.Instance.mineExploding);
-                    break;
-                }
+            if (t != null)
+            {
+                //Ajouter un check si la tile est upgrade pour les dégats de zone;
+                t.mineInTile.Value = false;
+                t.upgradedMine = false;
+                foreach(ulong _id in NetworkManager.ConnectedClientsIds)
+                    t.SetMineTileToClientRpc(_id, false);
+                SoundManager.Instance.PlaySoundOnClients(SoundManager.Instance.mineExploding);
+            }
         }
         else if (active && dictionnary.Contains(tilePos))
         {
-            foreach (var t in tilesGrid)
-                if (t.pos.Value == tilePos && !t.shipOnTile.Value)
-                {
-                    t.mineInTile.Value = true;
-                    t.upgradedMine = upgraded;
-                    t.SetMineTileToClientRpc(id, true);
-                    Cursor p = NetworkManager.ConnectedClients[id].PlayerObject.GetComponent<Cursor>();
-                    p.UseManaClientRpc();
-                    p.HasDidAnActionClientRpc();
-                    break;
-                }
+            if (t.pos.Value == tilePos && !t.shipOnTile.Value)
+            {
+                t.mineInTile.Value = true;
+                t.upgradedMine = upgraded;
+                t.SetMineTileToClientRpc(id, true);
+                Cursor p = NetworkManager.ConnectedClients[id].PlayerObject.GetComponent<Cursor>();
+                p.UseManaClientRpc();
+                p.HasDidAnActionClientRpc();
+            }
         }
     }
 

@@ -115,7 +115,6 @@ public class GameManager : NetworkBehaviour
         if (!IsServer) yield break;
 
         poolingStarted = true;
-        ShipUnit[] ships = FindObjectsOfType<ShipUnit>();
         Cursor[] players = FindObjectsOfType<Cursor>();
 
         while (true)
@@ -136,7 +135,7 @@ public class GameManager : NetworkBehaviour
 
             HUD.Instance.UpdateHealthBarClientRpc();
 
-            yield return new WaitForSeconds(.25f);
+            yield return new WaitForSeconds(1);
             if(gameState == GameState.GameFinish)
                 yield break;
         }
@@ -348,11 +347,7 @@ public class GameManager : NetworkBehaviour
     {
         if (!IsOwner) return;
 
-        int width = GridManager.Instance._width;
-        int height = GridManager.Instance._height;
-
         Camera.main.transform.position = cameraPos.Value;
-
         HUD.Instance.SetGameStateClientRpc(SetGameStateString(gameState), currentRound.Value);
     }
 
