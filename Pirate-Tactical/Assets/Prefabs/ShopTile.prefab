@@ -504,12 +504,12 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Sprite: {fileID: 7482667652216324306, guid: 311925a002f4447b3a28927169b83ea6, type: 3}
+  m_Sprite: {fileID: 21300000, guid: cc0649490469cb048b2388a2da78f209, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
-  m_Size: {x: 1, y: 1}
+  m_Size: {x: 0.64, y: 0.64}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
@@ -535,8 +535,8 @@ MonoBehaviour:
   _highlightMine: {fileID: 838752197553743546}
   _highlightSpawn: {fileID: 8490403859365643966}
   _blockedTileTemp: {fileID: 6804894505471844507}
-  normalColor: {r: 1, g: 0.90713394, b: 0, a: 1}
-  offsetNormalColor: {r: 0.8867924, g: 0.79453325, b: 0.17150229, a: 1}
+  normalColor: {r: 1, g: 1, b: 1, a: 1}
+  offsetNormalColor: {r: 1, g: 1, b: 1, a: 1}
   pathColor: {r: 1, g: 0.2971698, b: 0.2971698, a: 1}
   openColor: {r: 0.5789483, g: 1, b: 0.3443396, a: 1}
   closeColor: {r: 1, g: 0.6777429, b: 0, a: 1}
@@ -603,7 +603,7 @@ BoxCollider2D:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0.5, y: 0.5}
     oldSize: {x: 1, y: 1}
-    newSize: {x: 1, y: 1}
+    newSize: {x: 0.64, y: 0.64}
     adaptiveTilingThreshold: 0.5
     drawMode: 0
     adaptiveTiling: 0

@@ -88,8 +88,16 @@ public class ShipUnit : NetworkBehaviour
     {
         if (IsOwner)
         {
-            unitSpecialShot.Value = shotCapacity.shootCapacity;
-            unitSpecialTile.Value = tileCapacity.tileCapacity;
+            if(shotCapacity == null)
+                unitSpecialShot.Value = UnitSpecialShot.None;
+            else
+                unitSpecialShot.Value = shotCapacity.shootCapacity;
+
+            if(tileCapacity == null)
+                unitSpecialTile.Value = UnitSpecialTile.None;
+            else
+                unitSpecialTile.Value = tileCapacity.tileCapacity;
+
             baseMoveRange = unitMoveRange;
         }
 
@@ -135,6 +143,7 @@ public class ShipUnit : NetworkBehaviour
         if(roundToStopFireEffect > GameManager.Instance.currentRound.Value)
         {
             TakeDamageServerRpc(passiveDmg, unitPos.Value, false, 0, false);
+            GridManager.Instance.DisplayDamageClientRpc("Brulure", new Vector2(unitPos.Value.x, unitPos.Value.y + 0.5f));
         }
 
         if (roundToStopWindEffect < GameManager.Instance.currentRound.Value)
@@ -196,7 +205,7 @@ public class ShipUnit : NetworkBehaviour
 
         if (hasGoneThroughWater) randomDmg /= 2;
 
-        GridManager.Instance.DisplayDamageClientRpc(randomDmg, pos);
+        GridManager.Instance.DisplayDamageClientRpc(randomDmg.ToString(), pos);
 
         unitLife.Value -= randomDmg;
 

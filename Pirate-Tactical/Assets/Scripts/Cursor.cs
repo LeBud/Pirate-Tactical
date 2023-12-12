@@ -679,7 +679,7 @@ public class Cursor : NetworkBehaviour
                     GridManager.Instance.BlockedTileServerRpc(t.pos.Value, NetworkManager.LocalClientId, unitManager.ships[currentShipIndex].tileCapacity.tilePassiveDuration, false, 0);
                     break;
                 case ShipUnit.UnitSpecialTile.Mine:
-                    if(!t.Walkable)
+                    if (t.Walkable)
                         GridManager.Instance.SetMineOnTileServerRpc(t.pos.Value, NetworkManager.LocalClientId, true, false);
                     break;
                 case ShipUnit.UnitSpecialTile.Teleport:
@@ -706,7 +706,7 @@ public class Cursor : NetworkBehaviour
                     GridManager.Instance.BlockedTileServerRpc(t.pos.Value, NetworkManager.LocalClientId, unitManager.ships[currentShipIndex].tileCapacity.tilePassiveDuration, true, blockedOrientation);
                     break;
                 case ShipUnit.UnitSpecialTile.Mine:
-                    if (!t.Walkable)
+                    if (t.Walkable)
                         GridManager.Instance.SetMineOnTileServerRpc(t.pos.Value, NetworkManager.LocalClientId, true, true);
                     break;
                 case ShipUnit.UnitSpecialTile.Teleport:

@@ -244,6 +244,9 @@ public class GameManager : NetworkBehaviour
         if (gameState == GameState.Player1Turn)
         {
             currentRound.Value++;
+            if(currentRound.Value == 3)
+                HUD.Instance.DisplayStormClientRpc();
+            
 
             for(int i = 0; i < 2; i++)
             {

@@ -62,6 +62,9 @@ public class HUD : NetworkBehaviour
     [Header("Icons")]
     public List<CapacitiesSO> capacities;
 
+    [Header("Announcer")]
+    public GameObject stormGO;
+
     private void Awake()
     {
         if(Instance == null)
@@ -167,7 +170,7 @@ public class HUD : NetworkBehaviour
             {
                 shipsDisplay.GetChild(i).gameObject.SetActive(true);
                 shipsDisplay.GetChild(i).transform.GetChild(3).GetComponent<TextMeshProUGUI>().text = player.unitManager.ships[i].unitLife.Value.ToString();
-                shipsDisplay.GetChild(i).transform.GetChild(4).GetComponent<TextMeshProUGUI>().text = player.unitManager.ships[i].shotCapacity.specialAbilityCost.ToString();
+                shipsDisplay.GetChild(i).transform.GetChild(4).GetComponent<TextMeshProUGUI>().text = player.unitManager.ships[i].tileCapacity.specialAbilityCost.ToString();
             }
             else
                 shipsDisplay.GetChild(i).gameObject.SetActive(false);
@@ -363,6 +366,19 @@ public class HUD : NetworkBehaviour
         StartCoroutine(SetEnemiesShip());
     }
 
-#endregion
+    #endregion
+
+    [ClientRpc]
+    public void DisplayStormClientRpc()
+    {
+        StartCoroutine(StormDisplay());
+    }
+
+    IEnumerator StormDisplay()
+    {
+        stormGO.SetActive(true);
+        yield return new WaitForSeconds(2);
+        stormGO.SetActive(false);
+    }
 
 }

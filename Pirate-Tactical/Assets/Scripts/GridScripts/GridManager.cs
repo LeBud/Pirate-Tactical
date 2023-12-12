@@ -55,6 +55,9 @@ public class GridManager : NetworkBehaviour
 
     List<Cannon> cannonsOnMap = new List<Cannon>();
 
+    //Pooling
+    int poolIndex = 0;
+
     private void Awake()
     {
         if(Instance == null)
@@ -705,6 +708,8 @@ public class GridManager : NetworkBehaviour
             }
         }
 
+        DisplayDamageClientRpc("mine", new Vector2(pos.x, pos.y + 0.5f));
+
         #region UpgradedMineAoE
         if (GetTileAtPosition(pos).upgradedMine)
         {
@@ -1008,23 +1013,18 @@ public class GridManager : NetworkBehaviour
     }
 
     [ClientRpc]
-    public void DisplayDamageClientRpc(int damage, Vector2 pos)
+    public void DisplayDamageClientRpc(string damage, Vector2 pos)
     {
         StartCoroutine(DisplayTxt(damage, pos));
     }
 
-    IEnumerator DisplayTxt(int damage, Vector2 pos)
+    IEnumerator DisplayTxt(string damage, Vector2 pos)
     {
-        int txtNum = 0;
+        int txtNum = poolIndex;
 
-        for(int i = 0; i < displayTxts.Count; i++)
-        {
-            if (displayTxts[i].activeSelf)
-            {
-                txtNum = i;
-                break;
-            }
-        }
+        poolIndex++;
+        if (poolIndex > displayTxts.Count)
+            poolIndex = 0;
 
         displayTxts[txtNum].SetActive(true);
         displayTxts[txtNum].transform.position = new Vector3(pos.x + 0.5f, pos.y, -5);
