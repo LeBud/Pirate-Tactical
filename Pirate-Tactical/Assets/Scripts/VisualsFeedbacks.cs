@@ -23,7 +23,7 @@ public class VisualsFeedbacks : MonoBehaviour
 
         if(displayBlock.Count > 0 )
             foreach (var d in displayBlock)
-                d.SetColor(3);
+                d._blockedTileTemp.SetActive(false);
 
         switch (dir)
         {
@@ -48,15 +48,15 @@ public class VisualsFeedbacks : MonoBehaviour
         foreach (var d in displayBlock)
         {
             Debug.Log("read for each");
-            d.SetColor(0);
+            d._blockedTileTemp.SetActive(true);
         }
     }
 
     public void StopDisplayBlocked()
     {
-        if(displayBlock.Count > 0)
+        if (displayBlock.Count > 0)
             foreach (var d in displayBlock)
-                d.SetColor(3);
+                d._blockedTileTemp.SetActive(false);
 
         displayBlock.Clear();
     }

@@ -1201,7 +1201,7 @@ public class Cursor : NetworkBehaviour
         }
         else
         {
-            foreach (var item in pathHighlight)
+            foreach (var item in allTiles)
                 item.SetColor(3);
         }
 
