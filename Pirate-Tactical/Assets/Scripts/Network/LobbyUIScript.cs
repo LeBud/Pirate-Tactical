@@ -15,7 +15,7 @@ public class LobbyUIScript : MonoBehaviour
     [Header("CreateLobby")]
     [SerializeField] Button createLobbyBtt;
     [SerializeField] TMP_InputField lobbyNameIF;
-    [SerializeField] Toggle privateLobby;
+    //[SerializeField] Toggle privateLobby;
 
     [Header("SearchLobby")]
     [SerializeField] Button connectBtt;
@@ -61,7 +61,7 @@ public class LobbyUIScript : MonoBehaviour
         foreach(var lobby in query.Results)
         {
             Button btt = Instantiate(searchLobbyPrefab, searchLobbiesContainer);
-            btt.GetComponentInChildren<TextMeshProUGUI>().text = lobby.Name + " | " + lobby.Players.Count + " player connected";
+            btt.GetComponentInChildren<TextMeshProUGUI>().text = lobby.Name + " | " + lobby.Players.Count + " joueur(s) connecté(s)";
             btt.onClick.AddListener(() => { JoinLobby(lobby.Id); });
         }
     }
@@ -69,7 +69,7 @@ public class LobbyUIScript : MonoBehaviour
 
     public void CreateLobby()
     {
-        LobbyScript.Instance.CreateLobby(lobbyNameIF.text, privateLobby.isOn);
+        LobbyScript.Instance.CreateLobby(lobbyNameIF.text, false);
     }
 
     public void JoinLobby(string code)
