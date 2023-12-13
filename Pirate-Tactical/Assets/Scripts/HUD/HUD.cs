@@ -65,6 +65,10 @@ public class HUD : NetworkBehaviour
     [Header("Announcer")]
     public GameObject stormGO;
 
+    [Header("Round Gain")]
+    public TextMeshProUGUI goldGain;
+    public TextMeshProUGUI manaGain;
+
     private void Awake()
     {
         if(Instance == null)
@@ -380,6 +384,27 @@ public class HUD : NetworkBehaviour
         stormGO.SetActive(true);
         yield return new WaitForSeconds(2);
         stormGO.SetActive(false);
+    }
+
+    [ClientRpc]
+    public void DisplayGoldManaGainClientRpc()
+    {
+        StartCoroutine(ShowGoldManaGain());
+    }
+
+    IEnumerator ShowGoldManaGain()
+    {
+        goldGain.text = "+" + player.playerGoldGainPerRound.ToString();
+        manaGain.text = "+" + player.specialGainPerRound.ToString();
+
+        goldGain.gameObject.SetActive(true);
+        manaGain.gameObject.SetActive(true);
+
+        yield return new WaitForSeconds(4);
+
+        goldGain.gameObject.SetActive(false);
+        manaGain.gameObject.SetActive(false);
+
     }
 
 }

@@ -245,7 +245,9 @@ public class GameManager : NetworkBehaviour
             currentRound.Value++;
             if(currentRound.Value == 3)
                 HUD.Instance.DisplayStormClientRpc();
-            
+
+            if (currentRound.Value > 1)
+                HUD.Instance.DisplayGoldManaGainClientRpc();
 
             for(int i = 0; i < 2; i++)
             {
