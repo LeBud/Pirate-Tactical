@@ -915,6 +915,7 @@ public class GridManager : NetworkBehaviour
 
         Cannon c = Instantiate(cannonPrefab, new Vector3(pos.x, pos.y, -1), Quaternion.identity);
         c.GetComponent<NetworkObject>().Spawn();
+        c.cannonPos = pos;
         c.ID.Value = id;
         c.index = Random.Range(1, 1000);
 

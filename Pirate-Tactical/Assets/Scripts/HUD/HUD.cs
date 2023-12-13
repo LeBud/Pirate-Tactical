@@ -86,8 +86,10 @@ public class HUD : NetworkBehaviour
             shipHighlight.transform.position = shipsDisplay.GetChild(player.currentShipIndex).transform.position;
             currentMode.text = GetCurrentMode(player.currentModeIndex);
 
-            specialAttackBtt.GetComponentInChildren<TextMeshProUGUI>().text = player.unitManager.ships[player.currentShipIndex].shotCapacity.capacityName;
-            specialTileBtt.GetComponentInChildren<TextMeshProUGUI>().text = player.unitManager.ships[player.currentShipIndex].tileCapacity.capacityName;
+            if(player.unitManager.ships[player.currentShipIndex].shotCapacity != null)
+                specialAttackBtt.GetComponentInChildren<TextMeshProUGUI>().text = player.unitManager.ships[player.currentShipIndex].shotCapacity.capacityName;
+            if(player.unitManager.ships[player.currentShipIndex].tileCapacity != null)
+                specialTileBtt.GetComponentInChildren<TextMeshProUGUI>().text = player.unitManager.ships[player.currentShipIndex].tileCapacity.capacityName;
 
             if (player.unitManager.ships[player.currentShipIndex].canMove.Value)
                 moveBtt.interactable = true;
