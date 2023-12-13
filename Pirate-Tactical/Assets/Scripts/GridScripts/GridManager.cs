@@ -663,6 +663,9 @@ public class GridManager : NetworkBehaviour
             finished++;
         }
 
+        ships.unitPos.Value = new Vector3(finalPos.x, finalPos.y, -1);
+        ships.SetNewTileClientRpc(finalPos);
+        SetShipOnTileServerRpc(ships.unitPos.Value, true);
 
         if (hasPull && finished == amountPull)
         {
@@ -884,7 +887,7 @@ public class GridManager : NetworkBehaviour
         float xPos = bounds.center.x;
         float yPos = bounds.center.y;
 
-        xPos = Mathf.FloorToInt(xPos - 1);
+        xPos = Mathf.FloorToInt(xPos);
         yPos = Mathf.FloorToInt(yPos);
 
         midTile = GetTileAtPosition(new Vector2(xPos, yPos));
@@ -1016,7 +1019,7 @@ public class GridManager : NetworkBehaviour
         int txtNum = poolIndex;
 
         poolIndex++;
-        if (poolIndex > displayTxts.Count)
+        if (poolIndex >= displayTxts.Count)
             poolIndex = 0;
 
         displayTxts[txtNum].SetActive(true);

@@ -208,7 +208,7 @@ public class Cursor : NetworkBehaviour
                 break;
             case 1:
                 if (NetworkManager.LocalClientId != (ulong)player) return;
-                xPos = GridManager.Instance.map.cellBounds.max.x - 2;
+                xPos = GridManager.Instance.map.cellBounds.max.x - 1;
                 for (int i = GridManager.Instance.map.cellBounds.min.y + 1; i < GridManager.Instance.map.cellBounds.max.y - 1; i++)
                 {
                     TileScript t = GridManager.Instance.GetTileAtPosition(new Vector2(xPos, i));
@@ -336,6 +336,8 @@ public class Cursor : NetworkBehaviour
             return;
         }
 
+        if (unitMoving) return;
+
         if (Input.GetMouseButtonDown(0) && shipSelected)
         {
             switch (currentModeIndex)
@@ -426,7 +428,7 @@ public class Cursor : NetworkBehaviour
                         return;
                     }
 
-                    if (unitManager.ships[currentShipIndex].canShoot.Value && unitManager.ships[currentShipIndex].shotCapacity.specialAbilityCost <= currentSpecialCharge)
+                    if (unitManager.ships[currentShipIndex].canShoot.Value && unitManager.ships[currentShipIndex].shotCapacity.specialAbilityCost <= currentSpecialCharge && cTile.shipOnTile.Value)
                         HandleSpecialUnitAttackOnUnit(cTile);
                     break;
             }
@@ -518,7 +520,7 @@ public class Cursor : NetworkBehaviour
         }
     }
 
-    void DeselectShip()
+    public void DeselectShip()
     {
         if (shipSelected)
         {

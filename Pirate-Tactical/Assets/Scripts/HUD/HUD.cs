@@ -242,8 +242,7 @@ public class HUD : NetworkBehaviour
     {
         if(player != null && player.canPlay.Value)
         {
-            player.shipSelected = false;
-            player.HideTiles();
+            player.DeselectShip();
             GameManager.Instance.UpdateGameStateServerRpc();
         }
     }
