@@ -872,11 +872,11 @@ public class GridManager : NetworkBehaviour
         
         if(blockedTiles.Count > 0)
         {
-            foreach(var t in blockedTiles)
+            for(int t = blockedTiles.Count - 1; t > 0; t--)
             {
-                if (t.blockedTile.Value)
-                    t.UnblockTileServerRpc();
-                if(!t.blockedTile.Value) blockedTiles.Remove(t);
+                if (blockedTiles[t].blockedTile.Value)
+                    blockedTiles[t].UnblockTileServerRpc();
+                if(!blockedTiles[t].blockedTile.Value) blockedTiles.RemoveAt(t);
             }
         }
     }
