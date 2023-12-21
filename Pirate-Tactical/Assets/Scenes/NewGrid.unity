@@ -5482,7 +5482,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &421887028
 RectTransform:
   m_ObjectHideFlags: 0
@@ -11100,23 +11100,23 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 41867e871ed25ff44ac1462250e90256, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  playSounds: 0
+  playSounds: 1
   attack: {fileID: 8300000, guid: 20026f71e49ba78478c8228f38b17b33, type: 3}
-  offensiveCapacity: {fileID: 0}
-  tileCapacity: {fileID: 0}
-  takeDamage: {fileID: 0}
+  offensiveCapacity: {fileID: 8300000, guid: 1422d61d2e3e6ef41b8c68249615802b, type: 3}
+  tileCapacity: {fileID: 8300000, guid: a115679e035cd2b42875fb15266c006e, type: 3}
+  takeDamage: {fileID: 8300000, guid: 2b25d98b906f7a24db82f6f9fdec1914, type: 3}
   startMoving: {fileID: 8300000, guid: 44f8e32ba38cbf44b8bfa8279dffc5ad, type: 3}
   stopMoving: {fileID: 8300000, guid: 44f8e32ba38cbf44b8bfa8279dffc5ad, type: 3}
   buyUpgrade: {fileID: 8300000, guid: 9446e2ec7f707f84389ca91d291235aa, type: 3}
   mineExploding: {fileID: 8300000, guid: de24b230401405b42b99f7c061aaae7a, type: 3}
   spawnShip: {fileID: 0}
-  selectShip: {fileID: 0}
-  deselectShip: {fileID: 0}
+  selectShip: {fileID: 8300000, guid: 546b756cbd3de5f4082ab8a4e4bc7959, type: 3}
+  deselectShip: {fileID: 8300000, guid: ca3f2a3c8d6a99341b5c45e67288dbf0, type: 3}
   shipDestroyed: {fileID: 0}
   shipSink: {fileID: 0}
-  changeShipMode: {fileID: 0}
+  changeShipMode: {fileID: 8300000, guid: e571c3f556d929d46ae41421907370ab, type: 3}
   accost: {fileID: 8300000, guid: c12a7e402bb5e09478aff65565003465, type: 3}
-  fireDamage: {fileID: 0}
+  fireDamage: {fileID: 8300000, guid: e90af221b0051ff489aaa3951bd6520c, type: 3}
   zoneShrinking: {fileID: 8300000, guid: 9b5fd6dade9e5b244b0dea546b0fa8a4, type: 3}
   gameStarting: {fileID: 0}
   music: {fileID: 0}
@@ -11507,7 +11507,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: jolly roger
+  m_text: Jolly Roger
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 4c376e254883a0c4caab0c2f3a4333db, type: 2}
   m_sharedMaterial: {fileID: -3779258513146809176, guid: 4c376e254883a0c4caab0c2f3a4333db, type: 2}
@@ -11540,7 +11540,7 @@ MonoBehaviour:
   m_enableAutoSizing: 0
   m_fontSizeMin: 18
   m_fontSizeMax: 72
-  m_fontStyle: 16
+  m_fontStyle: 0
   m_HorizontalAlignment: 2
   m_VerticalAlignment: 512
   m_textAlignment: 65535
@@ -16092,7 +16092,7 @@ MonoBehaviour:
       - m_Target: {fileID: 1381260912}
         m_TargetAssemblyTypeName: GameSettings, Assembly-CSharp
         m_MethodName: Graphics
-        m_Mode: 3
+        m_Mode: 0
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
@@ -16647,7 +16647,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &1107832327
 RectTransform:
   m_ObjectHideFlags: 0
@@ -20627,7 +20627,7 @@ MonoBehaviour:
   ActiveSceneSynchronization: 0
   SceneMigrationSynchronization: 1
   SpawnWithObservers: 1
-  DontDestroyWithOwner: 0
+  DontDestroyWithOwner: 1
   AutoObjectParentSync: 1
 --- !u!114 &1381260905
 MonoBehaviour:
@@ -23766,7 +23766,7 @@ MonoBehaviour:
       - m_Target: {fileID: 1381260912}
         m_TargetAssemblyTypeName: GameSettings, Assembly-CSharp
         m_MethodName: Resolution
-        m_Mode: 3
+        m_Mode: 0
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
@@ -26755,7 +26755,7 @@ MonoBehaviour:
       - m_Target: {fileID: 1381260912}
         m_TargetAssemblyTypeName: GameSettings, Assembly-CSharp
         m_MethodName: Fullscreen
-        m_Mode: 6
+        m_Mode: 0
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
