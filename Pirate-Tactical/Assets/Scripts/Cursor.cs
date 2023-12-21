@@ -723,6 +723,7 @@ public class Cursor : NetworkBehaviour
                     StartCoroutine(SpawnBarque(t.pos.Value, t));
                     break;
                 case ShipUnit.UnitSpecialTile.ExplodeBarque:
+                    DeselectShip();
                     ExplodeBarque();
                     break;
                 case ShipUnit.UnitSpecialTile.None:
