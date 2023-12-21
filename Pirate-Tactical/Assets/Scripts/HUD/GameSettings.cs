@@ -91,7 +91,7 @@ public class GameSettings : MonoBehaviour
         audioMixer.SetFloat("Music", Mathf.Log10(sliderValue) * 20);
 
         float displayNumber = sliderValue * 100;
-        musicVolumeTxt.text = "music : " + displayNumber.ToString("F0");
+        musicVolumeTxt.text = "musique : " + displayNumber.ToString("F0");
 
         musicSound = sliderValue;
     }
