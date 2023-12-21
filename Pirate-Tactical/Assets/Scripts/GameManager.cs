@@ -341,6 +341,19 @@ public class GameManager : NetworkBehaviour
             winner = "Player 1 won";
 
         HUD.Instance.SetGameStateClientRpc(winner, currentRound.Value);
+        EndGameOnClientRpc();
+    }
+
+    [ClientRpc]
+    void EndGameOnClientRpc()
+    {
+        StartCoroutine(EndGame());
+    }
+
+    IEnumerator EndGame()
+    {
+        yield return new WaitForSeconds(5);
+
     }
 
     //Initialise Player

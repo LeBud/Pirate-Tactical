@@ -10,7 +10,6 @@ public class LobbyUIScript : MonoBehaviour
     public static LobbyUIScript Instance { get; private set; }
 
     [SerializeField] TMP_InputField playerName;
-    [SerializeField] GameObject lobbyUI;
 
     [Header("CreateLobby")]
     [SerializeField] Button createLobbyBtt;
@@ -96,10 +95,5 @@ public class LobbyUIScript : MonoBehaviour
             var p = Instantiate(playersInLobbyPref, playersInLobbyContainer);
             p.GetComponentInChildren<TextMeshProUGUI>().text = player.Data["PlayerName"].Value.ToString();
         }
-    }
-
-    public void HideUI()
-    {
-        lobbyUI.SetActive(false);
     }
 }

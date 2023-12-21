@@ -89,7 +89,6 @@ public class LobbyScript : MonoBehaviour
                     if (!IsLobbyHost())
                         RelayScript.Instance.JoinRelay(joinedLobby.Data["RelayKey"].Value);
 
-                    LobbyUIScript.Instance.HideUI();
                     joinedLobby = null;
                 }
             }

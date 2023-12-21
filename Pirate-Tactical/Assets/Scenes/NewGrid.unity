@@ -5522,7 +5522,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   playerName: {fileID: 1445526064}
-  lobbyUI: {fileID: 421887027}
   createLobbyBtt: {fileID: 116951469}
   lobbyNameIF: {fileID: 2049312341}
   connectBtt: {fileID: 356249953}
@@ -21059,6 +21058,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   selectShipHUD: {fileID: 1120386598}
+  lobbyHUD: {fileID: 421887027}
   galionShotCapacities:
   - {fileID: 11400000, guid: b69ce819f744ed844bffd008ab317c1b, type: 2}
   - {fileID: 11400000, guid: bae430c0c23a01a43bde850586e0a372, type: 2}

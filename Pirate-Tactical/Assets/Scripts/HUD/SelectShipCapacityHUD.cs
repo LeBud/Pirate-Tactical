@@ -12,6 +12,7 @@ public class SelectShipCapacityHUD : NetworkBehaviour
     public static SelectShipCapacityHUD Instance;
 
     public GameObject selectShipHUD;
+    public GameObject lobbyHUD;
 
     [Header("Capacities")]
     public CapacitiesSO[] galionShotCapacities;
@@ -223,6 +224,8 @@ public class SelectShipCapacityHUD : NetworkBehaviour
                 player = cursor;
 
         selectShipHUD.SetActive(true);
+        lobbyHUD.SetActive(false);
+
         RefreshOptionsDropDown();
     }
 

@@ -578,6 +578,9 @@ public class Cursor : NetworkBehaviour
             return;
         }
 
+        if (currentModeIndex != currentModeInputIndex)
+            SoundManager.Instance.PlaySoundLocally(SoundManager.Instance.changeShipMode);
+
         switch (currentModeIndex)
         {
 
@@ -662,9 +665,6 @@ public class Cursor : NetworkBehaviour
                 canShoot = false;
                 break;
         }
-
-        if(currentModeIndex != currentModeInputIndex)
-            SoundManager.Instance.PlaySoundLocally(SoundManager.Instance.changeShipMode);
     }
 
     #region SpecialCapacities
