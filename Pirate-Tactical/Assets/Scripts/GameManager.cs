@@ -357,7 +357,7 @@ public class GameManager : NetworkBehaviour
     {
         yield return new WaitForSeconds(5);
         NetworkManager.Shutdown();
-        SelectShipCapacityHUD.Instance.lobbyHUD.SetActive(true);
+        StartCoroutine(ResetHUD());
     }
 
     //Initialise Player
@@ -393,7 +393,9 @@ public class GameManager : NetworkBehaviour
 
     IEnumerator DisconnectPlayer()
     {
-        SendLeaveToClientRpc();
+        if(!IsServer)
+            SendLeaveToClientRpc();
+
         StartCoroutine(ResetHUD());
         NetworkManager.DisconnectClient(1);
         
@@ -411,11 +413,17 @@ public class GameManager : NetworkBehaviour
 
     IEnumerator ResetHUD()
     {
-        yield return new WaitForSeconds(3);
+        gameState = GameState.GameStarting;
+        foreach (var t in HUD.Instance.lobbyScreen)
+            t.SetActive(false);
+
+        SelectShipCapacityHUD.Instance.lobbyHUD.SetActive(true);
+        HUD.Instance.inGameHUD.SetActive(false);
         HUD.Instance.pausePanel.SetActive(false);
         HUD.Instance.inPauseMenu = false;
+        HUD.Instance.lobbyMenu.SetActive(true);
+        yield return new WaitForSeconds(3);
+        
         leavePanel.SetActive(false);
-        HUD.Instance.inGameHUD.SetActive(false);
-        SelectShipCapacityHUD.Instance.lobbyHUD.SetActive(true);
     }
 }

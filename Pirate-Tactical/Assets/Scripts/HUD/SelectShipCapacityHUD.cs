@@ -225,6 +225,7 @@ public class SelectShipCapacityHUD : NetworkBehaviour
 
         selectShipHUD.SetActive(true);
         lobbyHUD.SetActive(false);
+        HUD.Instance.inGameHUD.SetActive(true);
 
         RefreshOptionsDropDown();
     }

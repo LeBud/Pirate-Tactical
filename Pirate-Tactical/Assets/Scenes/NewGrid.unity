@@ -21275,6 +21275,12 @@ MonoBehaviour:
   stormGO: {fileID: 991880129}
   goldGain: {fileID: 487242589}
   manaGain: {fileID: 2092305403}
+  lobbyScreen:
+  - {fileID: 484851005}
+  - {fileID: 899536027}
+  - {fileID: 1771304236}
+  - {fileID: 1873127691}
+  lobbyMenu: {fileID: 234407146}
 --- !u!114 &1381260910
 MonoBehaviour:
   m_ObjectHideFlags: 0

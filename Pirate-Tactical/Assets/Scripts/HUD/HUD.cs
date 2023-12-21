@@ -69,6 +69,10 @@ public class HUD : NetworkBehaviour
     public TextMeshProUGUI goldGain;
     public TextMeshProUGUI manaGain;
 
+    [Header("Lobby")]
+    public GameObject[] lobbyScreen;
+    public GameObject lobbyMenu;
+
     private void Awake()
     {
         if(Instance == null)
