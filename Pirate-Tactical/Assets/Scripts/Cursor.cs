@@ -307,6 +307,8 @@ public class Cursor : NetworkBehaviour
     {
         if (Input.GetButtonDown("Cancel") && !shipSelected && !HUD.Instance.isInUpgradeWindow)
             HUD.Instance.PauseGame();
+        else if (Input.GetButtonDown("Cancel") || (shipSelected && !unitManager.ships[currentShipIndex].canBeSelected.Value))
+            DeselectShip();
 
         if (HUD.Instance.inPauseMenu)
             return;
@@ -444,9 +446,6 @@ public class Cursor : NetworkBehaviour
                 if (currentShipIndex >= unitManager.ships.Length) currentShipIndex = 0;
             }
         }
-
-        if (Input.GetButtonDown("Cancel") || (shipSelected && !unitManager.ships[currentShipIndex].canBeSelected.Value))
-            DeselectShip();
     }
 
     void DisplayVisuals()

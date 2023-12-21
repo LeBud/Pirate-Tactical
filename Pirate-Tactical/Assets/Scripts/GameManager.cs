@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using Unity.Collections;
 using Unity.Netcode;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class GameManager : NetworkBehaviour
 {
@@ -27,7 +28,7 @@ public class GameManager : NetworkBehaviour
     public bool spawnShipAnyWhere = false;
     public bool canStartGame = false;
 
-    Cursor[] players = new Cursor[2];
+    public Cursor[] players = new Cursor[2];
 
     public enum GameState
     {
@@ -40,6 +41,8 @@ public class GameManager : NetworkBehaviour
     }
 
     public GameState gameState;
+
+    public GameObject leavePanel;
 
     private void Awake()
     {
@@ -353,7 +356,8 @@ public class GameManager : NetworkBehaviour
     IEnumerator EndGame()
     {
         yield return new WaitForSeconds(5);
-
+        NetworkManager.Shutdown();
+        SelectShipCapacityHUD.Instance.lobbyHUD.SetActive(true);
     }
 
     //Initialise Player
@@ -377,7 +381,41 @@ public class GameManager : NetworkBehaviour
 
     public void QuitGame()
     {
+        if (IsServer)
+            StartCoroutine(DisconnectPlayer());
+
+        if (IsClient)
+        {
+            NetworkManager.Shutdown();
+            StartCoroutine(ResetHUD());
+        }
+    }
+
+    IEnumerator DisconnectPlayer()
+    {
+        SendLeaveToClientRpc();
+        StartCoroutine(ResetHUD());
+        NetworkManager.DisconnectClient(1);
+        
+        yield return new WaitForSeconds(3);
+
         NetworkManager.Shutdown();
     }
 
+    [ClientRpc]
+    public void SendLeaveToClientRpc()
+    {
+        leavePanel.SetActive(true);
+        StartCoroutine(ResetHUD());
+    }
+
+    IEnumerator ResetHUD()
+    {
+        yield return new WaitForSeconds(3);
+        HUD.Instance.pausePanel.SetActive(false);
+        HUD.Instance.inPauseMenu = false;
+        leavePanel.SetActive(false);
+        HUD.Instance.inGameHUD.SetActive(false);
+        SelectShipCapacityHUD.Instance.lobbyHUD.SetActive(true);
+    }
 }
