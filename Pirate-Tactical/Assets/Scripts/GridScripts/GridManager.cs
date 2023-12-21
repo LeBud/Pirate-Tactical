@@ -1031,4 +1031,15 @@ public class GridManager : NetworkBehaviour
         displayTxts[txtNum].SetActive(false);
     }
 
+    public void CheckAllShip()
+    {
+        ShipUnit[] allShips = FindObjectsOfType<ShipUnit>();
+
+        foreach(ShipUnit shipUnit in allShips)
+        {
+            TileScript t = GetTileAtPosition(shipUnit.unitPos.Value);
+            t.shipOnTile.Value = true;
+        }
+    }
+
 }

@@ -288,6 +288,8 @@ public class GameManager : NetworkBehaviour
                 PoolingInfosToUpdate();
         }
 
+        GridManager.Instance.CheckAllShip();
+
         //Setup pour que seulement le joueur puisse spawn ses unités puis l'autre joueur eznsuite
         if (gameState == GameState.Player1Turn)
         {
