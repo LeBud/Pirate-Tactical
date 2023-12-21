@@ -110,7 +110,7 @@ public class GameManager : NetworkBehaviour
 
         SetUpGameBaseInfoServerRpc();
         HandleUpgradeSystem.Instance.GenerateUpgradeOnServerRpc();
-        SoundManager.Instance.PlaySoundOnClients(SoundManager.Instance.gameStarting);
+        SoundManager.Instance.PlaySoundOnClients(SoundManager.Instance.gameStarting.id);
     }
 
     IEnumerator PoolingInfosToUpdate()

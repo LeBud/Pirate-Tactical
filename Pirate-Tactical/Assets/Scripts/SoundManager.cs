@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using Unity.Collections;
@@ -12,28 +13,28 @@ public class SoundManager : NetworkBehaviour
     public bool playSounds;
 
     [Header("Ships Sounds")]
-    public AudioClip attack;
-    public AudioClip offensiveCapacity;
-    public AudioClip tileCapacity;
-    public AudioClip takeDamage;
-    public AudioClip startMoving;
-    public AudioClip stopMoving;
-    public AudioClip buyUpgrade;
-    public AudioClip mineExploding;
-    public AudioClip spawnShip;
-    public AudioClip selectShip;
-    public AudioClip deselectShip;
-    public AudioClip shipDestroyed;
-    public AudioClip shipSink;
-    public AudioClip changeShipMode;
-    public AudioClip accost;
-    public AudioClip fireDamage;
+    public Sounds attack;
+    public Sounds offensiveCapacity;
+    public Sounds tileCapacity;
+    public Sounds takeDamage;
+    public Sounds startMoving;
+    public Sounds stopMoving;
+    public Sounds buyUpgrade;
+    public Sounds mineExploding;
+    public Sounds spawnShip;
+    public Sounds selectShip;
+    public Sounds deselectShip;
+    public Sounds shipDestroyed;
+    public Sounds shipSink;
+    public Sounds changeShipMode;
+    public Sounds accost;
+    public Sounds fireDamage;
 
     [Header("Map Sounds")]
-    public AudioClip zoneShrinking;
+    public Sounds zoneShrinking;
 
     [Header("other Sounds")]
-    public AudioClip gameStarting;
+    public Sounds gameStarting;
     public AudioClip music;
     public AudioClip timer;
     public AudioClip oceanAmbient;
@@ -51,73 +52,87 @@ public class SoundManager : NetworkBehaviour
         _audioSource = GetComponent<AudioSource>();
     }
 
-    public void PlaySoundOnClients(AudioClip sound)
+    public void PlaySoundOnClients(int sound)
     {
         if (!playSounds) return;
-        soundToPlayOnClient = sound;
-        PassSoundThroughtServerRpc(sound.ToString());
+        PassSoundThroughtServerRpc(sound);
     }
 
     [ServerRpc(RequireOwnership = false)]
-    void PassSoundThroughtServerRpc(FixedString128Bytes clip)
+    void PassSoundThroughtServerRpc(int id)
     {
-        PlaySoundsClientRpc(clip);
+        PlaySoundsClientRpc(id);
     }
 
     [ClientRpc]
-    void PlaySoundsClientRpc(FixedString128Bytes clip)
+    void PlaySoundsClientRpc(int id)
     {
-        _audioSource.PlayOneShot(AudioToPlay(clip.ToString()));
+        Debug.Log("Son serveur");
+        _audioSource.PlayOneShot(AudioToPlay(id));
     }
 
     public void PlaySoundLocally(AudioClip sound)
     {
         if (!playSounds) return;
+        Debug.Log("son local");
         _audioSource.PlayOneShot(sound);
     }
 
-    AudioClip AudioToPlay(string clip)
+    AudioClip AudioToPlay(int clip)
     {
         switch(clip)
         {
-            case "attack":
-                return attack;
-            case "offensiveCapacity":
-                return offensiveCapacity;
-            case "tileCapacity":
-                return tileCapacity;
-            case "takeDamage":
-                return takeDamage;
-            case "startMoving":
-                return startMoving;
-            case "stopMoving":
-                return stopMoving;
-            case "buyUpgrade":
-                return buyUpgrade;
-            case "mineExploding":
-                return mineExploding;
-            case "spawnShip":
-                return spawnShip;
-            case "selectShip":
-                return selectShip;
-            case "deselectShip":
-                return deselectShip;
-            case "shipDestroyed":
-                return shipDestroyed;
-            case "shipSink":
-                return shipSink;
-            case "changeShipMode":
-                return changeShipMode;
-            case "accost":
-                return accost;
-            case "fireDamage":
-                return fireDamage;
-            case "zoneShrinking":
-                return zoneShrinking;
-            case "gameStarting":
-                return gameStarting;
+            case 0:
+                return attack.clip;
+            case 1:
+                return offensiveCapacity.clip;
+            case 2:
+                return tileCapacity.clip;
+            case 3:
+                return takeDamage.clip;
+            case 4:
+                return startMoving.clip;
+            case 5:
+                return stopMoving.clip;
+            case 6:
+                return buyUpgrade.clip;
+            case 7:
+                return mineExploding.clip;
+            case 8:
+                return spawnShip.clip;
+            case 9:
+                return selectShip.clip;
+            case 10:
+                return deselectShip.clip;
+            case 11:
+                return shipDestroyed.clip;
+            case 12:
+                return shipSink.clip;
+            case 13:
+                return changeShipMode.clip;
+            case 14:
+                return accost.clip;
+            case 15:
+                return fireDamage.clip;
+            case 16:
+                return zoneShrinking.clip;
+            case 17:
+                return gameStarting.clip;
         }
         return null;
     }
-
 }
+
+[Serializable]
+public struct Sounds
+{
+    public AudioClip clip;
+    public int id;
+
+    public Sounds(AudioClip clip, int id)
+    {
+        this.clip = clip;
+        this.id = id;
+    }
+}
+

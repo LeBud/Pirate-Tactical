@@ -144,7 +144,7 @@ public class HandleUpgradeSystem : NetworkBehaviour
         p.unitManager.ships[p.currentShipIndex].canBeUpgrade = false;
         p.HasDidAnActionClientRpc();
 
-        SoundManager.Instance.PlaySoundLocally(SoundManager.Instance.buyUpgrade);
+        SoundManager.Instance.PlaySoundLocally(SoundManager.Instance.buyUpgrade.clip);
 
         HUD.Instance.UpgradeWindow(false, 0);
     }
@@ -215,6 +215,6 @@ public class HandleUpgradeSystem : NetworkBehaviour
         p.unitManager.ships[p.currentShipIndex].canBeUpgrade = false;
         p.HasDidAnActionClientRpc();
 
-        SoundManager.Instance.PlaySoundLocally(SoundManager.Instance.buyUpgrade);
+        SoundManager.Instance.PlaySoundLocally(SoundManager.Instance.buyUpgrade.clip);
     }
 }

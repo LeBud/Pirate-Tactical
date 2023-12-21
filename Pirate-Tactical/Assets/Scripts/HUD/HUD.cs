@@ -246,6 +246,7 @@ public class HUD : NetworkBehaviour
                 return null;
         }
     }
+
     public void UpdateGameMode()
     {
         if(player != null && player.canPlay.Value)

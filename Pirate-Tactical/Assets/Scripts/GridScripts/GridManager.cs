@@ -241,7 +241,7 @@ public class GridManager : NetworkBehaviour
         Cursor p = NetworkManager.ConnectedClients[id].PlayerObject.GetComponent<Cursor>();
         p.HasDidAnActionClientRpc();
 
-        SoundManager.Instance.PlaySoundOnClients(SoundManager.Instance.accost);
+        SoundManager.Instance.PlaySoundOnClients(SoundManager.Instance.accost.id);
     }
 
 
@@ -839,11 +839,13 @@ public class GridManager : NetworkBehaviour
             if (t != null)
             {
                 //Ajouter un check si la tile est upgrade pour les dégats de zone;
+                if(t.mineInTile.Value)
+                    SoundManager.Instance.PlaySoundOnClients(SoundManager.Instance.mineExploding.id);
+
                 t.mineInTile.Value = false;
                 t.upgradedMine = false;
                 foreach(ulong _id in NetworkManager.ConnectedClientsIds)
                     t.SetMineTileToClientRpc(_id, false);
-                SoundManager.Instance.PlaySoundOnClients(SoundManager.Instance.mineExploding);
             }
         }
         else if (active && dictionnary.Contains(tilePos))
@@ -906,7 +908,7 @@ public class GridManager : NetworkBehaviour
             }
         }
 
-        SoundManager.Instance.PlaySoundOnClients(SoundManager.Instance.zoneShrinking);
+        SoundManager.Instance.PlaySoundOnClients(SoundManager.Instance.zoneShrinking.id);
     }
 
     [ServerRpc(RequireOwnership = false)]
@@ -985,7 +987,7 @@ public class GridManager : NetworkBehaviour
             Destroy(cannon.gameObject);
         }
 
-        SoundManager.Instance.PlaySoundOnClients(SoundManager.Instance.shipDestroyed);
+        SoundManager.Instance.PlaySoundOnClients(SoundManager.Instance.shipDestroyed.id);
     }
 
     [ServerRpc]

@@ -131,7 +131,7 @@ MonoBehaviour:
     m_InternalValue: 3
   shotCapacity: {fileID: 11400000, guid: b69ce819f744ed844bffd008ab317c1b, type: 2}
   tileCapacity: {fileID: 11400000, guid: fb6e9343689504a439d9d7bc741565b6, type: 2}
-  upgradedCapacity: 1
+  upgradedCapacity: 0
   barqueSpawn: 0
   barqueIndex: 0
   isBark: 0

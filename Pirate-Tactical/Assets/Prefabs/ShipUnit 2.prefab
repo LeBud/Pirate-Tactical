@@ -131,7 +131,7 @@ MonoBehaviour:
     m_InternalValue: 2
   shotCapacity: {fileID: 11400000, guid: 1614c8af2ff83a14199a099a10161e06, type: 2}
   tileCapacity: {fileID: 11400000, guid: 67896433804843446a9f7888b3c98f46, type: 2}
-  upgradedCapacity: 1
+  upgradedCapacity: 0
   barqueSpawn: 0
   barqueIndex: 0
   isBark: 0
@@ -145,7 +145,7 @@ MonoBehaviour:
   health: {fileID: 3972178521639787351}
   highlight: {fileID: 3170301662735359108}
   usedSprite: {fileID: 8138186423642493875}
-  index: 1
+  index: 2
   clientIdOwner: 1
   movePoint: 1
   attackPoint: 1

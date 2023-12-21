@@ -405,12 +405,12 @@ public class Cursor : NetworkBehaviour
                     if (cTile.shipOnTile.Value && canShoot && unitManager.ships[currentShipIndex].canShoot.Value)
                     {
                         GridManager.Instance.DamageUnitServerRpc(unitManager.ships[currentShipIndex].damage.Value, cTile.pos.Value, NetworkManager.LocalClientId, false, 0, false, HasGoThroughWaterCapacity(cTile), false);
-                        SoundManager.Instance.PlaySoundOnClients(SoundManager.Instance.attack);
+                        SoundManager.Instance.PlaySoundOnClients(SoundManager.Instance.attack.id);
                     }
                     else if (cTile.cannonInTile.Value && canShoot && unitManager.ships[currentShipIndex].canShoot.Value)
                     {
                         GridManager.Instance.DamageCannonOnServerRpc(cTile.pos.Value);
-                        SoundManager.Instance.PlaySoundOnClients(SoundManager.Instance.attack);
+                        SoundManager.Instance.PlaySoundOnClients(SoundManager.Instance.attack.id);
                     }
                     break;
                 case 3: //Special Shoot Mode
@@ -497,7 +497,7 @@ public class Cursor : NetworkBehaviour
         if(shipSelected)
         {
             unitManager.ships[currentShipIndex].highlight.SetActive(false);
-            SoundManager.Instance.PlaySoundLocally(SoundManager.Instance.deselectShip);
+            SoundManager.Instance.PlaySoundLocally(SoundManager.Instance.deselectShip.clip);
             shipSelected = false;
             HideTiles();
         }
@@ -513,7 +513,7 @@ public class Cursor : NetworkBehaviour
                 shipSelected = true;
                 unitManager.ships[currentShipIndex].highlight.SetActive(true);
                 DisplayOnSelectedUnit();
-                SoundManager.Instance.PlaySoundLocally(SoundManager.Instance.selectShip);
+                SoundManager.Instance.PlaySoundLocally(SoundManager.Instance.selectShip.clip);
                 break;
             }
         }
@@ -524,7 +524,7 @@ public class Cursor : NetworkBehaviour
         if (shipSelected)
         {
             unitManager.ships[currentShipIndex].highlight.SetActive(false);
-            SoundManager.Instance.PlaySoundLocally(SoundManager.Instance.deselectShip);
+            SoundManager.Instance.PlaySoundLocally(SoundManager.Instance.deselectShip.clip);
             shipSelected = false;
             HideTiles();
         }
@@ -537,14 +537,14 @@ public class Cursor : NetworkBehaviour
         currentShipIndex = i;
         shipSelected = true;
         DisplayOnSelectedUnit();
-        SoundManager.Instance.PlaySoundLocally(SoundManager.Instance.selectShip);
+        SoundManager.Instance.PlaySoundLocally(SoundManager.Instance.selectShip.clip);
     }
 
     void DisplayOnSelectedUnit()
     {
         if (!unitManager.ships[currentShipIndex].canBeSelected.Value)
         {
-            SoundManager.Instance.PlaySoundLocally(SoundManager.Instance.deselectShip);
+            SoundManager.Instance.PlaySoundLocally(SoundManager.Instance.deselectShip.clip);
             shipSelected = false;
             HideTiles();
         }
@@ -578,7 +578,7 @@ public class Cursor : NetworkBehaviour
         }
 
         if (currentModeIndex != currentModeInputIndex)
-            SoundManager.Instance.PlaySoundLocally(SoundManager.Instance.changeShipMode);
+            SoundManager.Instance.PlaySoundLocally(SoundManager.Instance.changeShipMode.clip);
 
         switch (currentModeIndex)
         {
@@ -731,7 +731,7 @@ public class Cursor : NetworkBehaviour
             }
         }
 
-        SoundManager.Instance.PlaySoundOnClients(SoundManager.Instance.tileCapacity);
+        SoundManager.Instance.PlaySoundOnClients(SoundManager.Instance.tileCapacity.id);
     }
 
     void HandleSpecialUnitAttackOnUnit(TileScript t)
@@ -789,7 +789,7 @@ public class Cursor : NetworkBehaviour
             }
         }
 
-        SoundManager.Instance.PlaySoundOnClients(SoundManager.Instance.offensiveCapacity);
+        SoundManager.Instance.PlaySoundOnClients(SoundManager.Instance.offensiveCapacity.id);
     }
 
     void TeleportShip(TileScript t)
@@ -952,7 +952,7 @@ public class Cursor : NetworkBehaviour
         unitManager.ships[index].shipIndexFrom.Value = currentShipIndex;
 
         GridManager.Instance.SetShipOnTileServerRpc(pos, true);
-        SoundManager.Instance.PlaySoundOnClients(SoundManager.Instance.spawnShip);
+        SoundManager.Instance.PlaySoundOnClients(SoundManager.Instance.spawnShip.id);
     }
 
     IEnumerator TShotFunction(TileScript t, bool upgraded)
@@ -1216,7 +1216,7 @@ public class Cursor : NetworkBehaviour
         bool stepOnMine = false;
 
         GridManager.Instance.SetShipOnTileServerRpc(unitManager.ships[currentShipIndex].currentTile.pos.Value, false);
-        SoundManager.Instance.PlaySoundOnClients(SoundManager.Instance.startMoving);
+        SoundManager.Instance.PlaySoundOnClients(SoundManager.Instance.startMoving.id);
         while (path.Count > 0)
         {
             UnitNewPosServerRpc(path[value].pos.Value, currentShipIndex);
@@ -1253,7 +1253,7 @@ public class Cursor : NetworkBehaviour
         unitManager.ships[currentShipIndex].canMove.Value = false;
         GridManager.Instance.SetShipOnTileServerRpc(unitManager.ships[currentShipIndex].currentTile.pos.Value, true);
 
-        SoundManager.Instance.PlaySoundOnClients(SoundManager.Instance.stopMoving);
+        SoundManager.Instance.PlaySoundOnClients(SoundManager.Instance.stopMoving.id);
 
         if(stepOnMine)
             GridManager.Instance.DamageUnitByMineServerRpc(GridManager.Instance.mineDamage, unitManager.ships[currentShipIndex].currentTile.pos.Value, false, 0);
@@ -1295,7 +1295,7 @@ public class Cursor : NetworkBehaviour
             }
         }
 
-        SoundManager.Instance.PlaySoundOnClients(SoundManager.Instance.spawnShip);
+        SoundManager.Instance.PlaySoundOnClients(SoundManager.Instance.spawnShip.id);
     }
 
     public void SetShopToInactive(int shopIndex)

@@ -2328,7 +2328,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6960e84d07fb87f47956e7a81d71c4e6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_ProtocolType: 0
+  m_ProtocolType: 1
   m_MaxPacketQueueSize: 128
   m_MaxPayloadSize: 6144
   m_HeartbeatTimeoutMS: 500
@@ -5482,7 +5482,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &421887028
 RectTransform:
   m_ObjectHideFlags: 0
@@ -11212,24 +11212,60 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   playSounds: 1
-  attack: {fileID: 8300000, guid: 20026f71e49ba78478c8228f38b17b33, type: 3}
-  offensiveCapacity: {fileID: 8300000, guid: 1422d61d2e3e6ef41b8c68249615802b, type: 3}
-  tileCapacity: {fileID: 8300000, guid: a115679e035cd2b42875fb15266c006e, type: 3}
-  takeDamage: {fileID: 8300000, guid: 2b25d98b906f7a24db82f6f9fdec1914, type: 3}
-  startMoving: {fileID: 8300000, guid: d0dc8e7fe45b9eb438671326b688c406, type: 3}
-  stopMoving: {fileID: 8300000, guid: e2629188e20497643938c4ffb377f792, type: 3}
-  buyUpgrade: {fileID: 8300000, guid: 9446e2ec7f707f84389ca91d291235aa, type: 3}
-  mineExploding: {fileID: 8300000, guid: de24b230401405b42b99f7c061aaae7a, type: 3}
-  spawnShip: {fileID: 8300000, guid: 9686a897680e8f443a3b505241eebd30, type: 3}
-  selectShip: {fileID: 8300000, guid: 546b756cbd3de5f4082ab8a4e4bc7959, type: 3}
-  deselectShip: {fileID: 8300000, guid: ca3f2a3c8d6a99341b5c45e67288dbf0, type: 3}
-  shipDestroyed: {fileID: 8300000, guid: 9abf708d602d62a459579cc39b807bc8, type: 3}
-  shipSink: {fileID: 0}
-  changeShipMode: {fileID: 8300000, guid: e571c3f556d929d46ae41421907370ab, type: 3}
-  accost: {fileID: 8300000, guid: c12a7e402bb5e09478aff65565003465, type: 3}
-  fireDamage: {fileID: 8300000, guid: e90af221b0051ff489aaa3951bd6520c, type: 3}
-  zoneShrinking: {fileID: 8300000, guid: 9b5fd6dade9e5b244b0dea546b0fa8a4, type: 3}
-  gameStarting: {fileID: 8300000, guid: ccbd2358f9f07454fbe792487a86014b, type: 3}
+  attack:
+    clip: {fileID: 8300000, guid: 20026f71e49ba78478c8228f38b17b33, type: 3}
+    id: 0
+  offensiveCapacity:
+    clip: {fileID: 8300000, guid: 1422d61d2e3e6ef41b8c68249615802b, type: 3}
+    id: 1
+  tileCapacity:
+    clip: {fileID: 8300000, guid: a115679e035cd2b42875fb15266c006e, type: 3}
+    id: 2
+  takeDamage:
+    clip: {fileID: 8300000, guid: 2b25d98b906f7a24db82f6f9fdec1914, type: 3}
+    id: 3
+  startMoving:
+    clip: {fileID: 8300000, guid: d0dc8e7fe45b9eb438671326b688c406, type: 3}
+    id: 4
+  stopMoving:
+    clip: {fileID: 8300000, guid: e2629188e20497643938c4ffb377f792, type: 3}
+    id: 5
+  buyUpgrade:
+    clip: {fileID: 8300000, guid: 9446e2ec7f707f84389ca91d291235aa, type: 3}
+    id: 6
+  mineExploding:
+    clip: {fileID: 8300000, guid: de24b230401405b42b99f7c061aaae7a, type: 3}
+    id: 7
+  spawnShip:
+    clip: {fileID: 8300000, guid: 9686a897680e8f443a3b505241eebd30, type: 3}
+    id: 8
+  selectShip:
+    clip: {fileID: 8300000, guid: 546b756cbd3de5f4082ab8a4e4bc7959, type: 3}
+    id: 9
+  deselectShip:
+    clip: {fileID: 8300000, guid: ca3f2a3c8d6a99341b5c45e67288dbf0, type: 3}
+    id: 10
+  shipDestroyed:
+    clip: {fileID: 8300000, guid: 9abf708d602d62a459579cc39b807bc8, type: 3}
+    id: 11
+  shipSink:
+    clip: {fileID: 8300000, guid: 546bc6bb15c952948a2612ef25d1019c, type: 3}
+    id: 12
+  changeShipMode:
+    clip: {fileID: 8300000, guid: e571c3f556d929d46ae41421907370ab, type: 3}
+    id: 13
+  accost:
+    clip: {fileID: 8300000, guid: c12a7e402bb5e09478aff65565003465, type: 3}
+    id: 14
+  fireDamage:
+    clip: {fileID: 8300000, guid: e90af221b0051ff489aaa3951bd6520c, type: 3}
+    id: 15
+  zoneShrinking:
+    clip: {fileID: 8300000, guid: 9b5fd6dade9e5b244b0dea546b0fa8a4, type: 3}
+    id: 16
+  gameStarting:
+    clip: {fileID: 8300000, guid: ccbd2358f9f07454fbe792487a86014b, type: 3}
+    id: 17
   music: {fileID: 0}
   timer: {fileID: 0}
   oceanAmbient: {fileID: 0}
@@ -16892,7 +16928,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &1107832327
 RectTransform:
   m_ObjectHideFlags: 0

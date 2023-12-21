@@ -222,7 +222,7 @@ public class ShipUnit : NetworkBehaviour
         if (passiveAttack && !hasGoneThroughWater)
             GivePassiveFireToUnitClientRpc(effectDuration, dmg);
 
-        SoundManager.Instance.PlaySoundOnClients(SoundManager.Instance.takeDamage);
+        SoundManager.Instance.PlaySoundOnClients(SoundManager.Instance.takeDamage.id);
 
         if (unitLife.Value <= 0)
         {
@@ -242,7 +242,7 @@ public class ShipUnit : NetworkBehaviour
                 GridManager.Instance.SpawnShipwrekServerRpc(upgrade, unitPos.Value);
             }
 
-            SoundManager.Instance.PlaySoundOnClients(SoundManager.Instance.shipDestroyed);
+            SoundManager.Instance.PlaySoundOnClients(SoundManager.Instance.shipDestroyed.id);
             GridManager.Instance.SetShipOnTileServerRpc(pos, false);
             GetComponent<NetworkObject>().Despawn();
         }
@@ -254,7 +254,7 @@ public class ShipUnit : NetworkBehaviour
     {
         roundToStopFireEffect = roundDuration + GameManager.Instance.currentRound.Value;
         passiveDmg = _passiveDmg;
-        SoundManager.Instance.PlaySoundLocally(SoundManager.Instance.fireDamage);
+        SoundManager.Instance.PlaySoundLocally(SoundManager.Instance.fireDamage.clip);
     }
 
     [ClientRpc]
