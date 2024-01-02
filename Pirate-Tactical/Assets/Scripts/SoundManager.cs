@@ -41,6 +41,7 @@ public class SoundManager : NetworkBehaviour
     public AudioClip boutonClick;
     public AudioClip goldGain;
     public AudioClip manaGain;
+    public AudioClip playerTurn;
 
     AudioClip soundToPlayOnClient;
 

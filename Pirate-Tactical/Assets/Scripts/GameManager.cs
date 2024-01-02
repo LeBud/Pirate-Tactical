@@ -300,6 +300,8 @@ public class GameManager : NetworkBehaviour
 
             if (players[0].unitManager.allShipSpawned.Value)
                 players[0].ResetShipsActionClientRpc();
+
+            HUD.Instance.PlayerTurnClientRpc(player1.Value);
         }
         else if (gameState == GameState.Player2Turn)
         {
@@ -310,6 +312,8 @@ public class GameManager : NetworkBehaviour
 
             if (players[1].unitManager.allShipSpawned.Value)
                 players[1].ResetShipsActionClientRpc();
+
+            HUD.Instance.PlayerTurnClientRpc(player2.Value);
         }
     }
 

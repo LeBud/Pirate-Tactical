@@ -64,6 +64,8 @@ public class HUD : NetworkBehaviour
 
     [Header("Announcer")]
     public GameObject stormGO;
+    public GameObject playerTurn;
+    public TextMeshProUGUI playerTurnTxt;
 
     [Header("Round Gain")]
     public TextMeshProUGUI goldGain;
@@ -389,6 +391,21 @@ public class HUD : NetworkBehaviour
         stormGO.SetActive(true);
         yield return new WaitForSeconds(2);
         stormGO.SetActive(false);
+    }
+
+    [ClientRpc]
+    public void PlayerTurnClientRpc(FixedString128Bytes p)
+    {
+        StartCoroutine(PlayerTurn(p));
+    }
+
+    IEnumerator PlayerTurn(FixedString128Bytes p)
+    {
+        playerTurn.SetActive(true);
+        playerTurnTxt.text = "Au tour de : " + p;
+        SoundManager.Instance.PlaySoundLocally(SoundManager.Instance.playerTurn);
+        yield return new WaitForSeconds(1);
+        playerTurn.SetActive(false);
     }
 
     [ClientRpc]
