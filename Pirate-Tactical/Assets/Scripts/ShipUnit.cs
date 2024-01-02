@@ -55,6 +55,9 @@ public class ShipUnit : NetworkBehaviour
     [Header("Colors")]
     public Color player1Color;
     public Color player2Color;
+    public bool SpriteMode;
+    public Sprite Player1Sprite;
+    public Sprite Player2Sprite;
 
     [Header("Others")]
     public SpriteRenderer unitSprite;
@@ -162,10 +165,20 @@ public class ShipUnit : NetworkBehaviour
     [ClientRpc]
     public void SetShipColorClientRpc(ulong id)
     {
-        if(id == 0)
-            unitSprite.color = player1Color;
-        else 
-            unitSprite.color = player2Color;
+        if (!SpriteMode)
+        {
+            if(id == 0)
+                unitSprite.color = player1Color;
+            else 
+                unitSprite.color = player2Color;
+        }
+        else
+        {
+            if (id == 0)
+                unitSprite.sprite = Player1Sprite;
+            else
+                unitSprite.sprite = Player2Sprite;
+        }
     }
 
     [ClientRpc]

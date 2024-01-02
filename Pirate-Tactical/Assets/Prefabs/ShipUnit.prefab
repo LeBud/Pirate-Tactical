@@ -141,6 +141,9 @@ MonoBehaviour:
   upgrade: 0
   player1Color: {r: 0.9622642, g: 0.55039275, b: 0.004538993, a: 1}
   player2Color: {r: 0.5994166, g: 0, b: 0.8113208, a: 1}
+  SpriteMode: 1
+  Player1Sprite: {fileID: 21300000, guid: 5dc8d229c34102b43bff554943b90838, type: 3}
+  Player2Sprite: {fileID: 21300000, guid: 254d28027e006b347973cfa103455463, type: 3}
   unitSprite: {fileID: 12588485425085424}
   health: {fileID: 3639706659665886356}
   highlight: {fileID: 6215254823900577645}
@@ -275,7 +278,7 @@ SpriteRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 1
   m_Sprite: {fileID: -2413806693520163455, guid: a86470a33a6bf42c4b3595704624658b, type: 3}
-  m_Color: {r: 1, g: 0.033018887, b: 0.033018887, a: 1}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
