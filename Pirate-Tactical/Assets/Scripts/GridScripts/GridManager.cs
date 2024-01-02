@@ -176,7 +176,7 @@ public class GridManager : NetworkBehaviour
 
         if(ships != null)
         {
-            if (ships.GetComponent<NetworkObject>().OwnerClientId != id)
+            if (ships.OwnerClientId != id)
             {
                 isEnemy = true;
                 ships.TakeDamageServerRpc(damage, pos, passiveAttack, effectDuration, hasGoThroughWater);
@@ -218,7 +218,7 @@ public class GridManager : NetworkBehaviour
 
         ShipUnit ships = GetShipAtPos(pos);
 
-        if (ships.GetComponent<NetworkObject>().OwnerClientId != id)
+        if (ships.OwnerClientId != id)
         {
             ships.TakeDamageServerRpc(damage, pos, passiveAttack, effectDuration, hasGoThroughWater);
         }
@@ -234,14 +234,17 @@ public class GridManager : NetworkBehaviour
         int allyDmg = ally.unitAccostDamage + accostAttackBoost + ally.accostDmgBoost.Value;
         int enemyDmg = enemy.unitAccostDamage + enemy.accostDmgBoost.Value;
 
-        ally.TakeDamageServerRpc(enemyDmg, allyPos, false, 0, false);
-        enemy.TakeDamageServerRpc(allyDmg, enemyPos, false, 0, false);
-        
-        //Dépenser les points
-        Cursor p = NetworkManager.ConnectedClients[id].PlayerObject.GetComponent<Cursor>();
-        p.HasDidAnActionClientRpc();
+        if(enemy.OwnerClientId != id)
+        {
+            ally.TakeDamageServerRpc(enemyDmg, allyPos, false, 0, false);
+            enemy.TakeDamageServerRpc(allyDmg, enemyPos, false, 0, false);
 
-        SoundManager.Instance.PlaySoundOnClients(SoundManager.Instance.accost.id);
+            //Dépenser les points
+            Cursor p = NetworkManager.ConnectedClients[id].PlayerObject.GetComponent<Cursor>();
+            p.HasDidAnActionClientRpc();
+
+            SoundManager.Instance.PlaySoundOnClients(SoundManager.Instance.accost.id);
+        }
     }
 
 
