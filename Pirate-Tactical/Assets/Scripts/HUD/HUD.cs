@@ -320,8 +320,8 @@ public class HUD : NetworkBehaviour
         playerSlider.value = player.totalPlayerHealth.Value;
         enemyPlayerSlider.value = enemyPlayer.totalPlayerHealth.Value;
 
-        playerHealthTxt.text = player.totalPlayerHealth.Value.ToString() + " / " + playerMaxHealth;
-        enemyHealthTxt.text = enemyPlayer.totalPlayerHealth.Value.ToString() + " / " + enemyMaxHealth;
+        playerHealthTxt.text = player.totalPlayerHealth.Value.ToString() + "/" + playerMaxHealth;
+        enemyHealthTxt.text = enemyPlayer.totalPlayerHealth.Value.ToString() + "/" + enemyMaxHealth;
 
         StartCoroutine(SetShipOnHUD());
         StartCoroutine(SetEnemiesShip());
