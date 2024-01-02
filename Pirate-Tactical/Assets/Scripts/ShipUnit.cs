@@ -125,14 +125,13 @@ public class ShipUnit : NetworkBehaviour
         if (canBeSelected.Value)
         {
             if(!canMove.Value && !canShoot.Value)
-            {
                 canBeSelected.Value = false;
-                usedSprite.SetActive(true);
-            }
 
             if(usedSprite.activeSelf)
                 usedSprite.SetActive(false);
         }
+        else if(!canBeSelected.Value)
+            usedSprite.SetActive(true);
     }
 
     [ClientRpc]

@@ -338,6 +338,9 @@ public class Cursor : NetworkBehaviour
             return;
         }
 
+        if (unitManager.ships[currentShipIndex] == null)
+            DeselectShip();
+
         if (unitMoving) return;
 
         if (Input.GetMouseButtonDown(0) && shipSelected)
@@ -523,7 +526,8 @@ public class Cursor : NetworkBehaviour
     {
         if (shipSelected)
         {
-            unitManager.ships[currentShipIndex].highlight.SetActive(false);
+            if(unitManager.ships[currentShipIndex] != null)
+                unitManager.ships[currentShipIndex].highlight.SetActive(false);
             SoundManager.Instance.PlaySoundLocally(SoundManager.Instance.deselectShip.clip);
             shipSelected = false;
             HideTiles();
