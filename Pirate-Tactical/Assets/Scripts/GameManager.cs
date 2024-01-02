@@ -432,4 +432,9 @@ public class GameManager : NetworkBehaviour
         
         leavePanel.SetActive(false);
     }
+
+    public void CloseGame()
+    {
+        Application.Quit();
+    }
 }

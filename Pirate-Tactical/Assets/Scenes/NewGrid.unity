@@ -1543,6 +1543,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 3518676807329064082, guid: 6938d8686b198fe4abf44fc29fb6f783, type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: -6939757771348040540, guid: dccd9830c4e2998449de9b653f2aa02b, type: 2}
     - target: {fileID: 3615930774335691491, guid: 6938d8686b198fe4abf44fc29fb6f783, type: 3}
       propertyPath: m_Name
       value: DamageTxt (7)
@@ -1552,13 +1556,9 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 5270576833517184188, guid: 6938d8686b198fe4abf44fc29fb6f783, type: 3}
-      propertyPath: m_fontAsset
+      propertyPath: m_sharedMaterial
       value: 
-      objectReference: {fileID: 11400000, guid: dccd9830c4e2998449de9b653f2aa02b, type: 2}
-    - target: {fileID: 5270576833517184188, guid: 6938d8686b198fe4abf44fc29fb6f783, type: 3}
-      propertyPath: m_hasFontAssetChanged
-      value: 1
-      objectReference: {fileID: 0}
+      objectReference: {fileID: -6939757771348040540, guid: dccd9830c4e2998449de9b653f2aa02b, type: 2}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -3127,6 +3127,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 3518676807329064082, guid: 6938d8686b198fe4abf44fc29fb6f783, type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: -6939757771348040540, guid: dccd9830c4e2998449de9b653f2aa02b, type: 2}
     - target: {fileID: 3615930774335691491, guid: 6938d8686b198fe4abf44fc29fb6f783, type: 3}
       propertyPath: m_Name
       value: DamageTxt (12)
@@ -3136,13 +3140,9 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 5270576833517184188, guid: 6938d8686b198fe4abf44fc29fb6f783, type: 3}
-      propertyPath: m_fontAsset
+      propertyPath: m_sharedMaterial
       value: 
-      objectReference: {fileID: 11400000, guid: dccd9830c4e2998449de9b653f2aa02b, type: 2}
-    - target: {fileID: 5270576833517184188, guid: 6938d8686b198fe4abf44fc29fb6f783, type: 3}
-      propertyPath: m_hasFontAssetChanged
-      value: 1
-      objectReference: {fileID: 0}
+      objectReference: {fileID: -6939757771348040540, guid: dccd9830c4e2998449de9b653f2aa02b, type: 2}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -3757,6 +3757,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 3518676807329064082, guid: 6938d8686b198fe4abf44fc29fb6f783, type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: -6939757771348040540, guid: dccd9830c4e2998449de9b653f2aa02b, type: 2}
     - target: {fileID: 3615930774335691491, guid: 6938d8686b198fe4abf44fc29fb6f783, type: 3}
       propertyPath: m_Name
       value: DamageTxt (13)
@@ -3766,13 +3770,9 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 5270576833517184188, guid: 6938d8686b198fe4abf44fc29fb6f783, type: 3}
-      propertyPath: m_fontAsset
+      propertyPath: m_sharedMaterial
       value: 
-      objectReference: {fileID: 11400000, guid: dccd9830c4e2998449de9b653f2aa02b, type: 2}
-    - target: {fileID: 5270576833517184188, guid: 6938d8686b198fe4abf44fc29fb6f783, type: 3}
-      propertyPath: m_hasFontAssetChanged
-      value: 1
-      objectReference: {fileID: 0}
+      objectReference: {fileID: -6939757771348040540, guid: dccd9830c4e2998449de9b653f2aa02b, type: 2}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -6460,6 +6460,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 3518676807329064082, guid: 6938d8686b198fe4abf44fc29fb6f783, type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: -6939757771348040540, guid: dccd9830c4e2998449de9b653f2aa02b, type: 2}
     - target: {fileID: 3615930774335691491, guid: 6938d8686b198fe4abf44fc29fb6f783, type: 3}
       propertyPath: m_Name
       value: DamageTxt (11)
@@ -6469,13 +6473,9 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 5270576833517184188, guid: 6938d8686b198fe4abf44fc29fb6f783, type: 3}
-      propertyPath: m_fontAsset
+      propertyPath: m_sharedMaterial
       value: 
-      objectReference: {fileID: 11400000, guid: dccd9830c4e2998449de9b653f2aa02b, type: 2}
-    - target: {fileID: 5270576833517184188, guid: 6938d8686b198fe4abf44fc29fb6f783, type: 3}
-      propertyPath: m_hasFontAssetChanged
-      value: 1
-      objectReference: {fileID: 0}
+      objectReference: {fileID: -6939757771348040540, guid: dccd9830c4e2998449de9b653f2aa02b, type: 2}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -7282,6 +7282,10 @@ PrefabInstance:
     - target: {fileID: 3615930774335691491, guid: 6938d8686b198fe4abf44fc29fb6f783, type: 3}
       propertyPath: m_IsActive
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5270576833517184188, guid: 6938d8686b198fe4abf44fc29fb6f783, type: 3}
+      propertyPath: m_fontSizeBase
+      value: 4
       objectReference: {fileID: 0}
     - target: {fileID: 5270576833517184188, guid: 6938d8686b198fe4abf44fc29fb6f783, type: 3}
       propertyPath: m_hasFontAssetChanged
@@ -8736,7 +8740,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &525094276
 RectTransform:
   m_ObjectHideFlags: 0
@@ -10067,6 +10071,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 3518676807329064082, guid: 6938d8686b198fe4abf44fc29fb6f783, type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: -6939757771348040540, guid: dccd9830c4e2998449de9b653f2aa02b, type: 2}
     - target: {fileID: 3615930774335691491, guid: 6938d8686b198fe4abf44fc29fb6f783, type: 3}
       propertyPath: m_Name
       value: DamageTxt (5)
@@ -10076,13 +10084,9 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 5270576833517184188, guid: 6938d8686b198fe4abf44fc29fb6f783, type: 3}
-      propertyPath: m_fontAsset
+      propertyPath: m_sharedMaterial
       value: 
-      objectReference: {fileID: 11400000, guid: dccd9830c4e2998449de9b653f2aa02b, type: 2}
-    - target: {fileID: 5270576833517184188, guid: 6938d8686b198fe4abf44fc29fb6f783, type: 3}
-      propertyPath: m_hasFontAssetChanged
-      value: 1
-      objectReference: {fileID: 0}
+      objectReference: {fileID: -6939757771348040540, guid: dccd9830c4e2998449de9b653f2aa02b, type: 2}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -10956,6 +10960,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 3518676807329064082, guid: 6938d8686b198fe4abf44fc29fb6f783, type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: -6939757771348040540, guid: dccd9830c4e2998449de9b653f2aa02b, type: 2}
     - target: {fileID: 3615930774335691491, guid: 6938d8686b198fe4abf44fc29fb6f783, type: 3}
       propertyPath: m_Name
       value: DamageTxt (6)
@@ -10965,13 +10973,9 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 5270576833517184188, guid: 6938d8686b198fe4abf44fc29fb6f783, type: 3}
-      propertyPath: m_fontAsset
+      propertyPath: m_sharedMaterial
       value: 
-      objectReference: {fileID: 11400000, guid: dccd9830c4e2998449de9b653f2aa02b, type: 2}
-    - target: {fileID: 5270576833517184188, guid: 6938d8686b198fe4abf44fc29fb6f783, type: 3}
-      propertyPath: m_hasFontAssetChanged
-      value: 1
-      objectReference: {fileID: 0}
+      objectReference: {fileID: -6939757771348040540, guid: dccd9830c4e2998449de9b653f2aa02b, type: 2}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -11406,6 +11410,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 3518676807329064082, guid: 6938d8686b198fe4abf44fc29fb6f783, type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: -6939757771348040540, guid: dccd9830c4e2998449de9b653f2aa02b, type: 2}
     - target: {fileID: 3615930774335691491, guid: 6938d8686b198fe4abf44fc29fb6f783, type: 3}
       propertyPath: m_Name
       value: DamageTxt (8)
@@ -11415,13 +11423,9 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 5270576833517184188, guid: 6938d8686b198fe4abf44fc29fb6f783, type: 3}
-      propertyPath: m_fontAsset
+      propertyPath: m_sharedMaterial
       value: 
-      objectReference: {fileID: 11400000, guid: dccd9830c4e2998449de9b653f2aa02b, type: 2}
-    - target: {fileID: 5270576833517184188, guid: 6938d8686b198fe4abf44fc29fb6f783, type: 3}
-      propertyPath: m_hasFontAssetChanged
-      value: 1
-      objectReference: {fileID: 0}
+      objectReference: {fileID: -6939757771348040540, guid: dccd9830c4e2998449de9b653f2aa02b, type: 2}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -12156,6 +12160,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 3518676807329064082, guid: 6938d8686b198fe4abf44fc29fb6f783, type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: -6939757771348040540, guid: dccd9830c4e2998449de9b653f2aa02b, type: 2}
     - target: {fileID: 3615930774335691491, guid: 6938d8686b198fe4abf44fc29fb6f783, type: 3}
       propertyPath: m_Name
       value: DamageTxt (10)
@@ -12165,13 +12173,9 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 5270576833517184188, guid: 6938d8686b198fe4abf44fc29fb6f783, type: 3}
-      propertyPath: m_fontAsset
+      propertyPath: m_sharedMaterial
       value: 
-      objectReference: {fileID: 11400000, guid: dccd9830c4e2998449de9b653f2aa02b, type: 2}
-    - target: {fileID: 5270576833517184188, guid: 6938d8686b198fe4abf44fc29fb6f783, type: 3}
-      propertyPath: m_hasFontAssetChanged
-      value: 1
-      objectReference: {fileID: 0}
+      objectReference: {fileID: -6939757771348040540, guid: dccd9830c4e2998449de9b653f2aa02b, type: 2}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -15092,6 +15096,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 3518676807329064082, guid: 6938d8686b198fe4abf44fc29fb6f783, type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: -6939757771348040540, guid: dccd9830c4e2998449de9b653f2aa02b, type: 2}
     - target: {fileID: 3615930774335691491, guid: 6938d8686b198fe4abf44fc29fb6f783, type: 3}
       propertyPath: m_Name
       value: DamageTxt (3)
@@ -15101,13 +15109,9 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 5270576833517184188, guid: 6938d8686b198fe4abf44fc29fb6f783, type: 3}
-      propertyPath: m_fontAsset
+      propertyPath: m_sharedMaterial
       value: 
-      objectReference: {fileID: 11400000, guid: dccd9830c4e2998449de9b653f2aa02b, type: 2}
-    - target: {fileID: 5270576833517184188, guid: 6938d8686b198fe4abf44fc29fb6f783, type: 3}
-      propertyPath: m_hasFontAssetChanged
-      value: 1
-      objectReference: {fileID: 0}
+      objectReference: {fileID: -6939757771348040540, guid: dccd9830c4e2998449de9b653f2aa02b, type: 2}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -15326,6 +15330,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 3518676807329064082, guid: 6938d8686b198fe4abf44fc29fb6f783, type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: -6939757771348040540, guid: dccd9830c4e2998449de9b653f2aa02b, type: 2}
     - target: {fileID: 3615930774335691491, guid: 6938d8686b198fe4abf44fc29fb6f783, type: 3}
       propertyPath: m_Name
       value: DamageTxt (9)
@@ -15335,13 +15343,9 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 5270576833517184188, guid: 6938d8686b198fe4abf44fc29fb6f783, type: 3}
-      propertyPath: m_fontAsset
+      propertyPath: m_sharedMaterial
       value: 
-      objectReference: {fileID: 11400000, guid: dccd9830c4e2998449de9b653f2aa02b, type: 2}
-    - target: {fileID: 5270576833517184188, guid: 6938d8686b198fe4abf44fc29fb6f783, type: 3}
-      propertyPath: m_hasFontAssetChanged
-      value: 1
-      objectReference: {fileID: 0}
+      objectReference: {fileID: -6939757771348040540, guid: dccd9830c4e2998449de9b653f2aa02b, type: 2}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -16793,8 +16797,8 @@ RectTransform:
   m_Children: []
   m_Father: {fileID: 1058339818}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 0}
+  m_AnchorMin: {x: 1, y: 0}
+  m_AnchorMax: {x: 1, y: 1}
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 10, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
@@ -19426,7 +19430,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -550, y: 510}
+  m_AnchoredPosition: {x: -540, y: 510}
   m_SizeDelta: {x: 200, y: 50}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1100762965
@@ -20083,14 +20087,6 @@ PrefabInstance:
     - target: {fileID: 3615930774335691491, guid: 6938d8686b198fe4abf44fc29fb6f783, type: 3}
       propertyPath: m_IsActive
       value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 5270576833517184188, guid: 6938d8686b198fe4abf44fc29fb6f783, type: 3}
-      propertyPath: m_fontAsset
-      value: 
-      objectReference: {fileID: 11400000, guid: dccd9830c4e2998449de9b653f2aa02b, type: 2}
-    - target: {fileID: 5270576833517184188, guid: 6938d8686b198fe4abf44fc29fb6f783, type: 3}
-      propertyPath: m_hasFontAssetChanged
-      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -21739,7 +21735,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 1381260905}
         m_TargetAssemblyTypeName: GameManager, Assembly-CSharp
-        m_MethodName: QuitGame
+        m_MethodName: CloseGame
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -23663,6 +23659,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 3518676807329064082, guid: 6938d8686b198fe4abf44fc29fb6f783, type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
     - target: {fileID: 3615930774335691491, guid: 6938d8686b198fe4abf44fc29fb6f783, type: 3}
       propertyPath: m_Name
       value: DamageTxt (14)
@@ -23670,14 +23670,6 @@ PrefabInstance:
     - target: {fileID: 3615930774335691491, guid: 6938d8686b198fe4abf44fc29fb6f783, type: 3}
       propertyPath: m_IsActive
       value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 5270576833517184188, guid: 6938d8686b198fe4abf44fc29fb6f783, type: 3}
-      propertyPath: m_fontAsset
-      value: 
-      objectReference: {fileID: 11400000, guid: dccd9830c4e2998449de9b653f2aa02b, type: 2}
-    - target: {fileID: 5270576833517184188, guid: 6938d8686b198fe4abf44fc29fb6f783, type: 3}
-      propertyPath: m_hasFontAssetChanged
-      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -24434,14 +24426,6 @@ PrefabInstance:
     - target: {fileID: 3615930774335691491, guid: 6938d8686b198fe4abf44fc29fb6f783, type: 3}
       propertyPath: m_IsActive
       value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 5270576833517184188, guid: 6938d8686b198fe4abf44fc29fb6f783, type: 3}
-      propertyPath: m_fontAsset
-      value: 
-      objectReference: {fileID: 11400000, guid: dccd9830c4e2998449de9b653f2aa02b, type: 2}
-    - target: {fileID: 5270576833517184188, guid: 6938d8686b198fe4abf44fc29fb6f783, type: 3}
-      propertyPath: m_hasFontAssetChanged
-      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -27474,7 +27458,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -475, y: -485}
+  m_AnchoredPosition: {x: -570, y: -485}
   m_SizeDelta: {x: 90, y: 50}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1506939360
@@ -28300,7 +28284,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -530, y: 480}
+  m_AnchoredPosition: {x: -540, y: 485}
   m_SizeDelta: {x: 200, y: 50}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1540082321
@@ -28323,7 +28307,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: 'GOLD : 10'
+  m_text: 'Gold : 10'
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: dccd9830c4e2998449de9b653f2aa02b, type: 2}
   m_sharedMaterial: {fileID: -6939757771348040540, guid: dccd9830c4e2998449de9b653f2aa02b, type: 2}
@@ -29069,7 +29053,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -830, y: 490}
+  m_AnchoredPosition: {x: -830, y: 485}
   m_SizeDelta: {x: 200, y: 30}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1623875078
@@ -35359,7 +35343,7 @@ RectTransform:
   m_Father: {fileID: 817742200}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 0}
+  m_AnchorMax: {x: 0, y: 1}
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 10, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
@@ -35516,7 +35500,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -615, y: 485}
+  m_AnchoredPosition: {x: -630, y: 485}
   m_SizeDelta: {x: 200, y: 50}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1883859475
@@ -36826,6 +36810,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 3518676807329064082, guid: 6938d8686b198fe4abf44fc29fb6f783, type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: -6939757771348040540, guid: dccd9830c4e2998449de9b653f2aa02b, type: 2}
     - target: {fileID: 3615930774335691491, guid: 6938d8686b198fe4abf44fc29fb6f783, type: 3}
       propertyPath: m_Name
       value: DamageTxt (4)
@@ -36835,13 +36823,9 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 5270576833517184188, guid: 6938d8686b198fe4abf44fc29fb6f783, type: 3}
-      propertyPath: m_fontAsset
+      propertyPath: m_sharedMaterial
       value: 
-      objectReference: {fileID: 11400000, guid: dccd9830c4e2998449de9b653f2aa02b, type: 2}
-    - target: {fileID: 5270576833517184188, guid: 6938d8686b198fe4abf44fc29fb6f783, type: 3}
-      propertyPath: m_hasFontAssetChanged
-      value: 1
-      objectReference: {fileID: 0}
+      objectReference: {fileID: -6939757771348040540, guid: dccd9830c4e2998449de9b653f2aa02b, type: 2}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -38880,7 +38864,7 @@ RectTransform:
   m_Father: {fileID: 1397077302}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 0}
+  m_AnchorMax: {x: 0, y: 1}
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 10, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
@@ -39490,7 +39474,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -570, y: -485}
+  m_AnchoredPosition: {x: -475, y: -485}
   m_SizeDelta: {x: 90, y: 50}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &2058520743
@@ -39879,14 +39863,6 @@ PrefabInstance:
     - target: {fileID: 3615930774335691491, guid: 6938d8686b198fe4abf44fc29fb6f783, type: 3}
       propertyPath: m_IsActive
       value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 5270576833517184188, guid: 6938d8686b198fe4abf44fc29fb6f783, type: 3}
-      propertyPath: m_fontAsset
-      value: 
-      objectReference: {fileID: 11400000, guid: dccd9830c4e2998449de9b653f2aa02b, type: 2}
-    - target: {fileID: 5270576833517184188, guid: 6938d8686b198fe4abf44fc29fb6f783, type: 3}
-      propertyPath: m_hasFontAssetChanged
-      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

@@ -237,13 +237,13 @@ public class HUD : NetworkBehaviour
             case 0:
                 return "Interact";
             case 1:
-                return "Move unit";
+                return "Déplacer navire";
             case 2:
-                return "attack enemy";
+                return "Tirer";
             case 3:
-                return "special unit tile";
+                return "Capacité spéciale de terrain";
             case 4:
-                return "special unit attack";
+                return "Capacité spéciale des canons";
             default:
                 return null;
         }

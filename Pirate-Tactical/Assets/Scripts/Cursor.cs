@@ -484,9 +484,9 @@ public class Cursor : NetworkBehaviour
         if(Input.GetKeyDown(KeyCode.Alpha2))
             currentModeIndex = 2;
         if(Input.GetKeyDown(KeyCode.Alpha3))
-            currentModeIndex = 4;
-        if(Input.GetKeyDown(KeyCode.Alpha4))
             currentModeIndex = 3;
+        if(Input.GetKeyDown(KeyCode.Alpha4))
+            currentModeIndex = 4;
 
         if (Input.GetButtonDown("Jump"))
             blockedOrientation++;
