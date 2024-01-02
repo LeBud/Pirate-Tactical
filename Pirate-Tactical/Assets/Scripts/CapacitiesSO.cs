@@ -6,6 +6,7 @@ using UnityEngine;
 public class CapacitiesSO : ScriptableObject
 {
     public string capacityName;
+    [TextArea]
     public string capacityDescription;
     public Sprite icon;
 

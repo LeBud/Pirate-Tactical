@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   capacityName: Mur d'eau
   capacityDescription: "Placer un mur d'eau qui bloquera le d\xE9placement de votre
-    ennemi mais pas son tir"
+    ennemi mais pas son tir\nAm\xE9liorer : le mur d'eau occupe 3 cases."
   icon: {fileID: 21300000, guid: 9b660619d4506cd4792bc560ba2f4b81, type: 3}
   specialAbilityCost: 20
   shootCapacity: 0

@@ -13,8 +13,9 @@ MonoBehaviour:
   m_Name: FireShot
   m_EditorClassIdentifier: 
   capacityName: "Tir enflamm\xE9"
-  capacityDescription: "Tir\xE9 un boulet enflamm\xE9 sur votre adversaire qui infligeront
-    des d\xE9gats passifs"
+  capacityDescription: "Tir\xE9 un boulet enflamm\xE9 sur votre adversaire pour infliger
+    des d\xE9gats passifs.\nAm\xE9liorer : Tirer sur un navire provoque un feu sur
+    les cases autour qui enflamme les navires sur ces cases."
   icon: {fileID: 21300000, guid: 533822fe24b670046acdfe8109599076, type: 3}
   specialAbilityCost: 40
   shootCapacity: 3

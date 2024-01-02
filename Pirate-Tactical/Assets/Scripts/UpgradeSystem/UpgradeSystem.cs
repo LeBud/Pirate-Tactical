@@ -9,6 +9,7 @@ public class UpgradeSystem : ScriptableObject
 
     [Header("Infos")]
     public string upName;
+    [TextArea]
     public string upDescription;
 
     [Header("Upgrade")]

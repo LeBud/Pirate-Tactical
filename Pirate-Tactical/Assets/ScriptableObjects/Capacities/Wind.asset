@@ -13,7 +13,8 @@ MonoBehaviour:
   m_Name: Wind
   m_EditorClassIdentifier: 
   capacityName: Vent contraire
-  capacityDescription: "Ralentissez votre adversaire en limitant ses d\xE9placements"
+  capacityDescription: "Ralentissez votre adversaire en limitant ses d\xE9placements.\nAm\xE9liorer
+    : Le navire vis\xE9 est immobilis\xE9 pendant 1 tour."
   icon: {fileID: 21300000, guid: 8f9e20690e5be4745b646d36c7003643, type: 3}
   specialAbilityCost: 20
   shootCapacity: 5

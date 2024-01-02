@@ -14,7 +14,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   capacityName: Mine
   capacityDescription: "Poser une mine sur la carte. Elle est visible uniquement
-    par vous mais attention \xE0 ne pas voguer dessus"
+    par vous mais attention \xE0 ne pas voguer dessus.\nAm\xE9liorer : Lorsque la
+    mine explose elle inflige des d\xE9gat de zones."
   icon: {fileID: 21300000, guid: 211d7922cc621304f8db9dd078ddb9d3, type: 3}
   specialAbilityCost: 10
   shootCapacity: 0

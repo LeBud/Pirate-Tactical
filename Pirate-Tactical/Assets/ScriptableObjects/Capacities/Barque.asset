@@ -14,7 +14,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   capacityName: Barque
   capacityDescription: "Faites appara\xEEtre une barque ! Elle poss\xE8de les m\xEAmes
-    statistique que son cr\xE9ateur mais ne poss\xE8de pas ses capacit\xE9s sp\xE9ciales"
+    statistique que son cr\xE9ateur mais ne poss\xE8de pas ses capacit\xE9s sp\xE9ciales.\nAm\xE9liorer
+    : Explosez votre barque pour infliger des d\xE9g\xE2ts de zones aux unit\xE9s
+    autour."
   icon: {fileID: 21300000, guid: 2f2f93b6f596a124aa0300888e9f463c, type: 3}
   specialAbilityCost: 10
   shootCapacity: 0
