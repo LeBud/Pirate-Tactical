@@ -14,8 +14,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   capacityName: "Tir enflamm\xE9"
   capacityDescription: "Tir\xE9 un boulet enflamm\xE9 sur votre adversaire pour infliger
-    des d\xE9gats passifs.\nAm\xE9liorer : Tirer sur un navire provoque un feu sur
-    les cases autour qui enflamme les navires sur ces cases."
+    6 de d\xE9gats passifs pendant 2 tours. Le tir inflige 6 de d\xE9g\xE2ts.\nAm\xE9liorer
+    : Tirer sur un navire provoque un feu sur les cases autour qui enflamme les navires
+    dessus."
   icon: {fileID: 21300000, guid: 533822fe24b670046acdfe8109599076, type: 3}
   specialAbilityCost: 40
   shootCapacity: 3

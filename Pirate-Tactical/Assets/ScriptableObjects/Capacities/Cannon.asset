@@ -14,8 +14,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   capacityName: Canon
   capacityDescription: "Poser un canon sur une ile qui infligera des d\xE9gats aux
-    ennemis qui rentre dans un rayon de 3 cases.\nAm\xE9liorer : Son rayon augmente
-    \xE0 4 cases."
+    ennemis qui rentre dans un rayon de 3 cases et inflige 7 de d\xE9gats. Cependant
+    il suffit d'un tir pour le d\xE9truire.\nAm\xE9liorer : Son rayon augmente \xE0
+    4 cases."
   icon: {fileID: 21300000, guid: db0e793e0fa523747bcf35db35f37c6f, type: 3}
   specialAbilityCost: 20
   shootCapacity: 0

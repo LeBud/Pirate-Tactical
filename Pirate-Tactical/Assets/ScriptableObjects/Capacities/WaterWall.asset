@@ -14,7 +14,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   capacityName: Mur d'eau
   capacityDescription: "Placer un mur d'eau qui bloquera le d\xE9placement de votre
-    ennemi mais pas son tir\nAm\xE9liorer : le mur d'eau occupe 3 cases."
+    ennemi mais pas son tir. Il permet d'annuler la capacit\xE9 de tir enflamm\xE9,
+    de tir s\xE9par\xE9, de tir brochette et de diviser par 2 les d\xE9g\xE2ts re\xE7u.
+    Le mur reste pendant 2 tours. (\"espace\" pour changer de direction)\nAm\xE9liorer
+    : le mur d'eau occupe 3 cases."
   icon: {fileID: 21300000, guid: 9b660619d4506cd4792bc560ba2f4b81, type: 3}
   specialAbilityCost: 20
   shootCapacity: 0
