@@ -16,4 +16,4 @@ MonoBehaviour:
   upDescription: "Am\xE9liorer vos capacit\xE9 au niveau sup\xE9rieur (WIP)"
   upgradeType: 7
   value: 0
-  goldCost: 240
+  goldCost: 200

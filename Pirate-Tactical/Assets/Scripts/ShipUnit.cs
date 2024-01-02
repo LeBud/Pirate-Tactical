@@ -196,7 +196,8 @@ public class ShipUnit : NetworkBehaviour
     [ServerRpc(RequireOwnership = false)]
     public void TakeDamageServerRpc(int dmg, Vector2 pos, bool passiveAttack, int effectDuration, bool hasGoneThroughWater)
     {
-        int randomDmg = Random.Range(dmg - 1, dmg + 2);
+        //int randomDmg = Random.Range(dmg - 1, dmg + 2);
+        int randomDmg = dmg;
         //Crit chance
         int CritChance = Random.Range(0, 101);
         if (CritChance <= 10)

@@ -151,8 +151,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c5f47ab1fce98f64ab022280a582e656, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  playerGold: 10
-  playerGoldGainPerRound: 30
+  playerGold: 0
+  playerGoldGainPerRound: 40
   maxSpecialCharge: 100
   specialGainPerRound: 30
   currentShipIndex: 0
