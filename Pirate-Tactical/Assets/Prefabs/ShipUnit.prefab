@@ -119,7 +119,7 @@ MonoBehaviour:
   maxHealth: 48
   unitDamage: 10
   unitAccostDamage: 7
-  unitMoveRange: 1
+  unitMoveRange: 2
   unitShootRange: 4
   damage:
     m_InternalValue: 4
