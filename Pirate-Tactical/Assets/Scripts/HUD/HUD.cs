@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using TMPro;
 using Unity.Collections;
 using Unity.Netcode;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Rendering;
 using UnityEngine.UI;
@@ -89,8 +90,8 @@ public class HUD : NetworkBehaviour
 
         if (player.shipSelected)
         {
-            currentShipInfo.text = "ship selected : " + player.unitManager.ships[player.currentShipIndex].unitName + "\nCan move : " + player.unitManager.ships[player.currentShipIndex].canMove.Value
-            + "\nCan shoot : " + player.unitManager.ships[player.currentShipIndex].canShoot.Value;
+            currentShipInfo.text = "Navire sélectionner : " + player.unitManager.ships[player.currentShipIndex].unitName + "\nPeut se déplacer : " + NavireMove(player.unitManager.ships[player.currentShipIndex].canMove.Value)
+            + "\nPeut tirer : " + NavireMove(player.unitManager.ships[player.currentShipIndex].canShoot.Value) + "\nDéplacement : " + MovemOde(player.pathMode);
 
             shipHighlight.gameObject.SetActive(true);
             shipHighlight.transform.position = shipsDisplay.GetChild(player.currentShipIndex).transform.position;
@@ -152,8 +153,8 @@ public class HUD : NetworkBehaviour
         }
         else
         {
-            currentShipInfo.text = "ship selected : none ";
-            currentMode.text = "none";
+            currentShipInfo.text = "";
+            currentMode.text = "";
             shipHighlight.gameObject.SetActive(false);
             selectedBtt.gameObject.SetActive(false);
 
@@ -166,10 +167,20 @@ public class HUD : NetworkBehaviour
 
         specialSlider.value = player.currentSpecialCharge;
         specialTxt.text = player.currentSpecialCharge.ToString() + "/" + player.maxSpecialCharge.ToString();
-        goldTxt.text = "Gold : " + player.playerGold;
+        goldTxt.text = "Or : " + player.playerGold;
 
     }
 
+    string NavireMove(bool yes)
+    {
+        if (yes) return "Oui";
+        else return "Non";
+    }
+    string MovemOde(bool yes)
+    {
+        if (yes) return "Manuel";
+        else return "Automatique";
+    }
     public IEnumerator SetShipOnHUD()
     {
         if (player == null) yield break;
@@ -235,7 +246,7 @@ public class HUD : NetworkBehaviour
         switch (i)
         {
             case 0:
-                return "Interact";
+                return "Aborder/Acheter";
             case 1:
                 return "Déplacer navire";
             case 2:
@@ -304,12 +315,12 @@ public class HUD : NetworkBehaviour
     [ClientRpc]
     public void SetGameStateClientRpc(string gameState, int round)
     {
-        if(round == -1)
-            gameStateTxt.text = gameState;
+        if (round == -1)
+            gameStateTxt.text = "Sélectionner capacités";
         else if(round == 0)
-            gameStateTxt.text = gameState + "\nspawn ships";
+            gameStateTxt.text = gameState + "\nPlacer les navires";
         else
-            gameStateTxt.text = gameState + "\nround " + round;
+            gameStateTxt.text = gameState + "\nTour " + round;
     }
 
     [ClientRpc]
@@ -368,7 +379,7 @@ public class HUD : NetworkBehaviour
             enemyPlayerSlider.maxValue = enemyPlayer.totalPlayerHealth.Value;
             enemyPlayerSlider.value = enemyPlayer.totalPlayerHealth.Value;
             enemyMaxHealth = enemyPlayer.totalPlayerHealth.Value;
-            enemyHealthTxt.text = enemyPlayer.totalPlayerHealth.Value.ToString() + " / " + enemyMaxHealth;
+            enemyHealthTxt.text = enemyPlayer.totalPlayerHealth.Value.ToString() + "/" + enemyMaxHealth;
             if (id == 0) enemyPlayerName.text = GameManager.Instance.player1.Value.ToString();
             else if (id == 1) enemyPlayerName.text = GameManager.Instance.player2.Value.ToString();
         }

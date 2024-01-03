@@ -204,22 +204,22 @@ public class GameManager : NetworkBehaviour
         switch (newState)
         {
             case GameState.GameFinish:
-                returnState = "Game is Finish";
+                returnState = "Partie fini";
                 break;
             case GameState.GameStarting:
-                returnState = "Game is Starting";
+                returnState = "La partie commence";
                 break;
             case GameState.Player1Turn:
-                returnState = "Player 1 Turn";
+                returnState = "Au tour de : " + player1.Value;
                 break;
             case GameState.Player2Turn:
-                returnState = "Player 2 Turn";
+                returnState = "Au tour de : " + player2.Value;
                 break;
             case GameState.GameTesting:
                 returnState = "Game Testing";
                 break;
             case GameState.selectingShips:
-                returnState = "Select Capacities";
+                returnState = "Sélectionnez capacités";
                 break;
         }
 
