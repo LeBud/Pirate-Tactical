@@ -44,7 +44,7 @@ public class Cursor : NetworkBehaviour
 
     TileScript cTile = null;
     TileScript goalTile;
-    List<TileScript> path = new List<TileScript>();
+    public List<TileScript> path = new List<TileScript>();
     List<TileScript> pathHighlight = new List<TileScript>();
     List<TileScript> allTiles = new List<TileScript>();
     List<TileScript> inRangeTiles = new List<TileScript>();
@@ -55,6 +55,8 @@ public class Cursor : NetworkBehaviour
 
     [Header("Visual Feedbacks")]
     public VisualsFeedbacks vs;
+
+    public bool pathMode = false;
 
     private void Start()
     {
@@ -321,6 +323,7 @@ public class Cursor : NetworkBehaviour
         }
 
         HandleKeyboardInputs();
+        ChoosePath();
 
         Vector3 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
         Vector2 pos = new Vector2(mousePos.x, mousePos.y);
@@ -342,6 +345,12 @@ public class Cursor : NetworkBehaviour
             DeselectShip();
 
         if (unitMoving) return;
+
+        if (currentModeIndex == 1 && Input.GetButtonDown("Jump"))
+        {
+            pathMode = !pathMode;
+            path.Clear();
+        }
 
         if (Input.GetMouseButtonDown(0) && shipSelected)
         {
@@ -393,10 +402,21 @@ public class Cursor : NetworkBehaviour
                     { 
                         SelectShip(cTile);
                         return;
-                    } 
+                    }
 
-                    if (CanMoveUnit(cTile) && unitManager.ships[currentShipIndex].canMove.Value)
+                    if (!pathMode)
+                    {
+                        if (CanMoveUnit(cTile) && unitManager.ships[currentShipIndex].canMove.Value)
+                                StartCoroutine(UpdateShipPlacementOnGrid());
+                    }
+                    else
+                    {
+                        if(path.Count > 0 && unitManager.ships[currentShipIndex].canMove.Value)
+                        {
+                            path.Reverse();
                             StartCoroutine(UpdateShipPlacementOnGrid());
+                        }
+                    }
                     break;
                 case 2: //Attack Mode
                     if (!inRangeTiles.Contains(cTile))
@@ -505,6 +525,8 @@ public class Cursor : NetworkBehaviour
             HideTiles();
         }
 
+        path.Clear();
+        
         if (!t.shipOnTile.Value) return;
 
         foreach (var ship in unitManager.ships)
@@ -1187,6 +1209,7 @@ public class Cursor : NetworkBehaviour
 
         if (!unitManager.allShipSpawned.Value) return;
         if (CantPathfind(tile)) return;
+        if (pathMode) return;
 
         goalTile = tile;
         path.Clear();
@@ -1195,7 +1218,8 @@ public class Cursor : NetworkBehaviour
 
     void DisplayPath()
     {
-        if (inRangeTiles.Contains(cTile) && currentModeIndex == 1 && shipSelected && !unitMoving)
+        if(pathMode) return;
+        if (inRangeTiles.Contains(cTile) && currentModeIndex == 1 && shipSelected && !unitMoving && !pathMode)
         {
             foreach (var item in allTiles)
                 item.SetColor(3);
@@ -1212,7 +1236,62 @@ public class Cursor : NetworkBehaviour
         }
 
     }
+
+    void ChoosePath()
+    {
+        if(!pathMode) return;
+
+        if (path.Count <= 0 && !unitMoving)
+            path.Add(GridManager.Instance.GetTileAtPosition(unitManager.ships[currentShipIndex].unitPos.Value));
+
+        foreach (var item in allTiles)
+            item.SetColor(3);
+        foreach (var item in path)
+            item.SetColor(0);
+
+        if (Input.GetKeyDown(KeyCode.UpArrow))
+        {
+            Vector2 lastPos = path[path.Count - 1].pos.Value;
+            Vector2 pos = new Vector2(lastPos.x, lastPos.y + 1);
+            TileScript t = GridManager.Instance.GetTileAtPosition(pos);
+            if (t != null && !path.Contains(t) && inRangeTiles.Contains(t))
+                path.Add(t);
+            else if (t != null && path.Contains(t))
+                path.Remove(GridManager.Instance.GetTileAtPosition(lastPos));
+        }
+        else if (Input.GetKeyDown(KeyCode.DownArrow))
+        {
+            Vector2 lastPos = path[path.Count - 1].pos.Value;
+            Vector2 pos = new Vector2(lastPos.x, lastPos.y - 1); 
+            TileScript t = GridManager.Instance.GetTileAtPosition(pos);
+            if (t != null && !path.Contains(t) && inRangeTiles.Contains(t))
+                path.Add(t);
+            else if (t != null && path.Contains(t))
+                path.Remove(GridManager.Instance.GetTileAtPosition(lastPos));
+        }
+        else if (Input.GetKeyDown(KeyCode.RightArrow))
+        {
+            Vector2 lastPos = path[path.Count - 1].pos.Value;
+            Vector2 pos = new Vector2(lastPos.x + 1, lastPos.y); 
+            TileScript t = GridManager.Instance.GetTileAtPosition(pos);
+            if (t != null && !path.Contains(t) && inRangeTiles.Contains(t))
+                path.Add(t);
+            else if (t != null && path.Contains(t))
+                path.Remove(GridManager.Instance.GetTileAtPosition(lastPos));
+        }
+        else if (Input.GetKeyDown(KeyCode.LeftArrow))
+        {
+            Vector2 lastPos = path[path.Count - 1].pos.Value;
+            Vector2 pos = new Vector2(lastPos.x - 1, lastPos.y); 
+            TileScript t = GridManager.Instance.GetTileAtPosition(pos);
+            if (t != null && !path.Contains(t) && inRangeTiles.Contains(t))
+                path.Add(t);
+            else if (t != null && path.Contains(t))
+                path.Remove(GridManager.Instance.GetTileAtPosition(lastPos));
+        }
+    }
     #endregion
+
     IEnumerator UpdateShipPlacementOnGrid()
     {
         unitMoving = true;
