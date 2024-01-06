@@ -868,6 +868,27 @@ public class GridManager : NetworkBehaviour
     #endregion
 
     [ServerRpc(RequireOwnership = false)]
+    public void ReloadUnitServerRpc(Vector2 pos, ulong id, bool upgraded)
+    {
+        ShipUnit ship = GetShipAtPos(pos);
+
+        if(ship.OwnerClientId == id)
+        {
+            ship.GiveReloadEffectClientRpc(0,false);
+            Cursor p = NetworkManager.ConnectedClients[id].PlayerObject.GetComponent<Cursor>();
+            p.HasDidAnActionClientRpc();
+            p.UseManaClientRpc();
+        }
+        else if(ship.OwnerClientId != id && upgraded) 
+        {
+            ship.GiveReloadEffectClientRpc(GameManager.Instance.currentRound.Value + 1, true);
+            Cursor p = NetworkManager.ConnectedClients[id].PlayerObject.GetComponent<Cursor>();
+            p.HasDidAnActionClientRpc();
+            p.UseManaClientRpc();
+        }
+    }
+
+    [ServerRpc(RequireOwnership = false)]
     public void UpdateTilesServerRpc()
     {
         if (!IsServer) return;

@@ -25049,7 +25049,7 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 46f6aa656967eca4ca954e84af6a529c, type: 2}
   brigantinShotCapacities:
   - {fileID: 11400000, guid: 1614c8af2ff83a14199a099a10161e06, type: 2}
-  - {fileID: 11400000, guid: 9ae651c61fce2c44180d42a5f6589f5e, type: 2}
+  - {fileID: 11400000, guid: cbd15a5ea8aa2c14486b1c27fec7d6c3, type: 2}
   brigantinTileCapacities:
   - {fileID: 11400000, guid: 67896433804843446a9f7888b3c98f46, type: 2}
   - {fileID: 11400000, guid: e59d23e9ead497242a7151c811cf20f3, type: 2}

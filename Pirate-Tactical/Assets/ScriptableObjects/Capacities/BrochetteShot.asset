@@ -18,7 +18,7 @@ MonoBehaviour:
     premier navire touch\xE9, puis 3 puis 2.\nAm\xE9liorer : Le premier navire touch\xE9
     est pouss\xE9 d'une case et les d\xE9gats sont fixes."
   icon: {fileID: 21300000, guid: c555b5034bdba444d8af20c370b747b1, type: 3}
-  specialAbilityCost: 40
+  specialAbilityCost: 30
   shootCapacity: 4
   specialShootRange: 4
   specialAbilityDamage: 4

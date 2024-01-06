@@ -10,19 +10,20 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 5a66b714d1cd1f14dbfdcbf8f714c834, type: 3}
-  m_Name: GoldSearch
+  m_Name: ReloadUnit
   m_EditorClassIdentifier: 
-  capacityName: "Chercheur de tr\xE9sor"
-  capacityDescription: "25% de chance de trouver de 0, 5, 10 ou 15 d'or.\nAm\xE9liorer
-    : 25% de chance de trouver de 0, 10, 20 ou 30 points de sp\xE9cial."
-  icon: {fileID: 21300000, guid: 823f8e5e8c4076c44af32d5a3943004d, type: 3}
-  specialAbilityCost: 30
-  shootCapacity: 0
-  specialShootRange: 0
+  capacityName: Recharge de navire
+  capacityDescription: "Permet de recharger une unit\xE9 pour pouvoir l'utiliser
+    2 fois.\nAm\xE9liorer : Permet \xE9galement de pouvoir viser une unit\xE9 ennemi
+    pour l'emp\xEAcher d'aborder, de tirer ou d'utiliser une capacit\xE9 sp\xE9ciale."
+  icon: {fileID: 0}
+  specialAbilityCost: 20
+  shootCapacity: 7
+  specialShootRange: 3
   specialAbilityDamage: 0
   specialPassifDamage: 0
   shootPassiveDuration: 0
-  tileCapacity: 4
-  specialTileRange: 1
+  tileCapacity: 0
+  specialTileRange: 3
   specialPassifTile: 0
   tilePassiveDuration: 0

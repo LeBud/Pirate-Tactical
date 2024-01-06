@@ -7,7 +7,7 @@ using UnityEngine;
 public class ShipUnit : NetworkBehaviour
 {
 
-    public enum UnitSpecialShot { None, PushUnit, TShot, FireShot, TirBrochette, VentContraire, Grappin}
+    public enum UnitSpecialShot { None, PushUnit, TShot, FireShot, TirBrochette, VentContraire, Grappin, ReloadUnit }
     public enum UnitSpecialTile { None, Mine, BlockTile, Teleport, FouilleOr, CanonSurIle, Barque, ExplodeBarque}
     public enum UnitType { Galion, Brigantin, Sloop}
 
@@ -17,6 +17,9 @@ public class ShipUnit : NetworkBehaviour
     public NetworkVariable<bool> canMove = new NetworkVariable<bool>(false, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
     public NetworkVariable<bool> canShoot = new NetworkVariable<bool>(false, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
     public NetworkVariable<bool> canBeSelected = new NetworkVariable<bool>(false, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
+    public NetworkVariable<bool> canMoveAgain = new NetworkVariable<bool>(false, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
+    public NetworkVariable<bool> canShootAgain = new NetworkVariable<bool>(false, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
+    public NetworkVariable<bool> canOnlyMove = new NetworkVariable<bool>(false, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
 
     [HideInInspector]
     public TileScript currentTile;
@@ -76,6 +79,7 @@ public class ShipUnit : NetworkBehaviour
 
     int roundToStopFireEffect;
     int roundToStopWindEffect;
+    int roundToApplyEffect;
     int baseMoveRange;
 
     int passiveDmg;
@@ -118,6 +122,9 @@ public class ShipUnit : NetworkBehaviour
         if (transform.position != new Vector3(unitPos.Value.x, unitPos.Value.y, -1) && !isMoving)
             StartCoroutine(MoveShip());
 
+        if (canOnlyMove.Value)
+            canShoot.Value = false;
+
         if (GameManager.Instance.gametesting.Value)
         {
             canMove.Value = true;
@@ -127,6 +134,9 @@ public class ShipUnit : NetworkBehaviour
 
         if (canBeSelected.Value)
         {
+            if (canMoveAgain.Value || canShootAgain.Value)
+                return;
+
             if(!canMove.Value && !canShoot.Value)
                 canBeSelected.Value = false;
 
@@ -135,6 +145,11 @@ public class ShipUnit : NetworkBehaviour
         }
         else if(!canBeSelected.Value)
             usedSprite.SetActive(true);
+
+        if (roundToApplyEffect == GameManager.Instance.currentRound.Value)
+            canOnlyMove.Value = true;
+        else
+            canOnlyMove.Value = false;
     }
 
     [ClientRpc]
@@ -280,6 +295,39 @@ public class ShipUnit : NetworkBehaviour
             unitMoveRange = 0;
 
         if(unitMoveRange < 0) unitMoveRange = 0;
+    }
+
+    [ClientRpc]
+    public void GiveReloadEffectClientRpc(int round, bool upgraded)
+    {
+        if(!IsOwner) return;
+
+        if(!upgraded)
+        {
+            if (!canMove.Value)
+            {
+                if(!canShoot.Value)
+                    canShoot.Value = true;
+
+                canMove.Value = true;
+                return;
+            }
+            else if (!canShoot.Value)
+            {
+                if (!canMove.Value)
+                    canMove.Value = true;
+
+                canShoot.Value = true;
+                return;
+            }
+
+            canMoveAgain.Value = true;
+            canShootAgain.Value = true;
+        }
+        else if (upgraded)
+        {
+            roundToApplyEffect = round;
+        }
     }
 
     [ClientRpc]

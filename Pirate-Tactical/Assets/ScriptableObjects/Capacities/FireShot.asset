@@ -18,7 +18,7 @@ MonoBehaviour:
     : Tirer sur un navire provoque un feu sur les cases autour qui enflamme les navires
     dessus."
   icon: {fileID: 21300000, guid: 533822fe24b670046acdfe8109599076, type: 3}
-  specialAbilityCost: 40
+  specialAbilityCost: 30
   shootCapacity: 3
   specialShootRange: 4
   specialAbilityDamage: 6

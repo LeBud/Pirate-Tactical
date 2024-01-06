@@ -171,6 +171,17 @@ public class Cursor : NetworkBehaviour
 
         DisplayOnSelectedUnit();
 
+        if (unitManager.ships[currentShipIndex].canMoveAgain.Value)
+        {
+            unitManager.ships[currentShipIndex].canMoveAgain.Value = false;
+            return;
+        }
+        if (unitManager.ships[currentShipIndex].canShootAgain.Value)
+        {
+            unitManager.ships[currentShipIndex].canShootAgain.Value = false;
+            return;
+        }
+
         totalShootPoint--;
         unitManager.ships[currentShipIndex].canShoot.Value = false;
         if (unitManager.ships[currentShipIndex].canMove.Value)
@@ -784,6 +795,9 @@ public class Cursor : NetworkBehaviour
                 case ShipUnit.UnitSpecialShot.Grappin:
                     GridManager.Instance.PullUnitServerRpc(t.pos.Value, unitManager.ships[currentShipIndex].unitPos.Value, NetworkManager.LocalClientId, false);
                     break;
+                case ShipUnit.UnitSpecialShot.ReloadUnit:
+                    GridManager.Instance.ReloadUnitServerRpc(t.pos.Value, NetworkManager.LocalClientId, false);
+                    break;
                 case ShipUnit.UnitSpecialShot.None:
                     break;
             }
@@ -810,6 +824,9 @@ public class Cursor : NetworkBehaviour
                 case ShipUnit.UnitSpecialShot.Grappin:
                     GridManager.Instance.PullUnitServerRpc(t.pos.Value, unitManager.ships[currentShipIndex].unitPos.Value, NetworkManager.LocalClientId, true);
                     break;
+                case ShipUnit.UnitSpecialShot.ReloadUnit:
+                    GridManager.Instance.ReloadUnitServerRpc(t.pos.Value, NetworkManager.LocalClientId, true);
+                    break;
                 case ShipUnit.UnitSpecialShot.None:
                     break;
             }
@@ -835,6 +852,13 @@ public class Cursor : NetworkBehaviour
 
         if (stepOnMine)
             GridManager.Instance.DamageUnitByMineServerRpc(GridManager.Instance.mineDamage, t.pos.Value, false, 0);
+
+        if (unitManager.ships[currentShipIndex].canShootAgain.Value)
+        {
+            unitManager.ships[currentShipIndex].canMoveAgain.Value = false;
+            unitManager.ships[currentShipIndex].canShootAgain.Value = false;
+            return;
+        }
 
         currentSpecialCharge -= unitManager.ships[currentShipIndex].tileCapacity.specialAbilityCost;
         totalMovePoint--;
@@ -886,6 +910,13 @@ public class Cursor : NetworkBehaviour
 
         if (stepOnMine)
             GridManager.Instance.DamageUnitByMineServerRpc(GridManager.Instance.mineDamage, t.pos.Value, false, 0);
+
+        if (unitManager.ships[currentShipIndex].canShootAgain.Value)
+        {
+            unitManager.ships[currentShipIndex].canMoveAgain.Value = false;
+            unitManager.ships[currentShipIndex].canShootAgain.Value = false;
+            return;
+        }
 
         currentSpecialCharge -= unitManager.ships[currentShipIndex].tileCapacity.specialAbilityCost;
         totalMovePoint--;
@@ -947,7 +978,14 @@ public class Cursor : NetworkBehaviour
         currentSpecialCharge -= unitManager.ships[currentShipIndex].tileCapacity.specialAbilityCost;
 
         currentSpecialCharge += foundMana;
-        
+
+        if (unitManager.ships[currentShipIndex].canShootAgain.Value)
+        {
+            unitManager.ships[currentShipIndex].canMoveAgain.Value = false;
+            unitManager.ships[currentShipIndex].canShootAgain.Value = false;
+            return;
+        }
+
         totalMovePoint--;
         totalShootPoint--;
         unitManager.ships[currentShipIndex].canMove.Value = false;
@@ -1330,6 +1368,23 @@ public class Cursor : NetworkBehaviour
                 foreach (var item in allTiles)
                     item.SetColor(3);
             }
+        }
+
+        if (unitManager.ships[currentShipIndex].canMoveAgain.Value)
+        {
+            unitManager.ships[currentShipIndex].canMoveAgain.Value = false;
+            GridManager.Instance.SetShipOnTileServerRpc(unitManager.ships[currentShipIndex].currentTile.pos.Value, true);
+
+            SoundManager.Instance.PlaySoundOnClients(SoundManager.Instance.stopMoving.id);
+
+            if (stepOnMine)
+                GridManager.Instance.DamageUnitByMineServerRpc(GridManager.Instance.mineDamage, unitManager.ships[currentShipIndex].currentTile.pos.Value, false, 0);
+
+            GridManager.Instance.CheckForUnitInCannonRangesServerRpc(NetworkManager.LocalClientId, unitManager.ships[currentShipIndex].unitPos.Value);
+
+            DisplayOnSelectedUnit();
+            unitMoving = false;
+            yield break;
         }
 
         totalMovePoint--;

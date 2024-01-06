@@ -16,7 +16,7 @@ MonoBehaviour:
   capacityDescription: "T\xE9l\xE9porter vous sur la carte dans un rayon de 4 cases.\nAm\xE9liorer
     : Si un navire ennemi se trouve sur une case adjacente, elle subit 3 de d\xE9g\xE2ts."
   icon: {fileID: 21300000, guid: 1149d3f760499c24bac3aff331ac0197, type: 3}
-  specialAbilityCost: 40
+  specialAbilityCost: 30
   shootCapacity: 0
   specialShootRange: 0
   specialAbilityDamage: 0
