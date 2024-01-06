@@ -242,7 +242,7 @@ public class GridManager : NetworkBehaviour
             //Dépenser les points
             Cursor p = NetworkManager.ConnectedClients[id].PlayerObject.GetComponent<Cursor>();
             p.HasDidAnActionClientRpc();
-
+            p.GoldGainClientRpc();
             SoundManager.Instance.PlaySoundOnClients(SoundManager.Instance.accost.id);
         }
     }
@@ -259,7 +259,7 @@ public class GridManager : NetworkBehaviour
 
         bool hasPush = false;
 
-        int amountPush = 1;
+        int amountPush = 2;
         int finished = 0;
 
         bool hasStop = false;
@@ -267,16 +267,7 @@ public class GridManager : NetworkBehaviour
         Vector2 finalPos = pushShip;
 
         if (upgraded)
-        {
-            if (ships.unitName == ShipUnit.UnitType.Galion)
-                amountPush = 1;
-            else if (ships.unitName == ShipUnit.UnitType.Brigantin)
-                amountPush = 2;
-            else if (ships.unitName == ShipUnit.UnitType.Sloop)
-                amountPush = 3;
-
-            Debug.Log("Force de poussé : " + amountPush);
-        }
+            amountPush = 4;
 
         for(int i = 0; i < amountPush; i++)
         {
@@ -483,21 +474,14 @@ public class GridManager : NetworkBehaviour
         Vector2 posToCheck = new Vector2();
 
         bool hasPull = false;
-        int amountPull = 1;
+        int amountPull = 2;
         int finished = 0;
         bool hasStop = false;
 
         Vector2 finalPos = pushShip;
 
         if (upgraded)
-        {
-            if (ships.unitName == ShipUnit.UnitType.Galion)
-                amountPull = 1;
-            else if (ships.unitName == ShipUnit.UnitType.Brigantin)
-                amountPull = 2;
-            else if (ships.unitName == ShipUnit.UnitType.Sloop)
-                amountPull = 3;
-        }
+            amountPull = 4;
 
         for(int i = 0; i < amountPull; i++)
         {

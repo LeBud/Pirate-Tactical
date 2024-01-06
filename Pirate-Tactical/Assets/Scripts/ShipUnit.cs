@@ -79,7 +79,7 @@ public class ShipUnit : NetworkBehaviour
 
     int roundToStopFireEffect;
     int roundToStopWindEffect;
-    int roundToApplyEffect;
+    int roundToApplyEffect = -1;
     int baseMoveRange;
 
     int passiveDmg;
