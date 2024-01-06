@@ -17,4 +17,4 @@ MonoBehaviour:
     navire"
   upgradeType: 4
   value: 3
-  goldCost: 120
+  goldCost: 80

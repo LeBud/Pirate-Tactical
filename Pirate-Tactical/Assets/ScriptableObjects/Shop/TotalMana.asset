@@ -16,4 +16,4 @@ MonoBehaviour:
   upDescription: "Votre charge total de sp\xE9ciale est augment\xE9 de 20 points"
   upgradeType: 5
   value: 20
-  goldCost: 120
+  goldCost: 80

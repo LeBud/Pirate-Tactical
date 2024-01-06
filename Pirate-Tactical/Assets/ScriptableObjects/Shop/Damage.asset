@@ -17,4 +17,4 @@ MonoBehaviour:
     un ennemis"
   upgradeType: 1
   value: 3
-  goldCost: 120
+  goldCost: 80

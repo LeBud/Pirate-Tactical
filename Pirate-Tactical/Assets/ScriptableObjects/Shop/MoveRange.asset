@@ -16,4 +16,4 @@ MonoBehaviour:
   upDescription: "Vous pouvez vous d\xE9placer sur une distance d'une case suppl\xE9mentaire"
   upgradeType: 2
   value: 1
-  goldCost: 120
+  goldCost: 80

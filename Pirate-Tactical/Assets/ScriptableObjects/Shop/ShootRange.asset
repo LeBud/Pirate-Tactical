@@ -16,4 +16,4 @@ MonoBehaviour:
   upDescription: "Vous pouvez tirer sur une distance de 1 case suppl\xE9mentaire"
   upgradeType: 3
   value: 1
-  goldCost: 120
+  goldCost: 80

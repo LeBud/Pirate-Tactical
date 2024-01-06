@@ -17,4 +17,4 @@ MonoBehaviour:
     la fin de chaque tour."
   upgradeType: 6
   value: 5
-  goldCost: 120
+  goldCost: 80
