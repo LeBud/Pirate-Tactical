@@ -14726,11 +14726,12 @@ MonoBehaviour:
     \xE0 un port pour am\xE9liorer une unit\xE9 en \xE9change d'or. Vous pouvez am\xE9liorer
     vos capacit\xE9s sp\xE9ciales ou une statistique du navire.\n\nAbordage : En
     mode interaction lorsque vous \xEAtes \xE0 c\xF4t\xE9 d'un navire ennemi, cliquer
-    dessus pour l'aborder.\n\nL'or s'obtient \xE0 chaque fin de tour et en abordant
-    des navires.\n\nTemp\xEAtes : Une fois la temp\xEAte en cours, les unit\xE9s
-    subissent des d\xE9g\xE2ts \xE0 chaque changement de joueur.\n\nAttention si
-    vous utilisez la capacit\xE9 sp\xE9ciale de mine \xE0 ne pas marcher sur vos
-    propre mines."
+    dessus pour l'aborder.\n\nD\xE9truire une unit\xE9 am\xE9liorer en abordant cr\xE9er
+    une \xE9pave sur laquelle on peut r\xE9cup\xE9rer l'am\xE9lioration.\n\nL'or
+    s'obtient \xE0 chaque fin de tour et en abordant des navires.\n\nTemp\xEAtes
+    : Une fois la temp\xEAte en cours, les unit\xE9s subissent des d\xE9g\xE2ts \xE0
+    chaque changement de joueur.\n\nAttention si vous utilisez la capacit\xE9 sp\xE9ciale
+    de mine \xE0 ne pas marcher sur vos propre mines."
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 4c376e254883a0c4caab0c2f3a4333db, type: 2}
   m_sharedMaterial: {fileID: -3779258513146809176, guid: 4c376e254883a0c4caab0c2f3a4333db, type: 2}
