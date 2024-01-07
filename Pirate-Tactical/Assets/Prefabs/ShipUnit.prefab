@@ -114,6 +114,12 @@ MonoBehaviour:
     m_InternalValue: 0
   canBeSelected:
     m_InternalValue: 0
+  canMoveAgain:
+    m_InternalValue: 0
+  canShootAgain:
+    m_InternalValue: 0
+  canOnlyMove:
+    m_InternalValue: 0
   currentTile: {fileID: 0}
   unitName: 0
   maxHealth: 48
@@ -565,7 +571,7 @@ MeshRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 0
+  m_SortingOrder: 4
   m_AdditionalVertexStreams: {fileID: 0}
 --- !u!114 &3639706659665886356
 MonoBehaviour:
@@ -731,7 +737,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 0
+  m_SortingOrder: 4
   m_Sprite: {fileID: 7482667652216324306, guid: 311925a002f4447b3a28927169b83ea6, type: 3}
   m_Color: {r: 0.8018868, g: 0.1180829, b: 0, a: 1}
   m_FlipX: 0

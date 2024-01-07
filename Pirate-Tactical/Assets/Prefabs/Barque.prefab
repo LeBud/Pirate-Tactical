@@ -114,6 +114,12 @@ MonoBehaviour:
     m_InternalValue: 0
   canBeSelected:
     m_InternalValue: 0
+  canMoveAgain:
+    m_InternalValue: 0
+  canShootAgain:
+    m_InternalValue: 0
+  canOnlyMove:
+    m_InternalValue: 0
   currentTile: {fileID: 0}
   unitName: 2
   maxHealth: 12
@@ -141,6 +147,9 @@ MonoBehaviour:
   upgrade: 0
   player1Color: {r: 0.9622642, g: 0.55039275, b: 0.004538993, a: 1}
   player2Color: {r: 0.5994166, g: 0, b: 0.8113208, a: 1}
+  SpriteMode: 1
+  Player1Sprite: {fileID: 21300000, guid: 200535d7bef6ffe4b98863e5a60bf5c2, type: 3}
+  Player2Sprite: {fileID: 21300000, guid: e9a9b06c3fb36184c981b902bba14963, type: 3}
   unitSprite: {fileID: 1808388037352332092}
   health: {fileID: 5130245049498383686}
   highlight: {fileID: 5861150823489985625}
@@ -359,7 +368,7 @@ SpriteRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 1
   m_Sprite: {fileID: 7482667652216324306, guid: 75f5f34dc1b5347e0b8351032682f224, type: 3}
-  m_Color: {r: 1, g: 0.033018887, b: 0.033018887, a: 1}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
@@ -557,9 +566,9 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 0
+  m_SortingOrder: 4
   m_Sprite: {fileID: 7482667652216324306, guid: 311925a002f4447b3a28927169b83ea6, type: 3}
-  m_Color: {r: 0.09315527, g: 0.8773585, b: 0, a: 1}
+  m_Color: {r: 0.80392164, g: 0.121568635, b: 0, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
@@ -646,7 +655,7 @@ MeshRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 0
+  m_SortingOrder: 4
   m_AdditionalVertexStreams: {fileID: 0}
 --- !u!114 &5130245049498383686
 MonoBehaviour:
