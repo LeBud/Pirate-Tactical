@@ -220,7 +220,8 @@ public class GridManager : NetworkBehaviour
 
         if (ships.OwnerClientId != id)
         {
-            ships.TakeDamageServerRpc(damage, pos, passiveAttack, effectDuration, hasGoThroughWater);
+            if(ships != null)
+                ships.TakeDamageServerRpc(damage, pos, passiveAttack, effectDuration, hasGoThroughWater);
         }
     }
 
@@ -686,7 +687,7 @@ public class GridManager : NetworkBehaviour
     {
         ShipUnit ships = GetShipAtPos(pos);
 
-        if (GetTileAtPosition(pos).upgradedMine)
+        if (GetTileAtPosition(pos).upgradedMine.Value)
             damage = upgradedMineDamage;
 
         if (ships != null)
@@ -695,7 +696,7 @@ public class GridManager : NetworkBehaviour
         DisplayDamageClientRpc("mine", new Vector2(pos.x, pos.y + 0.5f));
 
         #region UpgradedMineAoE
-        if (GetTileAtPosition(pos).upgradedMine)
+        if (GetTileAtPosition(pos).upgradedMine.Value)
         {
             Vector2 check = pos;
             ShipUnit unit = GetShipAtPos(pos);
@@ -830,7 +831,7 @@ public class GridManager : NetworkBehaviour
                     SoundManager.Instance.PlaySoundOnClients(SoundManager.Instance.mineExploding.id);
 
                 t.mineInTile.Value = false;
-                t.upgradedMine = false;
+                t.upgradedMine.Value = false;
                 foreach(ulong _id in NetworkManager.ConnectedClientsIds)
                     t.SetMineTileToClientRpc(_id, false);
             }
@@ -840,7 +841,7 @@ public class GridManager : NetworkBehaviour
             if (t.pos.Value == tilePos && !t.shipOnTile.Value)
             {
                 t.mineInTile.Value = true;
-                t.upgradedMine = upgraded;
+                t.upgradedMine.Value = upgraded;
                 t.SetMineTileToClientRpc(id, true);
                 Cursor p = NetworkManager.ConnectedClients[id].PlayerObject.GetComponent<Cursor>();
                 p.UseManaClientRpc();

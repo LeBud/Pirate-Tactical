@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using Unity.Collections;
 using Unity.Netcode;
 using UnityEngine;
@@ -29,6 +30,9 @@ public class GameManager : NetworkBehaviour
     public bool canStartGame = false;
 
     public Cursor[] players = new Cursor[2];
+
+    public GameObject endGameAnnounce;
+    public TextMeshProUGUI endGameTxt;
 
     public enum GameState
     {
@@ -345,23 +349,25 @@ public class GameManager : NetworkBehaviour
         if (player1unitLeft == 0 && player2unitLeft == 0)
             winner = "Égalité";
         else if (player1unitLeft == 0 && player2unitLeft > 0)
-            winner = "Player 2 won";
+            winner = player2.Value.ToString() + " à gagner";
         else if (player2unitLeft == 0 && player1unitLeft > 0)
-            winner = "Player 1 won";
+            winner = player1.Value.ToString() + " à gagner";
 
         HUD.Instance.SetGameStateClientRpc(winner, currentRound.Value);
-        EndGameOnClientRpc();
+        EndGameOnClientRpc(winner);
     }
 
     [ClientRpc]
-    void EndGameOnClientRpc()
+    void EndGameOnClientRpc(FixedString128Bytes p)
     {
-        StartCoroutine(EndGame());
+        StartCoroutine(EndGame(p.ToString()));
     }
 
-    IEnumerator EndGame()
+    IEnumerator EndGame(string p)
     {
-        yield return new WaitForSeconds(5);
+        endGameAnnounce.SetActive(true);
+        endGameTxt.text = p;
+        yield return new WaitForSeconds(10);
         NetworkManager.Shutdown();
         StartCoroutine(ResetHUD());
     }

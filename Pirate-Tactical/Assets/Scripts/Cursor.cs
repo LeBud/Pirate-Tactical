@@ -409,20 +409,19 @@ public class Cursor : NetworkBehaviour
                     }
                     break;
                 case 1: //Move Mode
-                    if (!inRangeTiles.Contains(cTile)) 
-                    { 
-                        SelectShip(cTile);
-                        return;
-                    }
-
                     if (!pathMode)
                     {
+                        if (!inRangeTiles.Contains(cTile))
+                        {
+                            SelectShip(cTile);
+                            return;
+                        }
                         if (CanMoveUnit(cTile) && unitManager.ships[currentShipIndex].canMove.Value)
                                 StartCoroutine(UpdateShipPlacementOnGrid());
                     }
                     else
                     {
-                        if(path.Count > 0 && unitManager.ships[currentShipIndex].canMove.Value)
+                        if(path.Count > 1 && unitManager.ships[currentShipIndex].canMove.Value)
                         {
                             path.Reverse();
                             StartCoroutine(UpdateShipPlacementOnGrid());
@@ -1346,6 +1345,8 @@ public class Cursor : NetworkBehaviour
             {
                 unitManager.ships[currentShipIndex].currentTile = path[value];
                 stepOnMine = true;
+
+                path.Clear();
 
                 foreach (var item in allTiles)
                     item.SetColor(3);

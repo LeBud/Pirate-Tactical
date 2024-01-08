@@ -30,7 +30,6 @@ public class TileScript : NetworkBehaviour
     public bool ShopTile = true;
     public bool canAccessShop = true;
     public bool canSpawnShip = false;
-    public bool upgradedMine = false;
 
     public NetworkVariable<Vector2> pos = new NetworkVariable<Vector2>(Vector2.zero, NetworkVariableReadPermission.Everyone);
     public NetworkVariable<bool> shipOnTile = new NetworkVariable<bool>(false, NetworkVariableReadPermission.Everyone);
@@ -38,6 +37,7 @@ public class TileScript : NetworkBehaviour
     public NetworkVariable<bool> blockedTile = new NetworkVariable<bool>(false, NetworkVariableReadPermission.Everyone);
     public NetworkVariable<bool> tileOutOfCombatZone = new NetworkVariable<bool>(false, NetworkVariableReadPermission.Everyone);
     public NetworkVariable<bool> mineInTile = new NetworkVariable<bool>(false, NetworkVariableReadPermission.Everyone);
+    public NetworkVariable<bool> upgradedMine = new NetworkVariable<bool>(false, NetworkVariableReadPermission.Everyone);
     public NetworkVariable<int> shopIndex = new NetworkVariable<int>(0, NetworkVariableReadPermission.Everyone);
     public NetworkVariable<bool> cannonInTile = new NetworkVariable<bool>(false, NetworkVariableReadPermission.Everyone);
     public NetworkVariable<bool> shipwrek = new NetworkVariable<bool>(false, NetworkVariableReadPermission.Everyone);

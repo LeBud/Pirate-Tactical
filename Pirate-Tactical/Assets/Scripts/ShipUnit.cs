@@ -304,6 +304,9 @@ public class ShipUnit : NetworkBehaviour
 
         if(!upgraded)
         {
+            if (!canBeSelected.Value)
+                canBeSelected.Value = true;
+
             if (!canMove.Value)
             {
                 if(!canShoot.Value)

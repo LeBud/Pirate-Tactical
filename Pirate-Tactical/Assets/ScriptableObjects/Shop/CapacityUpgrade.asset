@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: CapacityUpgrade
   m_EditorClassIdentifier: 
   upName: "Cpacit\xE9 Am\xE9liorer"
-  upDescription: "Am\xE9liorer vos capacit\xE9 au niveau sup\xE9rieur (WIP)"
+  upDescription: "Am\xE9liorer vos capacit\xE9 au niveau sup\xE9rieur !"
   upgradeType: 7
   value: 0
   goldCost: 120

@@ -415,7 +415,7 @@ public class HUD : NetworkBehaviour
         playerTurn.SetActive(true);
         playerTurnTxt.text = "Au tour de : " + p;
         SoundManager.Instance.PlaySoundLocally(SoundManager.Instance.playerTurn);
-        yield return new WaitForSeconds(1);
+        yield return new WaitForSeconds(2);
         playerTurn.SetActive(false);
     }
 

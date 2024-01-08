@@ -25531,6 +25531,8 @@ MonoBehaviour:
   players:
   - {fileID: 0}
   - {fileID: 0}
+  endGameAnnounce: {fileID: 0}
+  endGameTxt: {fileID: 0}
   gameState: 0
   leavePanel: {fileID: 648111487}
 --- !u!4 &1381260906
@@ -25627,7 +25629,7 @@ MonoBehaviour:
   - {fileID: 11400000, guid: fb6e9343689504a439d9d7bc741565b6, type: 2}
   - {fileID: 11400000, guid: 1614c8af2ff83a14199a099a10161e06, type: 2}
   - {fileID: 11400000, guid: 67896433804843446a9f7888b3c98f46, type: 2}
-  - {fileID: 11400000, guid: 9ae651c61fce2c44180d42a5f6589f5e, type: 2}
+  - {fileID: 11400000, guid: cbd15a5ea8aa2c14486b1c27fec7d6c3, type: 2}
   stormGO: {fileID: 991880129}
   playerTurn: {fileID: 718362969}
   playerTurnTxt: {fileID: 753864161}
