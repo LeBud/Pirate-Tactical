@@ -107,10 +107,10 @@ public class Cursor : NetworkBehaviour
     public void CalculateHealthClientRpc()
     {
         int newHealth = 0;
-        foreach (ShipUnit s in unitManager.ships)
+        for(int i = 0; i < 5; i++)
         {
-            if(s != null)
-                newHealth += s.unitLife.Value;
+            if (unitManager.ships[i] != null)
+                newHealth += unitManager.ships[i].unitLife.Value;
         }
 
         SetHealthServerRpc(newHealth);
@@ -184,11 +184,11 @@ public class Cursor : NetworkBehaviour
 
         totalShootPoint--;
         unitManager.ships[currentShipIndex].canShoot.Value = false;
-        if (unitManager.ships[currentShipIndex].canMove.Value)
+        /*if (unitManager.ships[currentShipIndex].canMove.Value)
         {
             totalMovePoint--;
             unitManager.ships[currentShipIndex].canMove.Value = false;
-        }
+        }*/
         TotalActionPoint();
     }
 
@@ -861,9 +861,9 @@ public class Cursor : NetworkBehaviour
         }
 
         currentSpecialCharge -= unitManager.ships[currentShipIndex].tileCapacity.specialAbilityCost;
-        totalMovePoint--;
+        //totalMovePoint--;
         totalShootPoint--;
-        unitManager.ships[currentShipIndex].canMove.Value = false;
+        //unitManager.ships[currentShipIndex].canMove.Value = false;
         unitManager.ships[currentShipIndex].canShoot.Value = false;
         TotalActionPoint();
     }
@@ -919,9 +919,9 @@ public class Cursor : NetworkBehaviour
         }
 
         currentSpecialCharge -= unitManager.ships[currentShipIndex].tileCapacity.specialAbilityCost;
-        totalMovePoint--;
+        //totalMovePoint--;
         totalShootPoint--;
-        unitManager.ships[currentShipIndex].canMove.Value = false;
+        //unitManager.ships[currentShipIndex].canMove.Value = false;
         unitManager.ships[currentShipIndex].canShoot.Value = false;
         TotalActionPoint();
     }
@@ -986,9 +986,9 @@ public class Cursor : NetworkBehaviour
             return;
         }
 
-        totalMovePoint--;
+        //totalMovePoint--;
         totalShootPoint--;
-        unitManager.ships[currentShipIndex].canMove.Value = false;
+        //unitManager.ships[currentShipIndex].canMove.Value = false;
         unitManager.ships[currentShipIndex].canShoot.Value = false;
         TotalActionPoint();
     }
@@ -1000,7 +1000,7 @@ public class Cursor : NetworkBehaviour
         if (unitManager.ships[currentShipIndex].barqueSpawn) yield break;
 
         currentSpecialCharge -= unitManager.ships[currentShipIndex].tileCapacity.specialAbilityCost;
-        unitManager.ships[currentShipIndex].canMove.Value = false;
+        //unitManager.ships[currentShipIndex].canMove.Value = false;
         unitManager.ships[currentShipIndex].canShoot.Value = false;
         TotalActionPoint();
 
