@@ -14065,6 +14065,7 @@ MonoBehaviour:
   goldGain: {fileID: 8300000, guid: 00ff57caf3ac2de4ba3740c6c892d3db, type: 3}
   manaGain: {fileID: 8300000, guid: 32404f4b5f4a2e848a72f98903a9be32, type: 3}
   playerTurn: {fileID: 8300000, guid: 69a12bf392e69b34291a3e403550931f, type: 3}
+  endGame: {fileID: 0}
 --- !u!4 &801700749
 Transform:
   m_ObjectHideFlags: 0

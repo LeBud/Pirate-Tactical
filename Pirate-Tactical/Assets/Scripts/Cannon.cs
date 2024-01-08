@@ -21,6 +21,11 @@ public class Cannon : NetworkBehaviour
     public Color player1;
     public Color player2;
 
+    [Header("Textures")]
+    public bool useTexture = true;
+    public Sprite player1Sprite;
+    public Sprite player2Sprite;
+
     SpriteRenderer _renderer;
 
     [ServerRpc]
@@ -53,7 +58,15 @@ public class Cannon : NetworkBehaviour
     public void SetColorClientRpc(ulong id)
     {
         _renderer = GetComponent<SpriteRenderer>();
-        if (id == 0) _renderer.color = player1;
-        else _renderer.color = player2;
+        if (useTexture)
+        {
+            if (id == 0) _renderer.sprite = player1Sprite;
+            else _renderer.sprite = player2Sprite;
+        }
+        else
+        {
+            if (id == 0) _renderer.color = player1;
+            else _renderer.color = player2;
+        }
     }
 }
