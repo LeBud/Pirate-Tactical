@@ -400,7 +400,7 @@ public class HUD : NetworkBehaviour
     IEnumerator StormDisplay()
     {
         stormGO.SetActive(true);
-        yield return new WaitForSeconds(2);
+        yield return new WaitForSeconds(4);
         stormGO.SetActive(false);
     }
 
