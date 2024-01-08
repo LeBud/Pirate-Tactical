@@ -47,7 +47,6 @@ public class VisualsFeedbacks : MonoBehaviour
 
         foreach (var d in displayBlock)
         {
-            Debug.Log("read for each");
             d._blockedTileTemp.SetActive(true);
         }
     }
