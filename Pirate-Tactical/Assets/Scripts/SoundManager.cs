@@ -42,6 +42,7 @@ public class SoundManager : NetworkBehaviour
     public AudioClip goldGain;
     public AudioClip manaGain;
     public AudioClip playerTurn;
+    public AudioClip endGame;
 
     AudioClip soundToPlayOnClient;
 

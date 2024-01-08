@@ -367,6 +367,7 @@ public class GameManager : NetworkBehaviour
     {
         endGameAnnounce.SetActive(true);
         endGameTxt.text = p;
+        SoundManager.Instance.PlaySoundLocally(SoundManager.Instance.endGame);
         yield return new WaitForSeconds(10);
         NetworkManager.Shutdown();
         StartCoroutine(ResetHUD());
