@@ -14828,7 +14828,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &844554132
 RectTransform:
   m_ObjectHideFlags: 0
@@ -21698,7 +21698,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: 'Musique : 100'
+  m_text: 'Musique : 50'
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: dccd9830c4e2998449de9b653f2aa02b, type: 2}
   m_sharedMaterial: {fileID: -6939757771348040540, guid: dccd9830c4e2998449de9b653f2aa02b, type: 2}
@@ -26305,7 +26305,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: 'sfx : 100'
+  m_text: 'sfx : 50'
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: dccd9830c4e2998449de9b653f2aa02b, type: 2}
   m_sharedMaterial: {fileID: -6939757771348040540, guid: dccd9830c4e2998449de9b653f2aa02b, type: 2}
