@@ -61,12 +61,14 @@ public class ShipUnit : NetworkBehaviour
     public bool SpriteMode;
     public Sprite Player1Sprite;
     public Sprite Player2Sprite;
+    public Sprite Player1SpriteHighlight;
+    public Sprite Player2SpriteHighlight;
 
     [Header("Others")]
     public SpriteRenderer unitSprite;
     public TMP_Text health;
-    public GameObject highlight;
-    public GameObject usedSprite;
+    public SpriteRenderer highlight;
+    public SpriteRenderer usedSprite;
 
     [HideInInspector]
     public int index;
@@ -140,11 +142,11 @@ public class ShipUnit : NetworkBehaviour
             if(!canMove.Value && !canShoot.Value)
                 canBeSelected.Value = false;
 
-            if(usedSprite.activeSelf)
-                usedSprite.SetActive(false);
+            if(usedSprite.gameObject.activeSelf)
+                usedSprite.gameObject.SetActive(false);
         }
         else if(!canBeSelected.Value)
-            usedSprite.SetActive(true);
+            usedSprite.gameObject.SetActive(true);
 
         if (roundToApplyEffect == GameManager.Instance.currentRound.Value)
             canOnlyMove.Value = true;
@@ -190,9 +192,17 @@ public class ShipUnit : NetworkBehaviour
         else
         {
             if (id == 0)
+            {
                 unitSprite.sprite = Player1Sprite;
+                usedSprite.sprite = Player1Sprite;
+                highlight.sprite = Player1SpriteHighlight;
+            }
             else
+            {
                 unitSprite.sprite = Player2Sprite;
+                usedSprite.sprite = Player2Sprite;
+                highlight.sprite = Player2SpriteHighlight;
+            }
         }
     }
 

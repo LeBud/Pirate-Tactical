@@ -191,9 +191,18 @@ public class HUD : NetworkBehaviour
         {
             if (player.unitManager.ships[i] != null)
             {
+                if (player.OwnerClientId == 0)
+                    shipsDisplay.GetChild(i).transform.GetChild(0).GetComponent<Image>().sprite = player.unitManager.ships[i].Player1Sprite;
+                else
+                    shipsDisplay.GetChild(i).transform.GetChild(0).GetComponent<Image>().sprite = player.unitManager.ships[i].Player2Sprite;
                 shipsDisplay.GetChild(i).gameObject.SetActive(true);
                 shipsDisplay.GetChild(i).transform.GetChild(3).GetComponent<TextMeshProUGUI>().text = player.unitManager.ships[i].unitLife.Value.ToString();
                 shipsDisplay.GetChild(i).transform.GetChild(4).GetComponent<TextMeshProUGUI>().text = player.unitManager.ships[i].tileCapacity.specialAbilityCost.ToString();
+                if (i >= 5)
+                {
+                    shipsDisplay.GetChild(i).transform.GetChild(5).GetComponent<Image>().enabled = false;
+                    shipsDisplay.GetChild(i).transform.GetChild(6).GetComponent<Image>().sprite = GetIconTile(ShipUnit.UnitSpecialTile.ExplodeBarque);
+                }
             }
             else
                 shipsDisplay.GetChild(i).gameObject.SetActive(false);
@@ -211,9 +220,15 @@ public class HUD : NetworkBehaviour
             if (enemyPlayer.unitManager.ships[i] != null)
             {
                 enemyShipsDisplay.GetChild(i).gameObject.SetActive(true);
+                if (enemyPlayer.OwnerClientId == 0)
+                    enemyShipsDisplay.GetChild(i).transform.GetChild(0).GetComponent<Image>().sprite = enemyPlayer.unitManager.ships[i].Player1Sprite;
+                else
+                    enemyShipsDisplay.GetChild(i).transform.GetChild(0).GetComponent<Image>().sprite = enemyPlayer.unitManager.ships[i].Player2Sprite;
                 enemyShipsDisplay.GetChild(i).transform.GetChild(2).GetComponent<TextMeshProUGUI>().text = enemyPlayer.unitManager.ships[i].unitLife.Value.ToString();
                 enemyShipsDisplay.GetChild(i).transform.GetChild(3).GetComponent<Image>().sprite = GetIconShot(enemyPlayer.unitManager.ships[i].unitSpecialShot.Value);
                 enemyShipsDisplay.GetChild(i).transform.GetChild(4).GetComponent<Image>().sprite = GetIconTile(enemyPlayer.unitManager.ships[i].unitSpecialTile.Value);
+                if (i >= 5)
+                    enemyShipsDisplay.GetChild(i).transform.GetChild(3).GetComponent<Image>().enabled = false;
             }
             else
                 enemyShipsDisplay.GetChild(i).gameObject.SetActive(false);

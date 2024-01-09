@@ -15,7 +15,7 @@ MonoBehaviour:
   capacityName: Sabotage
   capacityDescription: "Explosez votre propre barque pour infliger des d\xE9g\xE2ts
     de zone."
-  icon: {fileID: 0}
+  icon: {fileID: 21300000, guid: ce54ad102c6ab7c439b2d3329a305648, type: 3}
   specialAbilityCost: 0
   shootCapacity: 0
   specialShootRange: 0

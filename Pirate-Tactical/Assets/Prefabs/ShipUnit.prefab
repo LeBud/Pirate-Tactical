@@ -150,10 +150,12 @@ MonoBehaviour:
   SpriteMode: 1
   Player1Sprite: {fileID: 21300000, guid: 5dc8d229c34102b43bff554943b90838, type: 3}
   Player2Sprite: {fileID: 21300000, guid: 254d28027e006b347973cfa103455463, type: 3}
+  Player1SpriteHighlight: {fileID: 21300000, guid: 722529fce95630e439dedb968c4d5737, type: 3}
+  Player2SpriteHighlight: {fileID: 21300000, guid: cbc3a8a7c9416f340abf82e43bc52908, type: 3}
   unitSprite: {fileID: 12588485425085424}
   health: {fileID: 3639706659665886356}
-  highlight: {fileID: 6215254823900577645}
-  usedSprite: {fileID: 4435240971898504917}
+  highlight: {fileID: 5213176967525775781}
+  usedSprite: {fileID: 833159377260439488}
   index: 0
   clientIdOwner: 1
   movePoint: 1

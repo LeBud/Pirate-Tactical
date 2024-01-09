@@ -529,7 +529,7 @@ public class Cursor : NetworkBehaviour
     {
         if(shipSelected)
         {
-            unitManager.ships[currentShipIndex].highlight.SetActive(false);
+            unitManager.ships[currentShipIndex].highlight.gameObject.SetActive(false);
             SoundManager.Instance.PlaySoundLocally(SoundManager.Instance.deselectShip.clip);
             shipSelected = false;
             HideTiles();
@@ -546,7 +546,7 @@ public class Cursor : NetworkBehaviour
             {
                 currentShipIndex = ship.index;
                 shipSelected = true;
-                unitManager.ships[currentShipIndex].highlight.SetActive(true);
+                unitManager.ships[currentShipIndex].highlight.gameObject.SetActive(true);
                 DisplayOnSelectedUnit();
                 SoundManager.Instance.PlaySoundLocally(SoundManager.Instance.selectShip.clip);
                 break;
@@ -559,7 +559,7 @@ public class Cursor : NetworkBehaviour
         if (shipSelected)
         {
             if(unitManager.ships[currentShipIndex] != null)
-                unitManager.ships[currentShipIndex].highlight.SetActive(false);
+                unitManager.ships[currentShipIndex].highlight.gameObject.SetActive(false);
             SoundManager.Instance.PlaySoundLocally(SoundManager.Instance.deselectShip.clip);
             shipSelected = false;
             HideTiles();
@@ -622,6 +622,11 @@ public class Cursor : NetworkBehaviour
             case 0: //InteractMode
                 if (currentModeInputIndex != currentModeIndex)
                 {
+                    if (!unitManager.ships[currentShipIndex].canShoot.Value)
+                    {
+                        currentModeIndex++;
+                        return;
+                    }
                     currentModeInputIndex = currentModeIndex;
                     GetInRangeInteractTile();
                 }
@@ -666,12 +671,13 @@ public class Cursor : NetworkBehaviour
             case 4: //Special Shot
                 if (currentModeInputIndex != currentModeIndex)
                 {
-                    if (!unitManager.ships[currentShipIndex].canShoot.Value)
+                    if (!unitManager.ships[currentShipIndex].canShoot.Value || unitManager.ships[currentShipIndex].shotCapacity == null)
                     {
                         currentModeIndex++;
                         return;
                     }
                     currentModeInputIndex = currentModeIndex;
+
                     GetInRangeShootTiles(unitManager.ships[currentShipIndex].shotCapacity.specialShootRange);
                 }
                 break;
