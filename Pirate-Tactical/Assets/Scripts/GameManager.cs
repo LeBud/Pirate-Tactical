@@ -435,6 +435,9 @@ public class GameManager : NetworkBehaviour
         HUD.Instance.pausePanel.SetActive(false);
         HUD.Instance.inPauseMenu = false;
         HUD.Instance.lobbyMenu.SetActive(true);
+        HUD.Instance.startBtt.interactable = true;
+        HUD.Instance.startBtt.gameObject.SetActive(false);
+
         yield return new WaitForSeconds(3);
         
         leavePanel.SetActive(false);

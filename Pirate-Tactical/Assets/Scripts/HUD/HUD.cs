@@ -75,6 +75,7 @@ public class HUD : NetworkBehaviour
     [Header("Lobby")]
     public GameObject[] lobbyScreen;
     public GameObject lobbyMenu;
+    public Button startBtt;
 
     private void Awake()
     {

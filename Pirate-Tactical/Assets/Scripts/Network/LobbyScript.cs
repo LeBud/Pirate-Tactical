@@ -16,7 +16,6 @@ public class LobbyScript : MonoBehaviour
     public Lobby joinedLobby;
     float heartbeatTimer;
     float lobbyUpdateTimer;
-    float lobbyPollTimer;
     public string playerName = "Player 1";
 
     int previousAmountOfPlayer = 0;
