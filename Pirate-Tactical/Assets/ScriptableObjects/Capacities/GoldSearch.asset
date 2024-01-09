@@ -13,8 +13,10 @@ MonoBehaviour:
   m_Name: GoldSearch
   m_EditorClassIdentifier: 
   capacityName: "Chercheur de tr\xE9sor"
-  capacityDescription: Trouvez de l'or dans les mers !
-  specialAbilityCost: 40
+  capacityDescription: "25% de chance de trouver de 0, 5, 10 ou 15 d'or.\nAm\xE9liorer
+    : 25% de chance de trouver de 0, 10, 20 ou 30 points de sp\xE9cial."
+  icon: {fileID: 21300000, guid: 823f8e5e8c4076c44af32d5a3943004d, type: 3}
+  specialAbilityCost: 30
   shootCapacity: 0
   specialShootRange: 0
   specialAbilityDamage: 0

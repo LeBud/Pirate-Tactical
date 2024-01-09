@@ -99,12 +99,18 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   damage: 7
-  ID: 0
+  upgradedDamage: 7
+  ID:
+    m_InternalValue: 0
+  upgraded: 0
   index: 0
   tiles: []
   cannonPos: {x: 0, y: 0}
   player1: {r: 0.8207547, g: 0.34198108, b: 0, a: 1}
   player2: {r: 0.28819335, g: 0.10065861, b: 0.5471698, a: 1}
+  useTexture: 1
+  player1Sprite: {fileID: 619065856, guid: aa43e446add7c7242a7d655d01dbbb88, type: 3}
+  player2Sprite: {fileID: 1671696341, guid: aa43e446add7c7242a7d655d01dbbb88, type: 3}
 --- !u!114 &8976152401000525605
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -123,5 +129,5 @@ MonoBehaviour:
   ActiveSceneSynchronization: 0
   SceneMigrationSynchronization: 1
   SpawnWithObservers: 1
-  DontDestroyWithOwner: 0
+  DontDestroyWithOwner: 1
   AutoObjectParentSync: 1

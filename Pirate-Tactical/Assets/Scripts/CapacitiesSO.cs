@@ -6,7 +6,9 @@ using UnityEngine;
 public class CapacitiesSO : ScriptableObject
 {
     public string capacityName;
+    [TextArea]
     public string capacityDescription;
+    public Sprite icon;
 
     [Header("Capacity Cost")]
     public int specialAbilityCost;

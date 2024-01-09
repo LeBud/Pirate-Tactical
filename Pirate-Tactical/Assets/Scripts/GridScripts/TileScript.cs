@@ -6,6 +6,7 @@ using UnityEngine;
 
 public class TileScript : NetworkBehaviour
 {
+    [Header("Tile Graph")]
     [SerializeField] SpriteRenderer _renderer;
     public GameObject _highlight;
     public GameObject _highlightRange;
@@ -13,6 +14,7 @@ public class TileScript : NetworkBehaviour
     public GameObject _highlightOutOfCombatZone;
     public GameObject _highlightMine;
     public GameObject _highlightSpawn;
+    public GameObject _blockedTileTemp;
 
     [Header("Normals Colors")]
     public Color normalColor;
@@ -35,8 +37,10 @@ public class TileScript : NetworkBehaviour
     public NetworkVariable<bool> blockedTile = new NetworkVariable<bool>(false, NetworkVariableReadPermission.Everyone);
     public NetworkVariable<bool> tileOutOfCombatZone = new NetworkVariable<bool>(false, NetworkVariableReadPermission.Everyone);
     public NetworkVariable<bool> mineInTile = new NetworkVariable<bool>(false, NetworkVariableReadPermission.Everyone);
+    public NetworkVariable<bool> upgradedMine = new NetworkVariable<bool>(false, NetworkVariableReadPermission.Everyone);
     public NetworkVariable<int> shopIndex = new NetworkVariable<int>(0, NetworkVariableReadPermission.Everyone);
     public NetworkVariable<bool> cannonInTile = new NetworkVariable<bool>(false, NetworkVariableReadPermission.Everyone);
+    public NetworkVariable<bool> shipwrek = new NetworkVariable<bool>(false, NetworkVariableReadPermission.Everyone);
     
     #region PathFinding
 

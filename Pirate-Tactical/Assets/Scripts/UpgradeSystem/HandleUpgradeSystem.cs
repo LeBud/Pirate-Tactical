@@ -11,10 +11,9 @@ public class HandleUpgradeSystem : NetworkBehaviour
 
     public UpgradeSystem[,] upgrades = new UpgradeSystem[3, 3];
     public List<UpgradeSystem> allUpgrades = new List<UpgradeSystem>();
-    public List<UpgradeSystem> allCapacityUpgrades = new List<UpgradeSystem>();
+    public UpgradeSystem CapacityUpgrade;
 
     List<UpgradeSystem> tempUpgrades = new List<UpgradeSystem>();
-    List<UpgradeSystem> tempCapacityUpgrades = new List<UpgradeSystem>();
 
     public NetworkList<int> upgradesInt;
     public NetworkList<int> capacityInt;
@@ -48,25 +47,6 @@ public class HandleUpgradeSystem : NetworkBehaviour
             tempUpgrades = tempUpgrades.Distinct().ToList();
         }
 
-        Debug.Log("Upgrades Selected");
-
-        while (tempCapacityUpgrades.Count < 3)
-        {
-            tempCapacityUpgrades.Clear();
-            capacityInt.Clear();
-
-            for (int i = 0; i < 3; i++)
-            {
-                int index = Random.Range(0, allCapacityUpgrades.Count);
-                tempCapacityUpgrades.Add(allCapacityUpgrades[index]);
-                capacityInt.Add(index);
-            }
-
-            tempCapacityUpgrades = tempCapacityUpgrades.Distinct().ToList();
-        }
-
-        Debug.Log("New Capacities Selected");
-
         SetUpgradeOnClientRpc();
     }
 
@@ -88,25 +68,24 @@ public class HandleUpgradeSystem : NetworkBehaviour
                 {
                     case 0:
                         if (j == 2)
-                            upgrades[i, j] = allCapacityUpgrades[capacityInt[i]];
+                            upgrades[i, j] = CapacityUpgrade;
                         else
                             upgrades[i, j] = allUpgrades[upgradesInt[j]];
                         break;
                     case 1:
                         if (j == 2)
-                            upgrades[i, j] = allCapacityUpgrades[capacityInt[i]];
+                            upgrades[i, j] = CapacityUpgrade;
                         else
                             upgrades[i, j] = allUpgrades[upgradesInt[j + 2]];
                         break;
                     case 2:
                         if (j == 2)
-                            upgrades[i, j] = allCapacityUpgrades[capacityInt[i]];
+                            upgrades[i, j] = CapacityUpgrade;
                         else
                             upgrades[i, j] = allUpgrades[upgradesInt[j + 4]];
                         break;
 
                 }
-                Debug.Log(upgrades[i, j].upgradeType.ToString());
             }
         }
     }
@@ -131,27 +110,31 @@ public class HandleUpgradeSystem : NetworkBehaviour
         {
             case UpgradeSystem.UpgradeType.Accost:
                 p.unitManager.ships[p.currentShipIndex].accostDmgBoost.Value += upgrades[shopIndex, i].value;
+                p.unitManager.ships[p.currentShipIndex].upgrade = upgrades[shopIndex, i].upgradeType;
                 break;
             case UpgradeSystem.UpgradeType.Damage:
                 p.unitManager.ships[p.currentShipIndex].damage.Value += upgrades[shopIndex, i].value;
+                p.unitManager.ships[p.currentShipIndex].upgrade = upgrades[shopIndex, i].upgradeType;
                 break;
             case UpgradeSystem.UpgradeType.ManaGain:
                 p.specialGainPerRound += upgrades[shopIndex, i].value;
+                p.unitManager.ships[p.currentShipIndex].upgrade = upgrades[shopIndex, i].upgradeType;
                 break;
             case UpgradeSystem.UpgradeType.MoveRange:
                 p.unitManager.ships[p.currentShipIndex].unitMoveRange += upgrades[shopIndex, i].value;
+                p.unitManager.ships[p.currentShipIndex].upgrade = upgrades[shopIndex, i].upgradeType;
                 break;
             case UpgradeSystem.UpgradeType.TotalMana:
                 p.maxSpecialCharge += upgrades[shopIndex, i].value;
+                p.unitManager.ships[p.currentShipIndex].upgrade = upgrades[shopIndex, i].upgradeType;
                 break;
             case UpgradeSystem.UpgradeType.ShootRange:
                 p.unitManager.ships[p.currentShipIndex].unitShootRange += upgrades[shopIndex, i].value;
+                p.unitManager.ships[p.currentShipIndex].upgrade = upgrades[shopIndex, i].upgradeType;
                 break;
-            case UpgradeSystem.UpgradeType.TileCapacity:
-                p.unitManager.ships[p.currentShipIndex].unitSpecialTile = upgrades[shopIndex, i].newTileCapacity;
-                break;
-            case UpgradeSystem.UpgradeType.ShootCapacity:
-                p.unitManager.ships[p.currentShipIndex].unitSpecialShot = upgrades[shopIndex, i].newShootCapacity;
+            case UpgradeSystem.UpgradeType.Capacity:
+                p.unitManager.ships[p.currentShipIndex].upgradedCapacity = true;
+                p.unitManager.ships[p.currentShipIndex].upgrade = upgrades[shopIndex, i].upgradeType;
                 break;
         }
 
@@ -161,10 +144,77 @@ public class HandleUpgradeSystem : NetworkBehaviour
         p.unitManager.ships[p.currentShipIndex].canBeUpgrade = false;
         p.HasDidAnActionClientRpc();
 
-        SoundManager.Instance.PlaySoundLocally(SoundManager.Instance.buyUpgrade);
+        SoundManager.Instance.PlaySoundLocally(SoundManager.Instance.buyUpgrade.clip);
 
         HUD.Instance.UpgradeWindow(false, 0);
     }
 
+    [ServerRpc(RequireOwnership = false)]
+    public void GetUpgradeFromShipwreckServerRpc(Vector2 pos, ulong id)
+    {
+        Shipwrek[] shipwreks = FindObjectsOfType<Shipwrek>();
+        foreach(var s in shipwreks)
+        {
+            if(s.pos == pos)
+            {
+                foreach (var u in allUpgrades)
+                {
+                    if(u.upgradeType == s.upgradeType.Value)
+                    {
+                        PutUpgradeFromShipwreckClientRpc(s.upgradeType.Value, u.value, id);
+                        GridManager.Instance.SetShipwreckOnMapServerRpc(pos, false);
+                        s.GetComponent<NetworkObject>().Despawn();
+                        break;
+                    }
+                }
+                break;
+                
+            }
+        }
+    }
 
+    [ClientRpc]
+    public void PutUpgradeFromShipwreckClientRpc(UpgradeSystem.UpgradeType type, int value, ulong id)
+    {
+        if (NetworkManager.LocalClientId != id) return;
+
+        Cursor p = HUD.Instance.player;
+
+        switch (type)
+        {
+            case UpgradeSystem.UpgradeType.Accost:
+                p.unitManager.ships[p.currentShipIndex].accostDmgBoost.Value += value;
+                p.unitManager.ships[p.currentShipIndex].upgrade = type;
+                break;
+            case UpgradeSystem.UpgradeType.Damage:
+                p.unitManager.ships[p.currentShipIndex].damage.Value += value;
+                p.unitManager.ships[p.currentShipIndex].upgrade = type;
+                break;
+            case UpgradeSystem.UpgradeType.ManaGain:
+                p.specialGainPerRound += value;
+                p.unitManager.ships[p.currentShipIndex].upgrade = type;
+                break;
+            case UpgradeSystem.UpgradeType.MoveRange:
+                p.unitManager.ships[p.currentShipIndex].unitMoveRange += value;
+                p.unitManager.ships[p.currentShipIndex].upgrade = type;
+                break;
+            case UpgradeSystem.UpgradeType.TotalMana:
+                p.maxSpecialCharge += value;
+                p.unitManager.ships[p.currentShipIndex].upgrade = type;
+                break;
+            case UpgradeSystem.UpgradeType.ShootRange:
+                p.unitManager.ships[p.currentShipIndex].unitShootRange += value;
+                p.unitManager.ships[p.currentShipIndex].upgrade = type;
+                break;
+            case UpgradeSystem.UpgradeType.Capacity:
+                p.unitManager.ships[p.currentShipIndex].upgradedCapacity = true;
+                p.unitManager.ships[p.currentShipIndex].upgrade = type;
+                break;
+        }
+
+        p.unitManager.ships[p.currentShipIndex].canBeUpgrade = false;
+        p.HasDidAnActionClientRpc();
+
+        SoundManager.Instance.PlaySoundLocally(SoundManager.Instance.buyUpgrade.clip);
+    }
 }

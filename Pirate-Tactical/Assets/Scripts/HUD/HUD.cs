@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using TMPro;
 using Unity.Collections;
 using Unity.Netcode;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Rendering;
 using UnityEngine.UI;
@@ -34,11 +35,13 @@ public class HUD : NetworkBehaviour
     [SerializeField] Button specialAttackBtt;
     [SerializeField] Button specialTileBtt;
     [SerializeField] Button interactBtt;
+    [SerializeField] Transform selectedBtt;
 
     [Header("Others")]
     public GameObject inGameHUD;
     public Transform shipsDisplay;
     public Transform shipHighlight;
+    public Transform enemyShipsDisplay;
 
     [Header("Upgrade")]
     public GameObject upgradeWindow;
@@ -57,6 +60,22 @@ public class HUD : NetworkBehaviour
     int playerMaxHealth;
     int enemyMaxHealth;
 
+    [Header("Icons")]
+    public List<CapacitiesSO> capacities;
+
+    [Header("Announcer")]
+    public GameObject stormGO;
+    public GameObject playerTurn;
+    public TextMeshProUGUI playerTurnTxt;
+
+    [Header("Round Gain")]
+    public TextMeshProUGUI goldGain;
+    public TextMeshProUGUI manaGain;
+
+    [Header("Lobby")]
+    public GameObject[] lobbyScreen;
+    public GameObject lobbyMenu;
+
     private void Awake()
     {
         if(Instance == null)
@@ -71,35 +90,155 @@ public class HUD : NetworkBehaviour
 
         if (player.shipSelected)
         {
-            currentShipInfo.text = "ship selected : " + player.unitManager.ships[player.currentShipIndex].unitName + "\nCan move : " + player.unitManager.ships[player.currentShipIndex].canMove.Value
-            + "\nCan shoot : " + player.unitManager.ships[player.currentShipIndex].canShoot.Value;
+            currentShipInfo.text = "Navire sélectionner : " + player.unitManager.ships[player.currentShipIndex].unitName + "\nPeut se déplacer : " + NavireMove(player.unitManager.ships[player.currentShipIndex].canMove.Value)
+            + "\nPeut tirer : " + NavireMove(player.unitManager.ships[player.currentShipIndex].canShoot.Value) + "\nDéplacement : " + MovemOde(player.pathMode);
 
             shipHighlight.gameObject.SetActive(true);
             shipHighlight.transform.position = shipsDisplay.GetChild(player.currentShipIndex).transform.position;
             currentMode.text = GetCurrentMode(player.currentModeIndex);
+
+            if(player.unitManager.ships[player.currentShipIndex].shotCapacity != null)
+                specialAttackBtt.GetComponentInChildren<TextMeshProUGUI>().text = player.unitManager.ships[player.currentShipIndex].shotCapacity.capacityName;
+            if(player.unitManager.ships[player.currentShipIndex].tileCapacity != null)
+                specialTileBtt.GetComponentInChildren<TextMeshProUGUI>().text = player.unitManager.ships[player.currentShipIndex].tileCapacity.capacityName;
+
+            if (player.unitManager.ships[player.currentShipIndex].canMove.Value)
+                moveBtt.interactable = true;
+            else if (!player.unitManager.ships[player.currentShipIndex].canMove.Value)
+                moveBtt.interactable = false;
+
+            if (player.unitManager.ships[player.currentShipIndex].canShoot.Value)
+            {
+                attackBtt.interactable = true;
+                interactBtt.interactable = true;
+
+                if (player.unitManager.ships[player.currentShipIndex].unitSpecialTile.Value != ShipUnit.UnitSpecialTile.None)
+                    specialTileBtt.interactable = true;
+                else
+                    specialTileBtt.interactable = false;
+
+                if(player.unitManager.ships[player.currentShipIndex].unitSpecialShot.Value != ShipUnit.UnitSpecialShot.None)
+                    specialAttackBtt.interactable = true;
+                else
+                    specialAttackBtt.interactable = false;
+            }
+            else if (!player.unitManager.ships[player.currentShipIndex].canShoot.Value)
+            {
+                attackBtt.interactable = false;
+                specialTileBtt.interactable = false;
+                specialAttackBtt.interactable = false;
+                interactBtt.interactable = false;
+            }
+
+            selectedBtt.gameObject.SetActive(true);
+            switch (player.currentModeIndex)
+            {
+                case 0:
+                    selectedBtt.position = interactBtt.transform.position;
+                    break;
+                case 1:
+                    selectedBtt.position = moveBtt.transform.position;
+                    break;
+                case 2:
+                    selectedBtt.position = attackBtt.transform.position;
+                    break;
+                case 3:
+                    selectedBtt.position = specialTileBtt.transform.position;
+                    break;
+                case 4:
+                    selectedBtt.position = specialAttackBtt.transform.position;
+                    break;
+            }
+
         }
         else
         {
-            currentShipInfo.text = "ship selected : none ";
-            currentMode.text = "none";
+            currentShipInfo.text = "";
+            currentMode.text = "";
             shipHighlight.gameObject.SetActive(false);
+            selectedBtt.gameObject.SetActive(false);
+
+            moveBtt.interactable = false;
+            attackBtt.interactable = false;
+            specialTileBtt.interactable = false;
+            specialAttackBtt.interactable = false;
+            interactBtt.interactable = false;
         }
 
         specialSlider.value = player.currentSpecialCharge;
-        specialTxt.text = player.currentSpecialCharge.ToString() + " / " + player.maxSpecialCharge.ToString();
-        goldTxt.text = "Gold : " + player.playerGold;
+        specialTxt.text = player.currentSpecialCharge.ToString() + "/" + player.maxSpecialCharge.ToString();
+        goldTxt.text = "Or : " + player.playerGold;
 
     }
 
-    void SetShipOnHUD()
+    string NavireMove(bool yes)
     {
-        if (player == null) return;
+        if (yes) return "Oui";
+        else return "Non";
+    }
+    string MovemOde(bool yes)
+    {
+        if (yes) return "Manuel";
+        else return "Automatique";
+    }
+    public IEnumerator SetShipOnHUD()
+    {
+        if (player == null) yield break;
+
+        yield return new WaitForSeconds(0.5f);
+
         for(int i = 0; i<player.unitManager.ships.Length; i++)
         {
-            if (i > 4) continue;
-            shipsDisplay.GetChild(i).GetChild(3).GetComponent<TextMeshProUGUI>().text = player.unitManager.ships[i].damage.Value.ToString();
-            shipsDisplay.GetChild(i).GetChild(4).GetComponent<TextMeshProUGUI>().text = player.unitManager.ships[i].shotCapacity.specialAbilityCost.ToString();
+            if (player.unitManager.ships[i] != null)
+            {
+                shipsDisplay.GetChild(i).gameObject.SetActive(true);
+                shipsDisplay.GetChild(i).transform.GetChild(3).GetComponent<TextMeshProUGUI>().text = player.unitManager.ships[i].unitLife.Value.ToString();
+                shipsDisplay.GetChild(i).transform.GetChild(4).GetComponent<TextMeshProUGUI>().text = player.unitManager.ships[i].tileCapacity.specialAbilityCost.ToString();
+            }
+            else
+                shipsDisplay.GetChild(i).gameObject.SetActive(false);
         }
+    }
+
+    public IEnumerator SetEnemiesShip()
+    {
+        if (enemyPlayer == null) yield break;
+
+        yield return new WaitForSeconds(0.5f);
+
+        for (int i = 0; i < enemyPlayer.unitManager.ships.Length; i++)
+        {
+            if (enemyPlayer.unitManager.ships[i] != null)
+            {
+                enemyShipsDisplay.GetChild(i).gameObject.SetActive(true);
+                enemyShipsDisplay.GetChild(i).transform.GetChild(2).GetComponent<TextMeshProUGUI>().text = enemyPlayer.unitManager.ships[i].unitLife.Value.ToString();
+                enemyShipsDisplay.GetChild(i).transform.GetChild(3).GetComponent<Image>().sprite = GetIconShot(enemyPlayer.unitManager.ships[i].unitSpecialShot.Value);
+                enemyShipsDisplay.GetChild(i).transform.GetChild(4).GetComponent<Image>().sprite = GetIconTile(enemyPlayer.unitManager.ships[i].unitSpecialTile.Value);
+            }
+            else
+                enemyShipsDisplay.GetChild(i).gameObject.SetActive(false);
+        }
+    }
+
+    Sprite GetIconShot(ShipUnit.UnitSpecialShot shot)
+    {
+        foreach(var c in capacities)
+        {
+            if (c.shootCapacity == shot)
+                return c.icon;
+        }
+
+        return null;
+    }
+
+    Sprite GetIconTile(ShipUnit.UnitSpecialTile shot)
+    {
+        foreach (var c in capacities)
+        {
+            if (c.tileCapacity == shot)
+                return c.icon;
+        }
+        return null;
     }
 
     string GetCurrentMode(int i)
@@ -107,25 +246,25 @@ public class HUD : NetworkBehaviour
         switch (i)
         {
             case 0:
-                return "Interact";
+                return "Aborder/Acheter";
             case 1:
-                return "Move unit";
+                return "Déplacer navire";
             case 2:
-                return "attack enemy";
+                return "Tirer";
             case 3:
-                return "special unit tile";
+                return "Capacité spéciale de terrain";
             case 4:
-                return "special unit attack";
+                return "Capacité spéciale des canons";
             default:
                 return null;
         }
     }
+
     public void UpdateGameMode()
     {
         if(player != null && player.canPlay.Value)
         {
-            player.shipSelected = false;
-            player.HideTiles();
+            player.DeselectShip();
             GameManager.Instance.UpdateGameStateServerRpc();
         }
     }
@@ -176,22 +315,27 @@ public class HUD : NetworkBehaviour
     [ClientRpc]
     public void SetGameStateClientRpc(string gameState, int round)
     {
-        if(round == 0)
-            gameStateTxt.text = gameState + "\nspawn ships";
+        if (round == -1)
+            gameStateTxt.text = "Sélectionner capacités";
+        else if(round == 0)
+            gameStateTxt.text = gameState + "\nPlacer les navires";
         else
-            gameStateTxt.text = gameState + "\nround " + round;
+            gameStateTxt.text = gameState + "\nTour " + round;
     }
 
     [ClientRpc]
     public void UpdateHealthBarClientRpc()
     {
+        if (player == null || enemyPlayer == null) return;
+
         playerSlider.value = player.totalPlayerHealth.Value;
         enemyPlayerSlider.value = enemyPlayer.totalPlayerHealth.Value;
 
-        playerHealthTxt.text = player.totalPlayerHealth.Value.ToString() + " / " + playerMaxHealth;
-        enemyHealthTxt.text = enemyPlayer.totalPlayerHealth.Value.ToString() + " / " + enemyMaxHealth;
+        playerHealthTxt.text = player.totalPlayerHealth.Value.ToString() + "/" + playerMaxHealth;
+        enemyHealthTxt.text = enemyPlayer.totalPlayerHealth.Value.ToString() + "/" + enemyMaxHealth;
 
-        SetShipOnHUD();
+        StartCoroutine(SetShipOnHUD());
+        StartCoroutine(SetEnemiesShip());
     }
 
     [ClientRpc]
@@ -235,14 +379,65 @@ public class HUD : NetworkBehaviour
             enemyPlayerSlider.maxValue = enemyPlayer.totalPlayerHealth.Value;
             enemyPlayerSlider.value = enemyPlayer.totalPlayerHealth.Value;
             enemyMaxHealth = enemyPlayer.totalPlayerHealth.Value;
-            enemyHealthTxt.text = enemyPlayer.totalPlayerHealth.Value.ToString() + " / " + enemyMaxHealth;
+            enemyHealthTxt.text = enemyPlayer.totalPlayerHealth.Value.ToString() + "/" + enemyMaxHealth;
             if (id == 0) enemyPlayerName.text = GameManager.Instance.player1.Value.ToString();
             else if (id == 1) enemyPlayerName.text = GameManager.Instance.player2.Value.ToString();
         }
 
-        SetShipOnHUD();
-        
+
+        StartCoroutine(SetShipOnHUD());
+        StartCoroutine(SetEnemiesShip());
     }
 
-#endregion
+    #endregion
+
+    [ClientRpc]
+    public void DisplayStormClientRpc()
+    {
+        StartCoroutine(StormDisplay());
+    }
+
+    IEnumerator StormDisplay()
+    {
+        stormGO.SetActive(true);
+        yield return new WaitForSeconds(4);
+        stormGO.SetActive(false);
+    }
+
+    [ClientRpc]
+    public void PlayerTurnClientRpc(FixedString128Bytes p)
+    {
+        StartCoroutine(PlayerTurn(p));
+    }
+
+    IEnumerator PlayerTurn(FixedString128Bytes p)
+    {
+        playerTurn.SetActive(true);
+        playerTurnTxt.text = "Au tour de : " + p;
+        SoundManager.Instance.PlaySoundLocally(SoundManager.Instance.playerTurn);
+        yield return new WaitForSeconds(2);
+        playerTurn.SetActive(false);
+    }
+
+    [ClientRpc]
+    public void DisplayGoldManaGainClientRpc()
+    {
+        StartCoroutine(ShowGoldManaGain());
+    }
+
+    IEnumerator ShowGoldManaGain()
+    {
+        goldGain.text = "+" + player.playerGoldGainPerRound.ToString();
+        manaGain.text = "+" + player.specialGainPerRound.ToString();
+
+        goldGain.gameObject.SetActive(true);
+        manaGain.gameObject.SetActive(true);
+
+        yield return new WaitForSeconds(4);
+
+        goldGain.gameObject.SetActive(false);
+        manaGain.gameObject.SetActive(false);
+
+    }
+
 }

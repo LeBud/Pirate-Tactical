@@ -10,6 +10,7 @@ public class UpgradeHolder : MonoBehaviour
 
     public TextMeshProUGUI uPName;
     public TextMeshProUGUI uPDescription;
+    public TextMeshProUGUI upCost;
     public Button upBuyBtt;
 
     int shop;
@@ -22,6 +23,7 @@ public class UpgradeHolder : MonoBehaviour
         currentUpgrade = HandleUpgradeSystem.Instance.upgrades[shopID,i];
         uPName.text = currentUpgrade.upName;
         uPDescription.text = currentUpgrade.upDescription;
+        upCost.text = currentUpgrade.goldCost + " pièces d'or";
 
         shop = shopID;
         num = i;

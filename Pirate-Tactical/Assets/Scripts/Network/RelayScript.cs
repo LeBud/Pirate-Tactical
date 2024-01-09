@@ -40,7 +40,6 @@ public class RelayScript : MonoBehaviour
             NetworkManager.Singleton.GetComponent<UnityTransport>().SetRelayServerData(data);
 
             NetworkManager.Singleton.StartHost();
-            HUD.Instance.inGameHUD.SetActive(true);
             GridManager.Instance.GenerateGridOnTileMapServerRpc();
 
             return joinCode;
@@ -64,7 +63,6 @@ public class RelayScript : MonoBehaviour
             NetworkManager.Singleton.GetComponent<UnityTransport>().SetRelayServerData(data);
 
             NetworkManager.Singleton.StartClient();
-            HUD.Instance.inGameHUD.SetActive(true);
         }
         catch (RelayServiceException e)
         {

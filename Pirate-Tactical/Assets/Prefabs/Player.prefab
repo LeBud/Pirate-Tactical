@@ -14,6 +14,7 @@ GameObject:
   - component: {fileID: 8982478056126480371}
   - component: {fileID: 2803976721492036311}
   - component: {fileID: 8773507901912881422}
+  - component: {fileID: -6299448447972417256}
   m_Layer: 0
   m_Name: Player
   m_TagString: Untagged
@@ -31,7 +32,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 0.25, y: 0.25, z: 0.25}
+  m_LocalScale: {x: 1.5, y: 1.5, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
@@ -76,7 +77,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 0
+  m_SortingOrder: 10
   m_Sprite: {fileID: -2413806693520163455, guid: a86470a33a6bf42c4b3595704624658b, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
@@ -150,8 +151,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c5f47ab1fce98f64ab022280a582e656, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  playerGold: 10
-  playerGoldGainPerRound: 30
+  playerGold: 0
+  playerGoldGainPerRound: 40
   maxSpecialCharge: 100
   specialGainPerRound: 30
   currentShipIndex: 0
@@ -165,6 +166,9 @@ MonoBehaviour:
   totalMovePoint: 0
   totalShootPoint: 0
   currentSpecialCharge: 0
+  isReady:
+    m_InternalValue: 0
+  vs: {fileID: -6299448447972417256}
 --- !u!114 &8773507901912881422
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -189,3 +193,23 @@ MonoBehaviour:
   numShipSpawned: 0
   allShipSpawned:
     m_InternalValue: 0
+--- !u!114 &-6299448447972417256
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 756178645241667870}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: aa15f801841937049936cd890b690e1e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  cursor: {fileID: 6776436403522937487}
+  classicCursor: {fileID: 21300000, guid: 085a993d4d134774b946f18b22009b5c, type: 3}
+  moveCursor: {fileID: 21300000, guid: 1fc68cab5e3667f46adf775f725e3b50, type: 3}
+  attackCursor: {fileID: 21300000, guid: 728bb299c6c3781488d701af5436aa3a, type: 3}
+  accostCursor: {fileID: 21300000, guid: 29619ca9b6f86484aadad921014ccf56, type: 3}
+  specialShotCursor: {fileID: 21300000, guid: 9e601e94eb35f7e4a9eb5eec53fb6400, type: 3}
+  specialTileCursor: {fileID: 21300000, guid: 48d66afde40413744af6573a80ddb4da, type: 3}
+  upgradeCursor: {fileID: 21300000, guid: 472e2b6789578af428625cb0571feb05, type: 3}

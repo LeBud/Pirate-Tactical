@@ -43,7 +43,6 @@ public class LobbyScript : MonoBehaviour
     {
         HandleLobbyHeartBeat();
         HandleLobbyCallForUpdate();
-        HandleLobbyPolling();
     }
 
     async void HandleLobbyHeartBeat()
@@ -73,28 +72,12 @@ public class LobbyScript : MonoBehaviour
 
                 Lobby lobby = await LobbyService.Instance.GetLobbyAsync(joinedLobby.Id);
                 joinedLobby = lobby;
-            }
-        }
-
-    }
-
-    private async void HandleLobbyPolling()
-    {
-        if (joinedLobby != null)
-        {
-            lobbyPollTimer -= Time.deltaTime;
-            if (lobbyPollTimer < 0f)
-            {
-                float lobbyPollTimerMax = 1.1f;
-                lobbyPollTimer = lobbyPollTimerMax;
-
-                joinedLobby = await LobbyService.Instance.GetLobbyAsync(joinedLobby.Id);
 
                 if (joinedLobby.Players.Count <= 0)
                     DeleteLobby();
 
                 int currentPlayerNum = joinedLobby.Players.Count;
-                if(currentPlayerNum != previousAmountOfPlayer)
+                if (currentPlayerNum != previousAmountOfPlayer)
                 {
                     previousAmountOfPlayer = currentPlayerNum;
                     LobbyUIScript.Instance.UpdateTextUI();
@@ -106,7 +89,6 @@ public class LobbyScript : MonoBehaviour
                     if (!IsLobbyHost())
                         RelayScript.Instance.JoinRelay(joinedLobby.Data["RelayKey"].Value);
 
-                    LobbyUIScript.Instance.HideUI();
                     joinedLobby = null;
                 }
             }

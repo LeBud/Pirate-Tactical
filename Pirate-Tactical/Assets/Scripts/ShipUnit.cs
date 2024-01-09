@@ -7,8 +7,8 @@ using UnityEngine;
 public class ShipUnit : NetworkBehaviour
 {
 
-    public enum UnitSpecialShot { None, PushUnit, TShot, FireShot, TirBrochette, VentContraire, Grappin}
-    public enum UnitSpecialTile { None, Mine, BlockTile, Teleport, FouilleOr, CanonSurIle, Barque}
+    public enum UnitSpecialShot { None, PushUnit, TShot, FireShot, TirBrochette, VentContraire, Grappin, ReloadUnit }
+    public enum UnitSpecialTile { None, Mine, BlockTile, Teleport, FouilleOr, CanonSurIle, Barque, ExplodeBarque}
     public enum UnitType { Galion, Brigantin, Sloop}
 
     [Header("NetworkVariables")]
@@ -17,6 +17,9 @@ public class ShipUnit : NetworkBehaviour
     public NetworkVariable<bool> canMove = new NetworkVariable<bool>(false, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
     public NetworkVariable<bool> canShoot = new NetworkVariable<bool>(false, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
     public NetworkVariable<bool> canBeSelected = new NetworkVariable<bool>(false, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
+    public NetworkVariable<bool> canMoveAgain = new NetworkVariable<bool>(false, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
+    public NetworkVariable<bool> canShootAgain = new NetworkVariable<bool>(false, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
+    public NetworkVariable<bool> canOnlyMove = new NetworkVariable<bool>(false, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
 
     [HideInInspector]
     public TileScript currentTile;
@@ -33,10 +36,11 @@ public class ShipUnit : NetworkBehaviour
     public NetworkVariable<int> accostDmgBoost = new NetworkVariable<int>(0, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
 
     [Header("Unit Special stats")]
-    public UnitSpecialShot unitSpecialShot;
-    public UnitSpecialTile unitSpecialTile;
+    public NetworkVariable<UnitSpecialShot> unitSpecialShot = new NetworkVariable<UnitSpecialShot>(0, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
+    public NetworkVariable<UnitSpecialTile> unitSpecialTile = new NetworkVariable<UnitSpecialTile>(0, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
     public CapacitiesSO shotCapacity;
     public CapacitiesSO tileCapacity;
+    public bool upgradedCapacity = false;
 
     [Header("Barque Parameters")]
     public bool barqueSpawn = false;
@@ -48,14 +52,21 @@ public class ShipUnit : NetworkBehaviour
 
     [Header("Upgrade")]
     public bool canBeUpgrade = true;
+    //public bool capacitiesUpgraded = false;
+    public UpgradeSystem.UpgradeType upgrade;
 
     [Header("Colors")]
     public Color player1Color;
     public Color player2Color;
+    public bool SpriteMode;
+    public Sprite Player1Sprite;
+    public Sprite Player2Sprite;
 
     [Header("Others")]
     public SpriteRenderer unitSprite;
     public TMP_Text health;
+    public GameObject highlight;
+    public GameObject usedSprite;
 
     [HideInInspector]
     public int index;
@@ -68,6 +79,7 @@ public class ShipUnit : NetworkBehaviour
 
     int roundToStopFireEffect;
     int roundToStopWindEffect;
+    int roundToApplyEffect = -1;
     int baseMoveRange;
 
     int passiveDmg;
@@ -81,20 +93,37 @@ public class ShipUnit : NetworkBehaviour
 
     private void Start()
     {
+        if (IsOwner)
+        {
+            if(shotCapacity == null)
+                unitSpecialShot.Value = UnitSpecialShot.None;
+            else
+                unitSpecialShot.Value = shotCapacity.shootCapacity;
+
+            if(tileCapacity == null)
+                unitSpecialTile.Value = UnitSpecialTile.None;
+            else
+                unitSpecialTile.Value = tileCapacity.tileCapacity;
+
+            baseMoveRange = unitMoveRange;
+        }
+
+        if (!IsServer) return;
+
         healthPercent = (float)unitLife.Value / maxHealth;
         healthDisplay.localScale = new Vector3(healthPercent, 1, 1);
         SetHealthBarClientRpc(healthPercent, unitLife.Value);
-        baseMoveRange = unitMoveRange;
-
-        if (isBark) return;
-        unitSpecialShot = shotCapacity.shootCapacity;
-        unitSpecialTile = tileCapacity.tileCapacity;
     }
 
     private void Update()
     {
+        if (!IsOwner) return;
+
         if (transform.position != new Vector3(unitPos.Value.x, unitPos.Value.y, -1) && !isMoving)
             StartCoroutine(MoveShip());
+
+        if (canOnlyMove.Value)
+            canShoot.Value = false;
 
         if (GameManager.Instance.gametesting.Value)
         {
@@ -105,21 +134,33 @@ public class ShipUnit : NetworkBehaviour
 
         if (canBeSelected.Value)
         {
+            if (canMoveAgain.Value || canShootAgain.Value)
+                return;
+
             if(!canMove.Value && !canShoot.Value)
-            {
                 canBeSelected.Value = false;
-            }
+
+            if(usedSprite.activeSelf)
+                usedSprite.SetActive(false);
         }
+        else if(!canBeSelected.Value)
+            usedSprite.SetActive(true);
+
+        if (roundToApplyEffect == GameManager.Instance.currentRound.Value)
+            canOnlyMove.Value = true;
+        else
+            canOnlyMove.Value = false;
     }
 
     [ClientRpc]
     public void UpdateUnitClientRpc()
     {
-        if (!IsOwner) return;
+        //if (!IsOwner) return;
 
         if(roundToStopFireEffect > GameManager.Instance.currentRound.Value)
         {
             TakeDamageServerRpc(passiveDmg, unitPos.Value, false, 0, false);
+            GridManager.Instance.DisplayDamageClientRpc("Brulure", new Vector2(unitPos.Value.x, unitPos.Value.y + 0.5f));
         }
 
         if (roundToStopWindEffect < GameManager.Instance.currentRound.Value)
@@ -139,10 +180,26 @@ public class ShipUnit : NetworkBehaviour
     [ClientRpc]
     public void SetShipColorClientRpc(ulong id)
     {
-        if(id == 0)
-            unitSprite.color = player1Color;
-        else 
-            unitSprite.color = player2Color;
+        if (!SpriteMode)
+        {
+            if(id == 0)
+                unitSprite.color = player1Color;
+            else 
+                unitSprite.color = player2Color;
+        }
+        else
+        {
+            if (id == 0)
+                unitSprite.sprite = Player1Sprite;
+            else
+                unitSprite.sprite = Player2Sprite;
+        }
+    }
+
+    [ClientRpc]
+    public void UpdateCurrentTileClientRpc(Vector2 pos)
+    {
+        currentTile = GridManager.Instance.GetTileAtPosition(pos);
     }
 
     IEnumerator MoveShip()
@@ -162,20 +219,21 @@ public class ShipUnit : NetworkBehaviour
         transform.position = endPos;
 
         isMoving = false;
-        /*transform.position = new Vector3(unitPos.Value.x, unitPos.Value.y, -1);
-        yield return null;*/
     }
 
     [ServerRpc(RequireOwnership = false)]
     public void TakeDamageServerRpc(int dmg, Vector2 pos, bool passiveAttack, int effectDuration, bool hasGoneThroughWater)
     {
-        int randomDmg = Random.Range(dmg - 1, dmg + 2);
+        //int randomDmg = Random.Range(dmg - 1, dmg + 2);
+        int randomDmg = dmg;
         //Crit chance
         int CritChance = Random.Range(0, 101);
         if (CritChance <= 10)
             randomDmg++;
 
         if (hasGoneThroughWater) randomDmg /= 2;
+
+        GridManager.Instance.DisplayDamageClientRpc(randomDmg.ToString(), pos);
 
         unitLife.Value -= randomDmg;
 
@@ -186,11 +244,13 @@ public class ShipUnit : NetworkBehaviour
         foreach (Cursor c in p)
             c.CalculateHealthClientRpc();
 
+        HUD.Instance.UpdateHealthBarClientRpc();
+        
         //Only set to true when an enemy unit attack this one with his special and has a passive effect
         if (passiveAttack && !hasGoneThroughWater)
             GivePassiveFireToUnitClientRpc(effectDuration, dmg);
 
-        SoundManager.Instance.PlaySoundOnClients(SoundManager.Instance.takeDamage);
+        SoundManager.Instance.PlaySoundOnClients(SoundManager.Instance.takeDamage.id);
 
         if (unitLife.Value <= 0)
         {
@@ -205,7 +265,12 @@ public class ShipUnit : NetworkBehaviour
                     GameManager.Instance.player2unitLeft--;
             }
 
-            SoundManager.Instance.PlaySoundOnClients(SoundManager.Instance.shipDestroyed);
+            if(upgrade != UpgradeSystem.UpgradeType.None)
+            {
+                GridManager.Instance.SpawnShipwrekServerRpc(upgrade, unitPos.Value);
+            }
+
+            SoundManager.Instance.PlaySoundOnClients(SoundManager.Instance.shipDestroyed.id);
             GridManager.Instance.SetShipOnTileServerRpc(pos, false);
             GetComponent<NetworkObject>().Despawn();
         }
@@ -217,15 +282,55 @@ public class ShipUnit : NetworkBehaviour
     {
         roundToStopFireEffect = roundDuration + GameManager.Instance.currentRound.Value;
         passiveDmg = _passiveDmg;
-        SoundManager.Instance.PlaySoundLocally(SoundManager.Instance.fireDamage);
+        SoundManager.Instance.PlaySoundLocally(SoundManager.Instance.fireDamage.clip);
     }
 
     [ClientRpc]
-    public void GiveWindEffectClientRpc(int roundDuration)
+    public void GiveWindEffectClientRpc(int roundDuration, bool upgraded)
     {
         roundToStopWindEffect = roundDuration + GameManager.Instance.currentRound.Value;
-        unitMoveRange -= 2;
+        if (!upgraded)
+            unitMoveRange -= 2;
+        else if (upgraded)
+            unitMoveRange = 0;
+
         if(unitMoveRange < 0) unitMoveRange = 0;
+    }
+
+    [ClientRpc]
+    public void GiveReloadEffectClientRpc(int round, bool upgraded)
+    {
+        if(!IsOwner) return;
+
+        if(!upgraded)
+        {
+            if (!canBeSelected.Value)
+                canBeSelected.Value = true;
+
+            if (!canMove.Value)
+            {
+                if(!canShoot.Value)
+                    canShoot.Value = true;
+
+                canMove.Value = true;
+                return;
+            }
+            else if (!canShoot.Value)
+            {
+                if (!canMove.Value)
+                    canMove.Value = true;
+
+                canShoot.Value = true;
+                return;
+            }
+
+            canMoveAgain.Value = true;
+            canShootAgain.Value = true;
+        }
+        else if (upgraded)
+        {
+            roundToApplyEffect = round;
+        }
     }
 
     [ClientRpc]

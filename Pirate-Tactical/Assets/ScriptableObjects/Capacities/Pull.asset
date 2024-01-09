@@ -13,7 +13,9 @@ MonoBehaviour:
   m_Name: Pull
   m_EditorClassIdentifier: 
   capacityName: Grappin
-  capacityDescription: "Tirer votre adversaire \xE0 vous !"
+  capacityDescription: "Tirer votre adversaire \xE0 vous d'une case.\nAm\xE9liorer
+    : tirer de plusieurs cases un navire."
+  icon: {fileID: 21300000, guid: 9f63a69c4762d2647ad5729d56f63df9, type: 3}
   specialAbilityCost: 10
   shootCapacity: 6
   specialShootRange: 4

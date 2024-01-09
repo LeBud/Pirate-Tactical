@@ -14,7 +14,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   capacityName: "Tir S\xE9par\xE9"
   capacityDescription: "Tirer un boulet qui va se s\xE9parer en deux pour atteindre
-    votre adversaire"
+    votre adversaire. Il inflige 4 points de d\xE9g\xE2ts au premier navire et la
+    moiti\xE9 aux suivant.\nAm\xE9liorer : Le boulet de canon se s\xE9pare en trois
+    et les d\xE9gats sont fixes."
+  icon: {fileID: 21300000, guid: 8314230dd47f77644a4f869fcd2141ac, type: 3}
   specialAbilityCost: 20
   shootCapacity: 2
   specialShootRange: 3
