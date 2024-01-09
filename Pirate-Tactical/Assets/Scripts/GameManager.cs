@@ -395,18 +395,28 @@ public class GameManager : NetworkBehaviour
     public void QuitGame()
     {
         if (IsServer)
-            StartCoroutine(DisconnectPlayer());
+            StartCoroutine(DisconnectPlayer(false));
 
         if (IsClient)
         {
-            NetworkManager.Shutdown();
-            StartCoroutine(ResetHUD());
+            StartCoroutine(DisconnectPlayer(true));
+            /*NetworkManager.Shutdown();
+            StartCoroutine(ResetHUD());*/
         }
     }
 
-    IEnumerator DisconnectPlayer()
+    [ServerRpc(RequireOwnership = false)]
+    void LeaveOnServerRpc()
     {
-        if(!IsServer)
+        StartCoroutine(DisconnectPlayer(false));
+    }
+
+    IEnumerator DisconnectPlayer(bool client)
+    {
+        if (client)
+            LeaveOnServerRpc();
+
+        if(IsServer)
             SendLeaveToClientRpc();
 
         StartCoroutine(ResetHUD());
