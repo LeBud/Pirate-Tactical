@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: AccostDamage
   m_EditorClassIdentifier: 
   upName: Abordage
-  upDescription: "Vous r\xE9aliser 3 d\xE9g\xE2ts de plus lorsque vous aborder un
+  upDescription: "Vous r\xE9alisez 3 d\xE9g\xE2ts de plus lorsque vous abordez un
     navire"
   upgradeType: 4
   value: 3

@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: MoveRange
   m_EditorClassIdentifier: 
   upName: Sortez les voiles !
-  upDescription: "Vous pouvez vous d\xE9placer sur une distance d'une case suppl\xE9mentaire"
+  upDescription: "Vous pouvez d\xE9placer ce navire d'une case suppl\xE9mentaire."
   upgradeType: 2
   value: 1
   goldCost: 80

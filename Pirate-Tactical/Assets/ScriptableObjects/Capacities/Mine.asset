@@ -13,10 +13,11 @@ MonoBehaviour:
   m_Name: Mine
   m_EditorClassIdentifier: 
   capacityName: Mine
-  capacityDescription: "Poser une mine sur la carte. Elle est visible uniquement
-    par vous mais attention \xE0 ne pas voguer dessus. Elle inflige 10 de d\xE9g\xE2ts.\nAm\xE9liorer
-    : Lorsque la mine explose elle inflige 15 de d\xE9gat en plus de 7 de d\xE9gats
-    de zones."
+  capacityDescription: "Posez une mine sur la carte. Elle est visible uniquement
+    par le joueur l'ayant pos\xE9, mais attention \xE0 ne pas voguer dessus. En explosant
+    un navire, elle inflige 7 de d\xE9g\xE2ts.\nAm\xE9lioration : Lorsque la mine
+    explose, elle inflige 15 d\xE9gats au navire ayant vogu\xE9 dessus, en plus de
+    7 de d\xE9gats de zones sur les cases adjacentes."
   icon: {fileID: 21300000, guid: 211d7922cc621304f8db9dd078ddb9d3, type: 3}
   specialAbilityCost: 10
   shootCapacity: 0

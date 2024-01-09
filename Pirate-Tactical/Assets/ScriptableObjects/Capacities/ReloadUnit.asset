@@ -13,9 +13,9 @@ MonoBehaviour:
   m_Name: ReloadUnit
   m_EditorClassIdentifier: 
   capacityName: Recharge de navire
-  capacityDescription: "Permet de recharger une unit\xE9 pour pouvoir l'utiliser
-    2 fois.\nAm\xE9liorer : Permet \xE9galement de pouvoir viser une unit\xE9 ennemi
-    pour l'emp\xEAcher d'aborder, de tirer ou d'utiliser une capacit\xE9 sp\xE9ciale."
+  capacityDescription: "Permet de recharger une unit\xE9 afin de l'utiliser 2 fois.\nAm\xE9lioration
+    : Permet \xE9galement de viser une unit\xE9 ennemi pour l'emp\xEAcher d'aborder,
+    de tirer ou d'utiliser une capacit\xE9 sp\xE9ciale."
   icon: {fileID: 21300000, guid: bc512a7f05d43234fb3e3951d262345b, type: 3}
   specialAbilityCost: 20
   shootCapacity: 7

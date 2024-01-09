@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Explode
   m_EditorClassIdentifier: 
   capacityName: Sabotage
-  capacityDescription: "Exploser votre propre barque pour infliger des d\xE9g\xE2ts
+  capacityDescription: "Explosez votre propre barque pour infliger des d\xE9g\xE2ts
     de zone."
   icon: {fileID: 0}
   specialAbilityCost: 0

@@ -13,8 +13,8 @@ MonoBehaviour:
   m_Name: GoldSearch
   m_EditorClassIdentifier: 
   capacityName: "Chercheur de tr\xE9sor"
-  capacityDescription: "25% de chance de trouver de 0, 5, 10 ou 15 d'or.\nAm\xE9liorer
-    : 25% de chance de trouver de 0, 10, 20 ou 30 points de sp\xE9cial."
+  capacityDescription: "25% de chance de trouver de 10, 20, 30 ou 40 d'or.\nAm\xE9lioration
+    : 25% de chance de trouver de 10, 20, 30 ou 40 points de Mana."
   icon: {fileID: 21300000, guid: 823f8e5e8c4076c44af32d5a3943004d, type: 3}
   specialAbilityCost: 30
   shootCapacity: 0

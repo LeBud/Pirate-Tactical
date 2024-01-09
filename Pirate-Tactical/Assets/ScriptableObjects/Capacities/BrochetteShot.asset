@@ -13,10 +13,10 @@ MonoBehaviour:
   m_Name: BrochetteShot
   m_EditorClassIdentifier: 
   capacityName: Tir Brochette
-  capacityDescription: "Votre tir transpercera jusqu'a 3 b\xE2teaux ! Le tir parcoura
+  capacityDescription: "Votre tir transpercera jusqu'\xE0 3 b\xE2teaux ! Le tir parcoura
     2 cases apr\xE8s avoir atteint une cible. Inflige 4 points de d\xE9g\xE2ts au
-    premier navire touch\xE9, puis 3 puis 2.\nAm\xE9liorer : Le premier navire touch\xE9
-    est pouss\xE9 d'une case et les d\xE9gats sont fixes."
+    premier navire touch\xE9, puis 3 puis 2.\nAm\xE9lioration : Le premier navire
+    touch\xE9 est pouss\xE9 d'une case et les d\xE9gats sont fixes."
   icon: {fileID: 21300000, guid: c555b5034bdba444d8af20c370b747b1, type: 3}
   specialAbilityCost: 30
   shootCapacity: 4

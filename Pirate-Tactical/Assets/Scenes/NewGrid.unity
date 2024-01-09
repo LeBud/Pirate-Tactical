@@ -180,8 +180,8 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: "points de vie : 24\nd\xE9gats inflig\xE9 : 3\nd\xE9g\xE2ts d'abordage
-    : 3\nrayon de d\xE9placement : 4\nrayon de tir : 2\nco\xFBt de capacit\xE9 :
+  m_text: "Points de vie : 24\nD\xE9g\xE2ts simples : 3\nD\xE9g\xE2ts d'abordage
+    : 3\nRayon de d\xE9placement : 4\nRayon de tir : 2\nCo\xFBt de capacit\xE9 :
     10"
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 4c376e254883a0c4caab0c2f3a4333db, type: 2}
@@ -558,11 +558,11 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: "Placer un mur d'eau qui bloquera le d\xE9placement de votre ennemi mais
-    pas son tir. Il permet d'annuler la capacit\xE9 de tir enflamm\xE9, de tir s\xE9par\xE9,
-    de tir brochette et de diviser par 2 les d\xE9g\xE2ts re\xE7u. Le mur reste pendant
-    2 tours. (\"espace\" pour changer de direction)\nAm\xE9liorer : le mur d'eau
-    occupe 3 cases."
+  m_text: "Placez un mur d'eau pouvant bloquer le d\xE9placement de votre ennemi,
+    mais pas ses tir. Il permet d'annuler la capacit\xE9 de tir enflamm\xE9, de tir
+    s\xE9par\xE9, de tir brochette et de diviser par 2 les d\xE9g\xE2ts encaiss\xE9s.
+    Le mur reste pendant 2 tours. Pressez \"Espace\" pour changer l'orientation du
+    mur. \nAm\xE9lioration : Le mur d'eau occupe 3 cases."
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 4c376e254883a0c4caab0c2f3a4333db, type: 2}
   m_sharedMaterial: {fileID: -3779258513146809176, guid: 4c376e254883a0c4caab0c2f3a4333db, type: 2}
@@ -697,7 +697,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls: []
   m_text: "Joseph DOCHEZ - Game Design / Sound Desgin\nK\xE9vin DUBOIS - Game Design\nCharles
-    HUYGHE - Game Desgin / Game Programmation\n\nMerci sp\xE9ciale \xE0 Ad\xE8le
+    HUYGHE - Game Desgin / Game Programmation\n\nRemerciements sp\xE9ciaux \xE0 Ad\xE8le
     GHYS pour le Game Art\n"
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: dccd9830c4e2998449de9b653f2aa02b, type: 2}
@@ -3139,9 +3139,9 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: "Votre tir transpercera jusqu'a 3 b\xE2teaux ! Le tir parcoura 2 cases
+  m_text: "Votre tir transpercera jusqu'\xE0 3 b\xE2teaux ! Le tir parcoura 2 cases
     apr\xE8s avoir atteint une cible. Inflige 4 points de d\xE9g\xE2ts au premier
-    navire touch\xE9, puis 3 puis 2.\nAm\xE9liorer : Le premier navire touch\xE9
+    navire touch\xE9, puis 3 puis 2.\nAm\xE9lioration : Le premier navire touch\xE9
     est pouss\xE9 d'une case et les d\xE9gats sont fixes."
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 4c376e254883a0c4caab0c2f3a4333db, type: 2}
@@ -3249,7 +3249,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6960e84d07fb87f47956e7a81d71c4e6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_ProtocolType: 1
+  m_ProtocolType: 0
   m_MaxPacketQueueSize: 128
   m_MaxPayloadSize: 6144
   m_HeartbeatTimeoutMS: 500
@@ -6444,9 +6444,9 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: "Tirer un boulet qui va se s\xE9parer en deux pour atteindre votre adversaire.
-    Il inflige 4 points de d\xE9g\xE2ts au premier navire et la moiti\xE9 aux suivant.\nAm\xE9liorer
-    : Le boulet de canon se s\xE9pare en trois et les d\xE9gats sont fixes."
+  m_text: "Tirez un boulet se s\xE9parant en deux pour atteindre votre adversaire.
+    Il inflige 4 points de d\xE9g\xE2ts au premier navire et la moiti\xE9 aux suivant.\nAm\xE9lioration
+    : Le boulet de canon se s\xE9pare en trois et les d\xE9gats deviennent fixes."
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 4c376e254883a0c4caab0c2f3a4333db, type: 2}
   m_sharedMaterial: {fileID: -3779258513146809176, guid: 4c376e254883a0c4caab0c2f3a4333db, type: 2}
@@ -13443,9 +13443,9 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: "points de vie : 48\nd\xE9gats inflig\xE9 : 10\nd\xE9g\xE2ts d'abordage
-    : 7\nrayon de d\xE9placement : 2\nrayon de tir : 4\nco\xFBt de capacit\xE9 :
-    40"
+  m_text: "Points de vie : 48\nD\xE9g\xE2ts simples : 10\nD\xE9g\xE2ts d'abordage
+    : 7\nRayon de d\xE9placement : 2\nRayon de tir : 4\nCo\xFBt de capacit\xE9 en
+    Mana : 40"
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 4c376e254883a0c4caab0c2f3a4333db, type: 2}
   m_sharedMaterial: {fileID: -3779258513146809176, guid: 4c376e254883a0c4caab0c2f3a4333db, type: 2}
@@ -14693,7 +14693,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: 70}
+  m_AnchoredPosition: {x: 0, y: 117}
   m_SizeDelta: {x: 1300, y: 50}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &839773025
@@ -14716,23 +14716,25 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: "Pour s\xE9lectionner une unit\xE9 cliquer dessus ou cliquer sur l'unit\xE9
-    dans le HUD.\n\nPour se d\xE9placer 2 modes sont disponibles : Automatique et
-    Manuel. Pour changer de mode il faut appuyer sur \"Espace\" en \xE9tant en mode
-    de d\xE9placement avec l'unit\xE9.\n\nLe mode Automatique permet de d\xE9placer
-    l'unit\xE9 automatiquement sur le chemin le plus court.\nLe mode Manuel permet
-    au joueur de choisir le chemin qu'il veut emprunter avec les fl\xE8ches directionnelles.\n\nPour
-    utiliser une capacit\xE9 sp\xE9ciale cela requiert d'avoir le mana requis. Le
-    mana se recharge tous les tours.\n\nAm\xE9lioration d'unit\xE9 : Rendez-vous
-    \xE0 un port pour am\xE9liorer une unit\xE9 en \xE9change d'or. Vous pouvez am\xE9liorer
-    vos capacit\xE9s sp\xE9ciales ou une statistique du navire.\n\nAbordage : En
-    mode interaction lorsque vous \xEAtes \xE0 c\xF4t\xE9 d'un navire ennemi, cliquer
-    dessus pour l'aborder.\n\nD\xE9truire une unit\xE9 am\xE9liorer en abordant cr\xE9er
-    une \xE9pave sur laquelle on peut r\xE9cup\xE9rer l'am\xE9lioration.\n\nL'or
-    s'obtient \xE0 chaque fin de tour et en abordant des navires.\n\nTemp\xEAtes
-    : Une fois la temp\xEAte en cours, les unit\xE9s subissent des d\xE9g\xE2ts \xE0
-    chaque changement de joueur.\n\nAttention si vous utilisez la capacit\xE9 sp\xE9ciale
-    de mine \xE0 ne pas marcher sur vos propre mines."
+  m_text: "Vous pouvez cliquer sur une unit\xE9 ou cliquer sur l'unit\xE9 dans le
+    HUD pour la s\xE9lectionner.\n\nPour se d\xE9placer, 2 modes sont disponibles
+    : Automatique et Manuel. Pour changer de mode, appuyez sur \"Espace\" en \xE9tant
+    en mode de d\xE9placement avec l'unit\xE9 voulue.\n\nLe mode Automatique permet
+    de d\xE9placer l'unit\xE9 automatiquement sur le chemin le plus court, pr\xE9d\xE9finit
+    par le jeu.\nLe mode Manuel permet au joueur de choisir le chemin qu'il souhaite
+    emprunter gr\xE2ce aux fl\xE8ches directionnelles.\n\nPour utiliser une capacit\xE9
+    sp\xE9ciale, il est n\xE9cessaire d'avoir le mana requis. Le mana se recharge
+    tous les tours.\n\nAm\xE9lioration d'unit\xE9 : Rendez vous \xE0 un port pour
+    am\xE9liorer une unit\xE9 en \xE9change d'or. Vous pouvez am\xE9liorer vos capacit\xE9s
+    sp\xE9ciales ou une statistique du navire.\n\nAbordage : En mode interaction,
+    lorsque vous \xEAtes sur une case adjacente \xE0 un navire ennemi, cliquez dessus
+    pour l'aborder.\n\nD\xE9truire une unit\xE9 adverse am\xE9lior\xE9e en l'abordant
+    cr\xE9e une \xE9pave sur laquelle il est possible de r\xE9cup\xE9rer l'am\xE9lioration
+    poss\xE9d\xE9e par le navire avant sa destruction.\n\nL'or s'obtient \xE0 chaque
+    fin de tour et en abordant des navires.\n\nTemp\xEAte : Une fois celle-ci en
+    cours, les unit\xE9s touch\xE9es subissent des d\xE9g\xE2ts \xE0 chaque changement
+    de joueur.\n\nAttention ! Si vous utilisez la capacit\xE9 sp\xE9ciale de mine,
+    assurez vous de ne pas marcher sur vos propre mines."
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 4c376e254883a0c4caab0c2f3a4333db, type: 2}
   m_sharedMaterial: {fileID: -3779258513146809176, guid: 4c376e254883a0c4caab0c2f3a4333db, type: 2}
@@ -14770,7 +14772,7 @@ MonoBehaviour:
   m_VerticalAlignment: 256
   m_textAlignment: 65535
   m_characterSpacing: 0
-  m_wordSpacing: 40
+  m_wordSpacing: 20
   m_lineSpacing: 0
   m_lineSpacingMax: 0
   m_paragraphSpacing: 0
@@ -16747,9 +16749,9 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: "points de vie : 48\nd\xE9gats inflig\xE9 : 10\nd\xE9g\xE2ts d'abordage
-    : 7\nrayon de d\xE9placement : 2\nrayon de tir : 4\nco\xFBt de capacit\xE9 :
-    40"
+  m_text: "Points de vie : 48\nD\xE9g\xE2ts simples : 10\nD\xE9g\xE2ts d'abordage
+    : 7\nRayon de d\xE9placement : 2\nRayon de tir : 4\nCo\xFBt de capacit\xE9 en
+    Mana : 40"
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 4c376e254883a0c4caab0c2f3a4333db, type: 2}
   m_sharedMaterial: {fileID: -3779258513146809176, guid: 4c376e254883a0c4caab0c2f3a4333db, type: 2}
@@ -17107,7 +17109,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: "L'h\xF4te s'est deconnect\xE9"
+  m_text: "L'h\xF4te s'est deconnect\xE9."
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: dccd9830c4e2998449de9b653f2aa02b, type: 2}
   m_sharedMaterial: {fileID: -6939757771348040540, guid: dccd9830c4e2998449de9b653f2aa02b, type: 2}
@@ -17975,8 +17977,9 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: "T\xE9l\xE9porter vous sur la carte dans un rayon de 4 cases.\nAm\xE9liorer
-    : Si un navire ennemi se trouve sur une case adjacente, elle subit 3 de d\xE9g\xE2ts."
+  m_text: "T\xE9l\xE9portez vous sur la carte dans un rayon de 4 cases.\nAm\xE9lioration
+    : Si un navire ennemi se trouve sur une case adjacente au Galion lorsqu'il se
+    t\xE9l\xE9porte, elle subit 3 de d\xE9g\xE2ts."
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 4c376e254883a0c4caab0c2f3a4333db, type: 2}
   m_sharedMaterial: {fileID: -3779258513146809176, guid: 4c376e254883a0c4caab0c2f3a4333db, type: 2}
@@ -18602,7 +18605,7 @@ AudioSource:
   m_Enabled: 1
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: -1724556361333199607, guid: 7f643c8e6797b2b45a745a446f314599, type: 2}
-  m_audioClip: {fileID: 8300000, guid: 9c57b459fb01fab4dab63d7ecf8a130c, type: 3}
+  m_audioClip: {fileID: 8300000, guid: a0353e03de346404dabe1599efe9e71a, type: 3}
   m_PlayOnAwake: 1
   m_Volume: 1
   m_Pitch: 1
@@ -20763,7 +20766,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &1107832327
 RectTransform:
   m_ObjectHideFlags: 0
@@ -20871,7 +20874,7 @@ RectTransform:
   m_Father: {fileID: 359173198}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 1, y: 1}
+  m_AnchorMax: {x: 0, y: 0}
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 10, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
@@ -24524,10 +24527,11 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: "Poser une mine sur la carte. Elle est visible uniquement par vous mais
-    attention \xE0 ne pas voguer dessus. Elle inflige 10 de d\xE9g\xE2ts.\nAm\xE9liorer
-    : Lorsque la mine explose elle inflige 15 de d\xE9gat en plus de 7 de d\xE9gats
-    de zones."
+  m_text: "Posez une mine sur la carte. Elle est visible uniquement par le joueur
+    l'ayant pos\xE9, mais attention \xE0 ne pas voguer dessus. En explosant un navire,
+    elle inflige 7 de d\xE9g\xE2ts.\nAm\xE9lioration : Lorsque la mine explose, elle
+    inflige 15 d\xE9gats au navire ayant vogu\xE9 dessus, en plus de 7 de d\xE9gats
+    de zones sur les cases adjacentes."
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 4c376e254883a0c4caab0c2f3a4333db, type: 2}
   m_sharedMaterial: {fileID: -3779258513146809176, guid: 4c376e254883a0c4caab0c2f3a4333db, type: 2}
@@ -25900,8 +25904,8 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: "Pousser votre adversaire sur une autre case\nAm\xE9liorer : pousser de
-    plusieurs cases un navire."
+  m_text: "Poussez un navire sur 2 cases.\nAm\xE9lioration : Poussez de 4 cases un
+    navire."
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 4c376e254883a0c4caab0c2f3a4333db, type: 2}
   m_sharedMaterial: {fileID: -3779258513146809176, guid: 4c376e254883a0c4caab0c2f3a4333db, type: 2}
@@ -27189,9 +27193,9 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: "Permet de recharger une unit\xE9 pour pouvoir l'utiliser 2 fois.\nAm\xE9liorer
-    : Permet \xE9galement de pouvoir viser une unit\xE9 ennemi pour l'emp\xEAcher
-    d'aborder, de tirer ou d'utiliser une capacit\xE9 sp\xE9ciale."
+  m_text: "Permet de recharger une unit\xE9 afin de l'utiliser 2 fois.\nAm\xE9lioration
+    : Permet \xE9galement de viser une unit\xE9 ennemi pour l'emp\xEAcher d'aborder,
+    de tirer ou d'utiliser une capacit\xE9 sp\xE9ciale."
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 4c376e254883a0c4caab0c2f3a4333db, type: 2}
   m_sharedMaterial: {fileID: -3779258513146809176, guid: 4c376e254883a0c4caab0c2f3a4333db, type: 2}
@@ -27875,7 +27879,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &1457590310
 RectTransform:
   m_ObjectHideFlags: 0
@@ -28629,8 +28633,8 @@ RectTransform:
   m_Children: []
   m_Father: {fileID: 145002518}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 1, y: 0}
-  m_AnchorMax: {x: 1, y: 1}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 0, y: 0}
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 40, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
@@ -30275,9 +30279,9 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: "points de vie : 32\nd\xE9gats inflig\xE9 : 6\nd\xE9g\xE2ts d'abordage
-    : 5\nrayon de d\xE9placement : 3\nrayon de tir : 3\nco\xFBt de capacit\xE9 :
-    20"
+  m_text: "Points de vie : 32\nD\xE9g\xE2ts simples : 6\nD\xE9g\xE2ts d'abordage
+    : 5\nRayon de d\xE9placement : 3\nRayon de tir : 3\nCo\xFBt de capacit\xE9 en
+    Mana : 20"
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 4c376e254883a0c4caab0c2f3a4333db, type: 2}
   m_sharedMaterial: {fileID: -3779258513146809176, guid: 4c376e254883a0c4caab0c2f3a4333db, type: 2}
@@ -31712,9 +31716,9 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: "Poser un canon sur une ile qui infligera des d\xE9gats aux ennemis qui
-    rentre dans un rayon de 3 cases et inflige 7 de d\xE9gats. Cependant il suffit
-    d'un tir pour le d\xE9truire.\nAm\xE9liorer : Son rayon augmente \xE0 4 cases."
+  m_text: "Posez un canon sur une \xEEle, infligeant 7 de d\xE9gats aux ennemis pr\xE9sents
+    dans un rayon de 3 cases autour du canon. Cependant il suffit d'un tir pour le
+    d\xE9truire.\nAm\xE9lioration : Son rayon de tir est augment\xE9 \xE0 4 cases."
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 4c376e254883a0c4caab0c2f3a4333db, type: 2}
   m_sharedMaterial: {fileID: -3779258513146809176, guid: 4c376e254883a0c4caab0c2f3a4333db, type: 2}
@@ -32407,8 +32411,8 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: "points de vie : 24\nd\xE9gats inflig\xE9 : 3\nd\xE9g\xE2ts d'abordage
-    : 3\nrayon de d\xE9placement : 4\nrayon de tir : 2\nco\xFBt de capacit\xE9 :
+  m_text: "Points de vie : 24\nD\xE9g\xE2ts simples : 3\nD\xE9g\xE2ts d'abordage
+    : 3\nRayon de d\xE9placement : 4\nRayon de tir : 2\nCo\xFBt de capacit\xE9 :
     10"
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 4c376e254883a0c4caab0c2f3a4333db, type: 2}
@@ -36230,9 +36234,9 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: "points de vie : 32\nd\xE9gats inflig\xE9 : 6\nd\xE9g\xE2ts d'abordage
-    : 5\nrayon de d\xE9placement : 3\nrayon de tir : 3\nco\xFBt de capacit\xE9 :
-    20"
+  m_text: "Points de vie : 32\nD\xE9g\xE2ts simples : 6\nD\xE9g\xE2ts d'abordage
+    : 5\nRayon de d\xE9placement : 3\nRayon de tir : 3\nCo\xFBt de capacit\xE9 en
+    Mana : 20"
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 4c376e254883a0c4caab0c2f3a4333db, type: 2}
   m_sharedMaterial: {fileID: -3779258513146809176, guid: 4c376e254883a0c4caab0c2f3a4333db, type: 2}
@@ -36706,7 +36710,7 @@ RectTransform:
   m_Father: {fileID: 1847569314}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 1, y: 1}
+  m_AnchorMax: {x: 0, y: 0}
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 10, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
@@ -38651,8 +38655,8 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: "Faites appara\xEEtre une barque ! Elle poss\xE8de les m\xEAmes statistique
-    que son cr\xE9ateur mais ne poss\xE8de pas ses capacit\xE9s sp\xE9ciales.\nAm\xE9liorer
+  m_text: "Faites appara\xEEtre une barque ! Celle-ci poss\xE8de les m\xEAmes statistique
+    que l'unit\xE9 l'ayant invoqu\xE9, mais ne poss\xE8de pas ses capacit\xE9s sp\xE9ciales.\nAm\xE9lioration
     : Explosez votre barque pour infliger 6 de d\xE9g\xE2ts de zones aux unit\xE9s
     autour."
   m_isRightToLeft: 0
@@ -39383,8 +39387,8 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: "25% de chance de trouver de 0, 5, 10 ou 15 d'or.\nAm\xE9liorer : 25% de
-    chance de trouver de 0, 10, 20 ou 30 points de sp\xE9cial."
+  m_text: "25% de chance de trouver de 10, 20, 30 ou 40 d'or.\nAm\xE9lioration :
+    25% de chance de trouver de 10, 20, 30 ou 40 points de Mana."
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 4c376e254883a0c4caab0c2f3a4333db, type: 2}
   m_sharedMaterial: {fileID: -3779258513146809176, guid: 4c376e254883a0c4caab0c2f3a4333db, type: 2}
@@ -39935,10 +39939,11 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: "Tir\xE9 un boulet enflamm\xE9 sur votre adversaire pour infliger 6 de
-    d\xE9gats passifs pendant 2 tours. Le tir inflige 6 de d\xE9g\xE2ts.\nAm\xE9liorer
-    : Tirer sur un navire provoque un feu sur les cases autour qui enflamme les navires
-    dessus."
+  m_text: "Tirez un boulet enflamm\xE9 sur une unit\xE9 adverse pour infliger 6 de
+    d\xE9gats passifs pendant 2 tours. Le tir inflige 6 de d\xE9g\xE2ts (compris
+    dans les d\xE9g\xE2ts passifs).\nAm\xE9lioration : Tirer sur un navire ennemi
+    provoque un feu sur les cases alentours, enflammat les navires pr\xE9sents dans
+    la zone concern\xE9e."
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 4c376e254883a0c4caab0c2f3a4333db, type: 2}
   m_sharedMaterial: {fileID: -3779258513146809176, guid: 4c376e254883a0c4caab0c2f3a4333db, type: 2}
@@ -40706,8 +40711,8 @@ RectTransform:
   m_Children: []
   m_Father: {fileID: 1190772706}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 1, y: 0}
-  m_AnchorMax: {x: 1, y: 1}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 0, y: 0}
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 40, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
@@ -42024,8 +42029,8 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: "Tirer votre adversaire \xE0 vous d'une case.\nAm\xE9liorer : tirer de
-    plusieurs cases un navire."
+  m_text: "Tirez un navire vers vous de 2 cases.\nAm\xE9lioration : Tirez de un navire
+    sur 4 cases."
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 4c376e254883a0c4caab0c2f3a4333db, type: 2}
   m_sharedMaterial: {fileID: -3779258513146809176, guid: 4c376e254883a0c4caab0c2f3a4333db, type: 2}

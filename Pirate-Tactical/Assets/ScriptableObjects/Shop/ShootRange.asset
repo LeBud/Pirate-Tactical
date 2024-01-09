@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: ShootRange
   m_EditorClassIdentifier: 
   upName: Plus de poudre
-  upDescription: "Vous pouvez tirer sur une distance de 1 case suppl\xE9mentaire"
+  upDescription: "Vous pouvez tirer sur une distance de 1 case suppl\xE9mentaire."
   upgradeType: 3
   value: 1
   goldCost: 80

@@ -13,8 +13,8 @@ MonoBehaviour:
   m_Name: Damage
   m_EditorClassIdentifier: 
   upName: Doublez les canons !
-  upDescription: "Vous r\xE9alisez 3 d\xE9g\xE2ts de plus lorsque vous tirer sur
-    un ennemis"
+  upDescription: "Vous r\xE9alisez 3 d\xE9g\xE2ts de plus lorsque vous tirez sur
+    un ennemi."
   upgradeType: 1
   value: 3
   goldCost: 80
