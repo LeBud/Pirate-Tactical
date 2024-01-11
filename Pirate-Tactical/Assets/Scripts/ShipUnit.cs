@@ -63,6 +63,9 @@ public class ShipUnit : NetworkBehaviour
     public Sprite Player2Sprite;
     public Sprite Player1SpriteHighlight;
     public Sprite Player2SpriteHighlight;
+    public Color healthBarColorP1;
+    public Color healthBarColorP2;
+    public SpriteRenderer healthBar;
 
     [Header("Others")]
     public SpriteRenderer unitSprite;
@@ -162,7 +165,7 @@ public class ShipUnit : NetworkBehaviour
         if(roundToStopFireEffect > GameManager.Instance.currentRound.Value)
         {
             TakeDamageServerRpc(passiveDmg, unitPos.Value, false, 0, false);
-            GridManager.Instance.DisplayDamageClientRpc("Brulure", new Vector2(unitPos.Value.x, unitPos.Value.y + 0.5f));
+            GridManager.Instance.DisplayDamageServerRpc("Brulure", new Vector2(unitPos.Value.x, unitPos.Value.y + 0.5f));
         }
 
         if (roundToStopWindEffect < GameManager.Instance.currentRound.Value)
@@ -196,12 +199,14 @@ public class ShipUnit : NetworkBehaviour
                 unitSprite.sprite = Player1Sprite;
                 usedSprite.sprite = Player1Sprite;
                 highlight.sprite = Player1SpriteHighlight;
+                healthBar.color = healthBarColorP1;
             }
             else
             {
                 unitSprite.sprite = Player2Sprite;
                 usedSprite.sprite = Player2Sprite;
                 highlight.sprite = Player2SpriteHighlight;
+                healthBar.color = healthBarColorP2;
             }
         }
     }
@@ -243,7 +248,7 @@ public class ShipUnit : NetworkBehaviour
 
         if (hasGoneThroughWater) randomDmg /= 2;
 
-        GridManager.Instance.DisplayDamageClientRpc(randomDmg.ToString(), pos);
+        GridManager.Instance.DisplayDamageServerRpc("-" + randomDmg.ToString(), pos);
 
         unitLife.Value -= randomDmg;
 

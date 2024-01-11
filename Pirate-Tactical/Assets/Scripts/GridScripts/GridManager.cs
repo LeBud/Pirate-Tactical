@@ -693,7 +693,7 @@ public class GridManager : NetworkBehaviour
         if (ships != null)
             ships.TakeDamageServerRpc(damage, pos, passiveAttack, effectDuration, false);
 
-        DisplayDamageClientRpc("mine", new Vector2(pos.x, pos.y + 0.5f));
+        DisplayDamageServerRpc("mine", new Vector2(pos.x, pos.y + 0.5f));
 
         #region UpgradedMineAoE
         if (GetTileAtPosition(pos).upgradedMine.Value)
@@ -1019,8 +1019,14 @@ public class GridManager : NetworkBehaviour
         t.shipwrek.Value = active;
     }
 
+    [ServerRpc(RequireOwnership = false)]
+    public void DisplayDamageServerRpc(string damage, Vector2 pos)
+    {
+        SendTxtToClientRpc(damage, pos);
+    }
+
     [ClientRpc]
-    public void DisplayDamageClientRpc(string damage, Vector2 pos)
+    void SendTxtToClientRpc(string damage, Vector2 pos)
     {
         StartCoroutine(DisplayTxt(damage, pos));
     }
@@ -1035,7 +1041,7 @@ public class GridManager : NetworkBehaviour
 
         displayTxts[txtNum].SetActive(true);
         displayTxts[txtNum].transform.position = new Vector3(pos.x + 0.5f, pos.y, -5);
-        displayTxts[txtNum].GetComponent<TMP_Text>().text = "-" + damage.ToString();
+        displayTxts[txtNum].GetComponent<TMP_Text>().text = damage.ToString();
 
         yield return new WaitForSeconds(2);
 

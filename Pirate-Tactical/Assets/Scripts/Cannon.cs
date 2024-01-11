@@ -49,7 +49,7 @@ public class Cannon : NetworkBehaviour
             else if(upgraded)
                 GridManager.Instance.DamageUnitNoActionServerRpc(upgradedDamage, shipMovedPos, ID.Value, false, 0, false);
 
-            GridManager.Instance.DisplayDamageClientRpc("Canon", new Vector2(shipMovedPos.x, shipMovedPos.y + 0.5f));
+            GridManager.Instance.DisplayDamageServerRpc("Canon", new Vector2(shipMovedPos.x, shipMovedPos.y + 0.5f));
         }
 
     }

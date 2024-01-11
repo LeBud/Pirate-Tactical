@@ -85,6 +85,19 @@ public class HUD : NetworkBehaviour
         endTurnBtt.onClick.AddListener(() => { UpdateGameMode(); });
     }
 
+    private void Update()
+    {
+        if (player != null && player.canPlay.Value)
+        {
+            if (player.unitManager.allShipSpawned.Value)
+                endTurnBtt.interactable = true;
+            else
+                endTurnBtt.interactable = false;
+        }
+        else if(player != null && !player.canPlay.Value)
+            endTurnBtt.interactable = false;
+    }
+
     private void LateUpdate()
     {
         if (player == null) return;

@@ -152,6 +152,9 @@ MonoBehaviour:
   Player2Sprite: {fileID: 21300000, guid: e9a9b06c3fb36184c981b902bba14963, type: 3}
   Player1SpriteHighlight: {fileID: 21300000, guid: b273db2567ad39046897008683891447, type: 3}
   Player2SpriteHighlight: {fileID: 21300000, guid: ee0982369d4c2dd45a8a37291b203603, type: 3}
+  healthBarColorP1: {r: 0.8980392, g: 0.7294118, b: 0, a: 1}
+  healthBarColorP2: {r: 0.0627451, g: 0.09019608, b: 0.43529412, a: 1}
+  healthBar: {fileID: 8755027344298001045}
   unitSprite: {fileID: 1808388037352332092}
   health: {fileID: 5130245049498383686}
   highlight: {fileID: 4237182368670258430}
@@ -614,7 +617,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -1.6, y: 0.5}
+  m_AnchoredPosition: {x: 0, y: 0.5}
   m_SizeDelta: {x: 2, y: 0.5}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!23 &7948908369086854724
@@ -637,7 +640,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
+  - {fileID: -6939757771348040540, guid: 2dd967c22c21a05419a9684265ee08cc, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -681,8 +684,8 @@ MonoBehaviour:
       m_Calls: []
   m_text: 48/48
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
-  m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: 2dd967c22c21a05419a9684265ee08cc, type: 2}
+  m_sharedMaterial: {fileID: -6939757771348040540, guid: 2dd967c22c21a05419a9684265ee08cc, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -713,7 +716,7 @@ MonoBehaviour:
   m_fontSizeMin: 18
   m_fontSizeMax: 72
   m_fontStyle: 1
-  m_HorizontalAlignment: 4
+  m_HorizontalAlignment: 2
   m_VerticalAlignment: 512
   m_textAlignment: 65535
   m_characterSpacing: 0

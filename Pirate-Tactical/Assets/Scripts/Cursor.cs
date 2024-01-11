@@ -773,6 +773,7 @@ public class Cursor : NetworkBehaviour
             }
         }
 
+        GridManager.Instance.DisplayDamageServerRpc("mana -" + unitManager.ships[currentShipIndex].shotCapacity.specialAbilityCost, unitManager.ships[currentShipIndex].unitPos.Value);
         SoundManager.Instance.PlaySoundOnClients(SoundManager.Instance.tileCapacity.id);
     }
 
@@ -837,6 +838,7 @@ public class Cursor : NetworkBehaviour
             }
         }
 
+        GridManager.Instance.DisplayDamageServerRpc("mana -" + unitManager.ships[currentShipIndex].shotCapacity.specialAbilityCost, unitManager.ships[currentShipIndex].unitPos.Value);
         SoundManager.Instance.PlaySoundOnClients(SoundManager.Instance.offensiveCapacity.id);
     }
 
@@ -1352,13 +1354,12 @@ public class Cursor : NetworkBehaviour
                 unitManager.ships[currentShipIndex].currentTile = path[value];
                 stepOnMine = true;
 
-                path.Clear();
-
                 foreach (var item in allTiles)
                     item.SetColor(3);
 
                 GridManager.Instance.SetMineOnTileServerRpc(path[value].pos.Value, NetworkManager.LocalClientId, false, false);
 
+                path.Clear();
                 break;
             }
             

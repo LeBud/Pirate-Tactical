@@ -70,7 +70,7 @@ Material:
     - _OutlineSoftness: 0
     - _OutlineUVSpeedX: 0
     - _OutlineUVSpeedY: 0
-    - _OutlineWidth: 0
+    - _OutlineWidth: 0.2
     - _PerspectiveFilter: 0.875
     - _Reflectivity: 10
     - _ScaleRatioA: 0.9
@@ -118,11 +118,11 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 71c1514a6bd24e1e882cebbe1904ce04, type: 3}
-  m_Name: Enchanted Land SDF
+  m_Name: Enchanted Land SDF 1
   m_EditorClassIdentifier: 
-  hashCode: -1689490036
+  hashCode: -1608645475
   material: {fileID: -6939757771348040540}
-  materialHashCode: -1040499540
+  materialHashCode: 1491083293
   m_Version: 1.1.0
   m_SourceFontFileGUID: b56b99ca25733a544b0934890248780c
   m_SourceFontFile_EditorRef: {fileID: 12800000, guid: b56b99ca25733a544b0934890248780c, type: 3}
